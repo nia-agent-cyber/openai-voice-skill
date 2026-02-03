@@ -34,6 +34,7 @@ from pydantic import BaseModel
 import uvicorn
 from twilio.rest import Client as TwilioClient
 from twilio.base.exceptions import TwilioException
+from twilio.request_validator import RequestValidator
 
 # Setup logging
 logging.basicConfig(
@@ -55,10 +56,12 @@ TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
 
 # Initialize Twilio client if credentials are available
 twilio_client = None
+twilio_validator = None
 if TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN:
     try:
         twilio_client = TwilioClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-        logger.info("Twilio client initialized for outbound calls")
+        twilio_validator = RequestValidator(TWILIO_AUTH_TOKEN)
+        logger.info("Twilio client and validator initialized for outbound calls")
     except Exception as e:
         logger.warning(f"Failed to initialize Twilio client: {e}")
 else:
@@ -103,11 +106,66 @@ class OutboundCallResponse(BaseModel):
 app = FastAPI(title="OpenAI Voice Server")
 
 
+def mask_phone_number(phone: str) -> str:
+    """Mask phone number for logging to protect PII."""
+    if not phone or len(phone) < 7:
+        return "****"
+    return f"{phone[:3]}****{phone[-4:]}"
+
+
 def validate_phone_number(phone: str) -> bool:
-    """Validate phone number format (E.164)."""
-    # Basic E.164 validation: +1234567890 to +123456789012345
-    pattern = r'^\+[1-9]\d{1,14}$'
-    return bool(re.match(pattern, phone))
+    """Validate phone number format (E.164) with stricter validation."""
+    if not phone:
+        return False
+    
+    # Reject common attack patterns
+    if len(phone) > 20:  # Unreasonably long
+        return False
+    if phone.count('+') > 1:  # Multiple plus signs
+        return False
+    if any(char in phone for char in ['<', '>', '"', "'", '&', ';']):  # Injection chars
+        return False
+    
+    # Stricter E.164 validation with country code validation
+    # Must start with +, followed by 1-3 digit country code, then 4-14 digits
+    pattern = r'^\+([1-9]\d{0,2})(\d{4,14})$'
+    match = re.match(pattern, phone)
+    
+    if not match:
+        return False
+    
+    country_code = match.group(1)
+    number_part = match.group(2)
+    
+    # Validate common country codes and total length
+    total_digits = len(country_code) + len(number_part)
+    if total_digits < 7 or total_digits > 15:
+        return False
+    
+    # Reject obviously invalid patterns
+    if number_part == '0' * len(number_part):  # All zeros
+        return False
+    if number_part == '1' * len(number_part):  # All ones  
+        return False
+    
+    # Additional validation for common patterns
+    if len(country_code) == 1 and country_code == '1':  # US/Canada
+        # Must be exactly 10 digits for US/Canada
+        if len(number_part) != 10:
+            return False
+        # Area code can't start with 0 or 1
+        if number_part[0] in ['0', '1']:
+            return False
+        # Exchange code can't start with 0 or 1
+        if number_part[3] in ['0', '1']:
+            return False
+        return True
+    elif len(country_code) == 2:  # Most European/international
+        return 4 <= len(number_part) <= 12
+    elif len(country_code) == 3:  # Some international
+        return 4 <= len(number_part) <= 10
+    
+    return True
 
 
 def verify_webhook_signature(request_body: bytes, signature: str, timestamp: str) -> bool:
@@ -130,6 +188,19 @@ def verify_webhook_signature(request_body: bytes, signature: str, timestamp: str
     return hmac.compare_digest(expected, signature)
 
 
+def verify_twilio_signature(url: str, params: dict, signature: str) -> bool:
+    """Verify Twilio webhook signature using RequestValidator."""
+    if not twilio_validator:
+        logger.warning("Twilio validator not configured - skipping signature validation")
+        return True  # Skip validation if no validator configured
+    
+    try:
+        return twilio_validator.validate(url, params, signature)
+    except Exception as e:
+        logger.error(f"Error validating Twilio signature: {e}")
+        return False
+
+
 @app.post("/call", response_model=OutboundCallResponse)
 async def initiate_outbound_call(request: OutboundCallRequest, background_tasks: BackgroundTasks):
     """
@@ -147,11 +218,29 @@ async def initiate_outbound_call(request: OutboundCallRequest, background_tasks:
             detail="Outbound calling not configured - missing Twilio credentials"
         )
     
-    # Validate phone number format
+    # Early input validation - reject malformed input immediately
+    if not request.to or not isinstance(request.to, str):
+        raise HTTPException(
+            status_code=400,
+            detail="Phone number is required and must be a string"
+        )
+    
+    # Remove any whitespace or common formatting
+    phone_cleaned = request.to.strip().replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
+    request.to = phone_cleaned
+    
+    # Validate phone number format with enhanced validation
     if not validate_phone_number(request.to):
         raise HTTPException(
             status_code=400,
-            detail="Invalid phone number format - use E.164 format (e.g. +1234567890)"
+            detail="Invalid phone number format - must be E.164 format with valid country code (e.g. +1234567890)"
+        )
+    
+    # Additional validation for caller_id if provided
+    if request.caller_id and not validate_phone_number(request.caller_id.strip()):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid caller_id format - must be E.164 format with valid country code"
         )
     
     # Validate OpenAI configuration
@@ -173,7 +262,7 @@ async def initiate_outbound_call(request: OutboundCallRequest, background_tasks:
         # Create OpenAI SIP URI
         sip_uri = f"sip:{OPENAI_PROJECT_ID}@sip.api.openai.com;transport=tls"
         
-        logger.info(f"Initiating outbound call: {request.to} via {sip_uri}")
+        logger.info(f"Initiating outbound call: {mask_phone_number(request.to)} via {sip_uri}")
         
         # Create Twilio call
         call = twilio_client.calls.create(
@@ -197,7 +286,7 @@ async def initiate_outbound_call(request: OutboundCallRequest, background_tasks:
         
         active_calls[call.sid] = call_data
         
-        logger.info(f"Outbound call initiated: {call.sid} to {request.to}")
+        logger.info(f"Outbound call initiated: {call.sid} to {mask_phone_number(request.to)}")
         
         # Set up OpenAI Realtime session in background
         background_tasks.add_task(setup_outbound_realtime_session, call.sid, request.message)
@@ -225,27 +314,43 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
     """
     body = await request.body()
     
-    # Verify signature if configured
-    signature = request.headers.get("webhook-signature", "")
-    timestamp = request.headers.get("webhook-timestamp", "")
+    # Check if this is a Twilio webhook by looking for CallStatus or Twilio signature
+    twilio_signature = request.headers.get("X-Twilio-Signature")
+    is_twilio_webhook = twilio_signature is not None
     
-    if WEBHOOK_SECRET and not verify_webhook_signature(body, signature, timestamp):
-        logger.warning("Invalid webhook signature")
-        raise HTTPException(status_code=401, detail="Invalid signature")
-    
-    try:
-        event = json.loads(body)
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail="Invalid JSON")
-    
-    event_type = event.get("type")
-    event_id = event.get("id")
-    
-    logger.info(f"Webhook received: {event_type} (id: {event_id})")
-    
-    # Handle Twilio webhook events (for outbound calls)
-    if "CallStatus" in event:
+    # Parse form data for Twilio webhooks, JSON for OpenAI
+    if is_twilio_webhook:
+        # Twilio sends form data
+        form_data = await request.form()
+        event = dict(form_data)
+        
+        # Validate Twilio signature
+        url = str(request.url)
+        if not verify_twilio_signature(url, event, twilio_signature):
+            logger.warning("Invalid Twilio webhook signature")
+            raise HTTPException(status_code=401, detail="Invalid Twilio signature")
+        
+        # Handle Twilio webhook events (for outbound calls)
         return await handle_twilio_webhook(event)
+    else:
+        # Handle OpenAI webhooks
+        # Verify OpenAI signature if configured
+        signature = request.headers.get("webhook-signature", "")
+        timestamp = request.headers.get("webhook-timestamp", "")
+        
+        if WEBHOOK_SECRET and not verify_webhook_signature(body, signature, timestamp):
+            logger.warning("Invalid OpenAI webhook signature")
+            raise HTTPException(status_code=401, detail="Invalid OpenAI signature")
+        
+        try:
+            event = json.loads(body)
+        except json.JSONDecodeError:
+            raise HTTPException(status_code=400, detail="Invalid JSON")
+        
+        event_type = event.get("type")
+        event_id = event.get("id")
+        
+        logger.info(f"OpenAI webhook received: {event_type} (id: {event_id})")
     
     # Handle OpenAI webhook events (for both inbound and outbound)
     
@@ -259,7 +364,7 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
         from_header = next((h["value"] for h in sip_headers if h["name"] == "From"), "unknown")
         to_header = next((h["value"] for h in sip_headers if h["name"] == "To"), "unknown")
         
-        logger.info(f"Incoming call: {call_id} from {from_header} to {to_header}")
+        logger.info(f"Incoming call: {call_id} from {mask_phone_number(from_header)} to {mask_phone_number(to_header)}")
         
         # Accept the call in background (don't block webhook response)
         background_tasks.add_task(accept_call, call_id, from_header)
