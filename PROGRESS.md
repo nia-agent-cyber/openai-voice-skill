@@ -114,12 +114,55 @@
 - Storage statistics and cleanup utilities
 - Configurable storage directory and size limits
 
+### Function Calling During Conversations (February 3, 2026)
+**Issue #3 - COMPLETED ✅**
+
+**What was implemented:**
+- Complete function calling infrastructure for voice conversations
+- Integration with OpenAI Realtime API function calling mechanism
+- Support for both Python function handlers and OpenClaw tool integration
+- Built-in functions: current time, weather lookup, calendar checking, email sending
+- Function call history tracking and analytics
+- Real-time conversation event processing and function execution
+- Comprehensive error handling and timeout management
+
+**Files changed:**
+- `scripts/function_calling.py` - New module for function management and execution
+- `scripts/webhook-server.py` - Enhanced with conversation events and function calling
+- `scripts/test_function_calling.py` - Comprehensive test suite for function calling
+- `.env.example` - Added function calling configuration options
+
+**API endpoints added:**
+- `GET /functions` - List all available functions with descriptions and parameters
+- `GET /history/{id}/functions` - Get function call history for a specific call
+
+**Technical highlights:**
+- Real-time function execution during live voice conversations
+- OpenClaw tool integration for advanced agent capabilities
+- Function call logging integrated with conversation transcripts
+- Configurable timeout and error handling for robust operation
+- Support for custom function registration and dynamic capabilities
+- Async execution to maintain conversation flow performance
+
+**Built-in functions:**
+- `get_current_time` - Current date/time with timezone support
+- `get_weather` - Weather information via OpenClaw integration
+- `check_calendar` - Calendar event checking via OpenClaw
+- `send_email` - Email sending capability via OpenClaw
+- Custom function registration system for extending capabilities
+
+**Configuration options:**
+- `ENABLE_FUNCTION_CALLING` - Toggle function calling on/off
+- `FUNCTION_TIMEOUT_SECONDS` - Configurable execution timeout
+- `OPENCLAW_API_URL` - OpenClaw integration endpoint
+- `OPENCLAW_API_KEY` - Authentication for OpenClaw tool access
+
 ## 📋 Next Phase: Production Ready
 
 ### High Priority
 - [x] **Outbound call support** - Agent-initiated calls ✅ COMPLETED
 - [x] **Call recording & transcripts** - Conversation persistence ✅ COMPLETED
-- [ ] **Function calling during calls** - Tool use mid-conversation
+- [x] **Function calling during calls** - Tool use mid-conversation ✅ COMPLETED
 - [ ] **Session memory persistence** - Context across calls
 
 ### Medium Priority  

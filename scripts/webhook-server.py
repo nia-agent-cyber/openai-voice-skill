@@ -22,6 +22,7 @@ import json
 import logging
 import os
 import re
+import sqlite3
 import time
 from datetime import datetime
 from pathlib import Path
@@ -41,6 +42,9 @@ from call_recording import recording_manager, CallRecord, TranscriptEntry
 
 # Import function calling functionality
 from function_calling import function_manager, FunctionResult
+
+# Import session memory functionality
+from session_memory import memory_manager, SessionContext, MemoryEntry
 
 # Setup logging
 logging.basicConfig(
@@ -451,6 +455,23 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
                         content=text,
                         event_type="conversation_message"
                     )
+                    
+                    # Add assistant responses to memory
+                    if role == "assistant" and len(text.strip()) > 10:
+                        # Get caller number from active calls
+                        caller_info = active_calls.get(call_id)
+                        if caller_info and caller_info.get("caller"):
+                            caller = caller_info["caller"]
+                            session_id = memory_manager._get_session_id(caller)
+                            
+                            # Add assistant message to memory
+                            await memory_manager.add_memory_entry(
+                                session_id=session_id,
+                                entry_type="conversation",
+                                content=f"Assistant responded: {text}",
+                                importance=2,  # Lower importance for responses
+                                metadata={"call_id": call_id, "type": "assistant_message"}
+                            )
         
         return JSONResponse({"status": "noted"})
     
@@ -467,6 +488,23 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
                 content=transcript,
                 event_type="speech_transcription"
             )
+            
+            # Add to session memory if significant
+            if len(transcript.strip()) > 10:  # Only add substantial messages
+                # Get caller number from active calls
+                caller_info = active_calls.get(call_id)
+                if caller_info and caller_info.get("caller"):
+                    caller = caller_info["caller"]
+                    session_id = memory_manager._get_session_id(caller)
+                    
+                    # Add user message to memory
+                    await memory_manager.add_memory_entry(
+                        session_id=session_id,
+                        entry_type="conversation",
+                        content=f"User said: {transcript}",
+                        importance=3,  # Normal importance
+                        metadata={"call_id": call_id, "type": "user_message"}
+                    )
         
         return JSONResponse({"status": "noted"})
     
@@ -514,13 +552,24 @@ async def accept_call(call_id: str, caller: str):
     
     url = f"https://api.openai.com/v1/realtime/calls/{call_id}/accept"
     
+    # Get or create session context for this caller
+    session = await memory_manager.get_or_create_session(caller, call_id)
+    
+    # Build agent instructions with session context
+    base_instructions = AGENT_CONFIG["instructions"]
+    session_context = memory_manager.get_context_for_agent(session)
+    
+    enhanced_instructions = base_instructions
+    if session_context:
+        enhanced_instructions = f"{base_instructions}\n\nContext from previous conversations:\n{session_context}"
+    
     # Get function definitions for this session
     function_definitions = function_manager.get_openai_function_definitions()
     
     payload = {
         "type": "realtime",
         "model": AGENT_CONFIG["model"],
-        "instructions": AGENT_CONFIG["instructions"],
+        "instructions": enhanced_instructions,
         "voice": AGENT_CONFIG["voice"],
         # Optional: add tools, turn detection settings, etc.
     }
@@ -582,6 +631,32 @@ async def execute_and_send_function_result(call_id: str, function_call_id: str,
             "execution_time": result.execution_time
         }
     )
+    
+    # Add function call to session memory
+    caller_info = active_calls.get(call_id)
+    if caller_info and caller_info.get("caller"):
+        caller = caller_info["caller"]
+        session_id = memory_manager._get_session_id(caller)
+        
+        # Add function call to memory with high importance
+        memory_content = f"Called function {function_name} with args {json.dumps(arguments)}"
+        if result.success:
+            memory_content += f" -> Success: {str(result.result)[:100]}"
+        else:
+            memory_content += f" -> Error: {result.error}"
+        
+        await memory_manager.add_memory_entry(
+            session_id=session_id,
+            entry_type="function_call",
+            content=memory_content,
+            importance=6,  # High importance for function calls
+            metadata={
+                "function_name": function_name,
+                "arguments": arguments,
+                "success": result.success,
+                "call_id": call_id
+            }
+        )
     
     # Send result back to OpenAI
     url = f"https://api.openai.com/v1/realtime/calls/{call_id}/function_call_output"
@@ -934,6 +1009,114 @@ async def get_call_functions(call_id: str):
         "call_id": call_id,
         "function_calls": len(function_history),
         "history": function_history
+    }
+
+@app.get("/memory/stats")
+async def get_memory_stats():
+    """Get session memory statistics."""
+    return memory_manager.get_memory_stats()
+
+@app.get("/memory/sessions")
+async def list_sessions(limit: int = Query(20), offset: int = Query(0)):
+    """List session memory entries with pagination."""
+    # This is a simplified implementation - in production you'd want proper pagination
+    with sqlite3.connect(memory_manager.db_path) as conn:
+        cursor = conn.execute('''
+            SELECT session_id, caller_number, first_call, last_call, total_calls, summary
+            FROM sessions
+            ORDER BY last_call DESC
+            LIMIT ? OFFSET ?
+        ''', (limit, offset))
+        
+        sessions = []
+        for row in cursor.fetchall():
+            sessions.append({
+                "session_id": row[0],
+                "caller_number": mask_phone_number(row[1]),
+                "first_call": row[2],
+                "last_call": row[3],
+                "total_calls": row[4],
+                "summary": row[5][:100] + "..." if row[5] and len(row[5]) > 100 else row[5]
+            })
+        
+        return {
+            "sessions": sessions,
+            "limit": limit,
+            "offset": offset
+        }
+
+@app.get("/memory/sessions/{session_id}")
+async def get_session_memory(session_id: str, limit: int = Query(50)):
+    """Get memory entries for a specific session."""
+    with sqlite3.connect(memory_manager.db_path) as conn:
+        # Get session info
+        cursor = conn.execute(
+            'SELECT caller_number, first_call, last_call, total_calls, summary FROM sessions WHERE session_id = ?',
+            (session_id,)
+        )
+        session_row = cursor.fetchone()
+        
+        if not session_row:
+            raise HTTPException(status_code=404, detail="Session not found")
+        
+        # Get memory entries
+        cursor = conn.execute('''
+            SELECT timestamp, entry_type, content, importance, metadata
+            FROM memory_entries
+            WHERE session_id = ?
+            ORDER BY importance DESC, timestamp DESC
+            LIMIT ?
+        ''', (session_id, limit))
+        
+        memories = []
+        for row in cursor.fetchall():
+            memories.append({
+                "timestamp": row[0],
+                "entry_type": row[1],
+                "content": row[2],
+                "importance": row[3],
+                "metadata": json.loads(row[4]) if row[4] else None
+            })
+        
+        return {
+            "session_id": session_id,
+            "caller_number": mask_phone_number(session_row[0]),
+            "first_call": session_row[1],
+            "last_call": session_row[2],
+            "total_calls": session_row[3],
+            "summary": session_row[4],
+            "memory_entries": memories
+        }
+
+@app.delete("/memory/sessions/{session_id}")
+async def delete_session_memory(session_id: str):
+    """Delete a session and all its memory entries."""
+    with sqlite3.connect(memory_manager.db_path) as conn:
+        # Check if session exists
+        cursor = conn.execute('SELECT COUNT(*) FROM sessions WHERE session_id = ?', (session_id,))
+        if cursor.fetchone()[0] == 0:
+            raise HTTPException(status_code=404, detail="Session not found")
+        
+        # Delete memory entries
+        conn.execute('DELETE FROM memory_entries WHERE session_id = ?', (session_id,))
+        
+        # Delete session
+        conn.execute('DELETE FROM sessions WHERE session_id = ?', (session_id,))
+        conn.commit()
+    
+    # Remove from active sessions cache
+    if session_id in memory_manager.active_sessions:
+        del memory_manager.active_sessions[session_id]
+    
+    return {"status": "deleted", "session_id": session_id}
+
+@app.post("/memory/cleanup")
+async def cleanup_old_memory():
+    """Clean up old memory entries based on retention policy."""
+    deleted_count = await memory_manager.cleanup_old_sessions()
+    return {
+        "status": "completed",
+        "deleted_sessions": deleted_count
     }
 
 @app.get("/")
