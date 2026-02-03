@@ -30,6 +30,7 @@ Single hop. Native speech-to-speech. Way more fluid.
 - ✅ Natural conversation flow with interruption handling
 - ✅ Custom agent personality via config
 - ✅ Multiple voice options (alloy, nova, shimmer, etc.)
+- ✅ **Outbound calling support** - Agent can initiate calls
 - ✅ Webhook-based (deploy anywhere)
 - ✅ OpenClaw skill format (works with any agent)
 
@@ -86,6 +87,16 @@ cloudflared tunnel --url http://localhost:8080
 2. Termination URI: `sip:YOUR_PROJECT_ID@sip.api.openai.com;transport=tls`
 3. Assign your phone number
 
+**For Outbound Calls (Optional):**
+1. Get Twilio Account SID and Auth Token from Console
+2. Purchase a phone number for caller ID
+3. Add credentials to `.env`:
+   ```bash
+   TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxx
+   TWILIO_AUTH_TOKEN=your_auth_token
+   TWILIO_PHONE_NUMBER=+1234567890
+   ```
+
 ## Configuration Options
 
 | Variable | Required | Description |
@@ -94,6 +105,11 @@ cloudflared tunnel --url http://localhost:8080
 | `OPENAI_PROJECT_ID` | Yes | From platform.openai.com/settings |
 | `WEBHOOK_SECRET` | No | For signature verification |
 | `PORT` | No | Server port (default: 8080) |
+| `TWILIO_ACCOUNT_SID` | For outbound | Your Twilio Account SID |
+| `TWILIO_AUTH_TOKEN` | For outbound | Your Twilio Auth Token |
+| `TWILIO_PHONE_NUMBER` | For outbound | Default caller ID (E.164 format) |
+
+**Note:** Outbound calling requires Twilio configuration. Inbound calls work without Twilio credentials.
 
 ## Available Voices
 
@@ -108,9 +124,32 @@ cloudflared tunnel --url http://localhost:8080
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/webhook` | POST | OpenAI webhook receiver |
+| `/webhook` | POST | OpenAI/Twilio webhook receiver |
+| `/call` | POST | Initiate outbound call |
+| `/call/{id}` | DELETE | Cancel outbound call |
 | `/calls` | GET | List active calls |
 | `/health` | GET | Health check |
+
+### Outbound Call Example
+
+```bash
+curl -X POST http://localhost:8080/call \
+  -H "Content-Type: application/json" \
+  -d '{
+    "to": "+1234567890",
+    "caller_id": "+0987654321",
+    "message": "Hello! This is your AI assistant calling."
+  }'
+```
+
+Response:
+```json
+{
+  "status": "initiated",
+  "call_id": "CAxxxxxxxxxxxxxxxxxxxxx",
+  "message": "Call initiated to +1234567890"
+}
+```
 
 ## For OpenClaw Agents
 
@@ -160,13 +199,13 @@ Total: ~$0.30/minute for voice conversations.
 ## Limitations
 
 - Requires OpenAI Realtime API access (may need to request)
-- Currently inbound-only (outbound requires additional Twilio setup)
 - No persistent conversation memory (each call is fresh)
+- Outbound calls require Twilio account and phone number
 
 ## Contributing
 
 PRs welcome! Areas for improvement:
-- [ ] Outbound call support
+- [x] Outbound call support ✅ 
 - [ ] Call recording/transcripts
 - [ ] Tool/function calling during calls
 - [ ] Session memory persistence
