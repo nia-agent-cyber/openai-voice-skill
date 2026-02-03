@@ -1,0 +1,187 @@
+# OpenClaw Voice Channel Plugin Integration Configuration
+# This configuration bridges the TypeScript channel plugin with the Python webhook server
+
+# OpenAI Configuration (shared between TypeScript and Python)
+openai:
+  apiKey: ${OPENAI_API_KEY}
+  projectId: ${OPENAI_PROJECT_ID}
+  model: "gpt-4o-realtime-preview"
+  voice: "alloy"  # alloy, echo, fable, onyx, nova, shimmer
+
+# Twilio Configuration (for outbound calls)
+twilio:
+  accountSid: ${TWILIO_ACCOUNT_SID}
+  authToken: ${TWILIO_AUTH_TOKEN}
+  phoneNumber: ${TWILIO_PHONE_NUMBER}
+
+# Webhook Configuration
+webhook:
+  # Python webhook server settings
+  python:
+    baseUrl: "http://localhost:8080"
+    port: 8080
+    healthCheckInterval: 30000
+    timeout: 30000
+    retryAttempts: 3
+    
+  # TypeScript plugin webhook server settings  
+  typescript:
+    port: 8081
+    secret: ${WEBHOOK_SECRET}
+    
+# OpenClaw Integration Settings
+openclaw:
+  # Workspace directory for file operations
+  workspaceDir: "/Users/ec2-user/.openclaw/workspace-voice-coder"
+  
+  # Memory and context settings
+  memoryEnabled: true
+  contextMaxTokens: 8000
+  crossChannelEnabled: true
+  
+  # Session linking options
+  sessionLinking:
+    inheritContext: true
+    syncMemory: true
+    notifyLinkedChannels: true
+
+# Call Settings
+call:
+  # Default instructions for voice calls
+  defaultInstructions: |
+    You are a helpful AI assistant conducting a voice conversation. 
+    Be natural, conversational, and concise in your responses.
+    If you have context about the caller or previous conversations, use it appropriately.
+    
+  # Call behavior settings
+  recordCalls: true
+  maxCallDurationMinutes: 30
+  autoEndOnSilence: true
+  
+  # Transcription and audio settings
+  transcription:
+    enabled: true
+    saveToFile: true
+    
+  audio:
+    recordingFormat: "wav"
+    sampleRate: 16000
+
+# Integration Bridge Settings
+bridge:
+  # Mapping between Python and TypeScript events
+  eventMapping:
+    "realtime.call.incoming": "call_initiated"
+    "realtime.call.answered": "call_answered" 
+    "realtime.call.ended": "call_ended"
+    "transcript.updated": "transcript_updated"
+    "audio.received": "audio_received"
+    
+  # Health monitoring
+  monitoring:
+    healthCheckInterval: 30000
+    alertOnFailure: true
+    retryOnFailure: true
+    maxRetries: 3
+    
+  # Synchronization settings  
+  sync:
+    sessionStateInterval: 5000
+    contextUpdateInterval: 10000
+    transcriptSyncInterval: 1000
+
+# Logging and Debugging
+logging:
+  level: "info"  # debug, info, warn, error
+  components:
+    bridge: "debug"
+    sessions: "info"
+    webhooks: "info"
+    context: "info"
+    
+  # Log file settings
+  files:
+    enabled: true
+    directory: "logs"
+    maxSizeMB: 10
+    maxFiles: 5
+
+# Development and Testing Settings
+development:
+  # Mock mode for testing without actual calls
+  mockMode: false
+  
+  # Test phone numbers (for development)
+  testNumbers:
+    - "+15551234567"
+    - "+15551234568"
+    
+  # Simulation settings
+  simulation:
+    enabled: false
+    autoAnswer: true
+    mockTranscripts: false
+
+# Performance and Scaling
+performance:
+  # Connection pooling
+  httpConnections:
+    maxSockets: 100
+    timeout: 30000
+    keepAlive: true
+    
+  # Memory management
+  memory:
+    sessionCacheSize: 1000
+    transcriptCacheSize: 500
+    contextCacheSize: 100
+    
+  # Rate limiting
+  rateLimiting:
+    enabled: true
+    maxCallsPerMinute: 60
+    maxCallsPerHour: 300
+
+# Security Settings
+security:
+  # Webhook signature verification
+  webhookSignatureVerification: true
+  
+  # Allowed origins for webhook calls
+  allowedOrigins:
+    - "localhost"
+    - "127.0.0.1"
+    
+  # Phone number validation
+  phoneValidation:
+    strict: true
+    allowTestNumbers: true
+    blockedPrefixes: []
+    
+  # Data retention
+  dataRetention:
+    callRecordsDays: 30
+    transcriptsDays: 90
+    audioFilesDays: 7
+    
+# Error Handling
+errorHandling:
+  # Retry policies
+  retry:
+    maxAttempts: 3
+    backoffMultiplier: 2
+    initialDelayMs: 1000
+    
+  # Fallback behaviors
+  fallbacks:
+    onPythonServerDown: "queue_calls"
+    onOpenAIFailure: "graceful_end"
+    onTranscriptionFailure: "continue_without"
+    
+  # Alert settings
+  alerts:
+    enabled: true
+    channels: ["console"] # future: email, slack, etc.
+    threshold:
+      errorRate: 0.1
+      latencyMs: 5000
