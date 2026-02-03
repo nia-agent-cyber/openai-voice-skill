@@ -25,16 +25,19 @@ import re
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Dict, Any
 
 import httpx
-from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Query
+from fastapi.responses import JSONResponse, FileResponse
 from pydantic import BaseModel
 import uvicorn
 from twilio.rest import Client as TwilioClient
 from twilio.base.exceptions import TwilioException
 from twilio.request_validator import RequestValidator
+
+# Import call recording functionality
+from call_recording import recording_manager, CallRecord, TranscriptEntry
 
 # Setup logging
 logging.basicConfig(
@@ -102,6 +105,29 @@ class OutboundCallResponse(BaseModel):
     status: str
     call_id: Optional[str] = None
     message: str
+
+# Call history API models
+class CallHistoryRequest(BaseModel):
+    limit: int = 50
+    offset: int = 0
+    call_type: Optional[str] = None
+
+class CallRecordResponse(BaseModel):
+    call_id: str
+    call_type: str
+    caller_number: Optional[str]
+    callee_number: Optional[str]
+    started_at: str
+    ended_at: Optional[str]
+    duration_seconds: Optional[float]
+    status: str
+    has_audio: bool
+    has_transcript: bool
+    metadata: Optional[Dict[str, Any]]
+
+class TranscriptResponse(BaseModel):
+    transcript: List[Dict[str, Any]]
+    call_info: CallRecordResponse
 
 app = FastAPI(title="OpenAI Voice Server")
 
@@ -288,6 +314,13 @@ async def initiate_outbound_call(request: OutboundCallRequest, background_tasks:
         
         logger.info(f"Outbound call initiated: {call.sid} to {mask_phone_number(request.to)}")
         
+        # Start call recording for outbound call
+        background_tasks.add_task(
+            recording_manager.start_call_recording,
+            call.sid, "outbound", from_number, request.to,
+            {"initial_message": request.message, "twilio_call_sid": call.sid}
+        )
+        
         # Set up OpenAI Realtime session in background
         background_tasks.add_task(setup_outbound_realtime_session, call.sid, request.message)
         
@@ -366,6 +399,13 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
         
         logger.info(f"Incoming call: {call_id} from {mask_phone_number(from_header)} to {mask_phone_number(to_header)}")
         
+        # Start call recording
+        background_tasks.add_task(
+            recording_manager.start_call_recording,
+            call_id, "inbound", from_header, to_header,
+            {"sip_headers": sip_headers}
+        )
+        
         # Accept the call in background (don't block webhook response)
         background_tasks.add_task(accept_call, call_id, from_header)
         
@@ -374,6 +414,12 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
     elif event_type == "realtime.call.ended":
         call_data = event.get("data", {})
         call_id = call_data.get("call_id")
+        
+        # End call recording
+        background_tasks.add_task(
+            recording_manager.end_call_recording,
+            call_id, "completed"
+        )
         
         if call_id in active_calls:
             duration = time.time() - active_calls[call_id].get("started_at", time.time())
@@ -608,13 +654,134 @@ async def health():
     }
 
 
+# Call History API Endpoints
+
+@app.get("/history", response_model=List[CallRecordResponse])
+async def get_call_history(
+    limit: int = Query(50, le=100),
+    offset: int = Query(0, ge=0),
+    call_type: Optional[str] = Query(None, regex="^(inbound|outbound)$")
+):
+    """Get call history with pagination."""
+    calls = await recording_manager.list_calls(limit, offset, call_type)
+    
+    return [CallRecordResponse(
+        call_id=call.call_id,
+        call_type=call.call_type,
+        caller_number=call.caller_number,
+        callee_number=call.callee_number,
+        started_at=call.started_at.isoformat(),
+        ended_at=call.ended_at.isoformat() if call.ended_at else None,
+        duration_seconds=call.duration_seconds,
+        status=call.status,
+        has_audio=call.has_audio,
+        has_transcript=call.has_transcript,
+        metadata=call.metadata
+    ) for call in calls]
+
+@app.get("/history/{call_id}", response_model=CallRecordResponse)
+async def get_call_details(call_id: str):
+    """Get details for a specific call."""
+    call = await recording_manager.get_call_record(call_id)
+    
+    if not call:
+        raise HTTPException(status_code=404, detail="Call not found")
+    
+    return CallRecordResponse(
+        call_id=call.call_id,
+        call_type=call.call_type,
+        caller_number=call.caller_number,
+        callee_number=call.callee_number,
+        started_at=call.started_at.isoformat(),
+        ended_at=call.ended_at.isoformat() if call.ended_at else None,
+        duration_seconds=call.duration_seconds,
+        status=call.status,
+        has_audio=call.has_audio,
+        has_transcript=call.has_transcript,
+        metadata=call.metadata
+    )
+
+@app.get("/history/{call_id}/transcript", response_model=TranscriptResponse)
+async def get_call_transcript(call_id: str):
+    """Get transcript for a specific call."""
+    call = await recording_manager.get_call_record(call_id)
+    if not call:
+        raise HTTPException(status_code=404, detail="Call not found")
+    
+    transcript_entries = await recording_manager.get_call_transcript(call_id)
+    
+    transcript_data = [{
+        "timestamp": entry.timestamp.isoformat(),
+        "speaker": entry.speaker,
+        "content": entry.content,
+        "event_type": entry.event_type,
+        "metadata": entry.metadata
+    } for entry in transcript_entries]
+    
+    return TranscriptResponse(
+        transcript=transcript_data,
+        call_info=CallRecordResponse(
+            call_id=call.call_id,
+            call_type=call.call_type,
+            caller_number=call.caller_number,
+            callee_number=call.callee_number,
+            started_at=call.started_at.isoformat(),
+            ended_at=call.ended_at.isoformat() if call.ended_at else None,
+            duration_seconds=call.duration_seconds,
+            status=call.status,
+            has_audio=call.has_audio,
+            has_transcript=call.has_transcript,
+            metadata=call.metadata
+        )
+    )
+
+@app.get("/history/{call_id}/audio")
+async def get_call_audio(call_id: str):
+    """Download audio recording for a specific call."""
+    call = await recording_manager.get_call_record(call_id)
+    
+    if not call:
+        raise HTTPException(status_code=404, detail="Call not found")
+    
+    if not call.recording_path:
+        raise HTTPException(status_code=404, detail="No audio recording available")
+    
+    recording_path = Path(call.recording_path)
+    if not recording_path.exists():
+        raise HTTPException(status_code=404, detail="Audio file not found")
+    
+    return FileResponse(
+        recording_path,
+        media_type="audio/wav",
+        filename=f"call_{call_id}_audio.wav"
+    )
+
+@app.delete("/history/{call_id}")
+async def delete_call_record(call_id: str, delete_files: bool = Query(False)):
+    """Delete a call record and optionally its files."""
+    success = await recording_manager.delete_call_record(call_id, delete_files)
+    
+    if not success:
+        raise HTTPException(status_code=404, detail="Call not found")
+    
+    return {"status": "deleted", "call_id": call_id}
+
+@app.get("/storage/stats")
+async def get_storage_stats():
+    """Get storage statistics for recordings."""
+    return recording_manager.get_storage_stats()
+
 @app.get("/")
 async def root():
     """Root endpoint with basic info."""
     endpoints = {
         "webhook": "POST /webhook - Handle OpenAI/Twilio webhooks",
         "calls": "GET /calls - List active calls",
-        "health": "GET /health - Health check"
+        "health": "GET /health - Health check",
+        "history": "GET /history - Get call history",
+        "call_details": "GET /history/{call_id} - Get call details",
+        "transcript": "GET /history/{call_id}/transcript - Get call transcript",
+        "audio": "GET /history/{call_id}/audio - Download call audio"
     }
     
     # Add outbound call endpoints if Twilio is configured
@@ -624,10 +791,15 @@ async def root():
             "cancel_call": "DELETE /call/{call_id} - Cancel outbound call"
         })
     
+    storage_stats = recording_manager.get_storage_stats()
+    
     return {
         "service": "OpenAI Voice Server",
         "agent": AGENT_CONFIG["name"],
         "outbound_calls_enabled": twilio_client is not None,
+        "recording_enabled": storage_stats["recording_enabled"],
+        "transcription_enabled": storage_stats["transcription_enabled"],
+        "total_recorded_calls": storage_stats["total_calls"],
         "endpoints": endpoints
     }
 
