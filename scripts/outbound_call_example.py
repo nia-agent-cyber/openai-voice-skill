@@ -12,6 +12,12 @@ import json
 # Server configuration
 SERVER_URL = "http://localhost:8080"
 
+def mask_phone_number(phone: str) -> str:
+    """Mask phone number for display to protect PII."""
+    if not phone or len(phone) < 7:
+        return "****"
+    return f"{phone[:3]}****{phone[-4:]}"
+
 async def make_outbound_call():
     """Example of initiating an outbound call."""
     
@@ -63,8 +69,8 @@ async def check_call_status(call_id: str = None):
                     print(f"   Status: {call.get('status')}")
                     
                     if call.get('type') == 'outbound':
-                        print(f"   To: {call.get('to')}")
-                        print(f"   From: {call.get('from')}")
+                        print(f"   To: {mask_phone_number(call.get('to', ''))}")
+                        print(f"   From: {mask_phone_number(call.get('from', ''))}")
                         print(f"   Twilio Status: {call.get('twilio_status')}")
                     print()
                     

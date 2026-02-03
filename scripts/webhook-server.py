@@ -118,6 +118,14 @@ def validate_phone_number(phone: str) -> bool:
     if not phone:
         return False
     
+    # Reject common attack patterns
+    if len(phone) > 20:  # Unreasonably long
+        return False
+    if phone.count('+') > 1:  # Multiple plus signs
+        return False
+    if any(char in phone for char in ['<', '>', '"', "'", '&', ';']):  # Injection chars
+        return False
+    
     # Stricter E.164 validation with country code validation
     # Must start with +, followed by 1-3 digit country code, then 4-14 digits
     pattern = r'^\+([1-9]\d{0,2})(\d{4,14})$'
@@ -134,9 +142,24 @@ def validate_phone_number(phone: str) -> bool:
     if total_digits < 7 or total_digits > 15:
         return False
     
+    # Reject obviously invalid patterns
+    if number_part == '0' * len(number_part):  # All zeros
+        return False
+    if number_part == '1' * len(number_part):  # All ones  
+        return False
+    
     # Additional validation for common patterns
     if len(country_code) == 1 and country_code == '1':  # US/Canada
-        return len(number_part) == 10
+        # Must be exactly 10 digits for US/Canada
+        if len(number_part) != 10:
+            return False
+        # Area code can't start with 0 or 1
+        if number_part[0] in ['0', '1']:
+            return False
+        # Exchange code can't start with 0 or 1
+        if number_part[3] in ['0', '1']:
+            return False
+        return True
     elif len(country_code) == 2:  # Most European/international
         return 4 <= len(number_part) <= 12
     elif len(country_code) == 3:  # Some international
@@ -195,11 +218,29 @@ async def initiate_outbound_call(request: OutboundCallRequest, background_tasks:
             detail="Outbound calling not configured - missing Twilio credentials"
         )
     
-    # Validate phone number format
+    # Early input validation - reject malformed input immediately
+    if not request.to or not isinstance(request.to, str):
+        raise HTTPException(
+            status_code=400,
+            detail="Phone number is required and must be a string"
+        )
+    
+    # Remove any whitespace or common formatting
+    phone_cleaned = request.to.strip().replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
+    request.to = phone_cleaned
+    
+    # Validate phone number format with enhanced validation
     if not validate_phone_number(request.to):
         raise HTTPException(
             status_code=400,
-            detail="Invalid phone number format - use E.164 format (e.g. +1234567890)"
+            detail="Invalid phone number format - must be E.164 format with valid country code (e.g. +1234567890)"
+        )
+    
+    # Additional validation for caller_id if provided
+    if request.caller_id and not validate_phone_number(request.caller_id.strip()):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid caller_id format - must be E.164 format with valid country code"
         )
     
     # Validate OpenAI configuration
