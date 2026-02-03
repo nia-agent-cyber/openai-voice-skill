@@ -39,6 +39,9 @@ from twilio.request_validator import RequestValidator
 # Import call recording functionality
 from call_recording import recording_manager, CallRecord, TranscriptEntry
 
+# Import function calling functionality
+from function_calling import function_manager, FunctionResult
+
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -428,6 +431,71 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
         
         return JSONResponse({"status": "noted"})
     
+    elif event_type == "realtime.conversation.item.created":
+        # Handle conversation items (including function calls)
+        call_data = event.get("data", {})
+        call_id = call_data.get("call_id")
+        item = call_data.get("item", {})
+        
+        # Add to transcript if it's a message
+        if item.get("type") == "message" and call_id:
+            role = item.get("role", "unknown")
+            content_items = item.get("content", [])
+            
+            for content_item in content_items:
+                if content_item.get("type") == "text":
+                    text = content_item.get("text", "")
+                    await recording_manager.add_transcript_entry(
+                        call_id=call_id,
+                        speaker="assistant" if role == "assistant" else "user",
+                        content=text,
+                        event_type="conversation_message"
+                    )
+        
+        return JSONResponse({"status": "noted"})
+    
+    elif event_type == "realtime.conversation.item.input_audio_transcription.completed":
+        # Handle user speech transcription
+        call_data = event.get("data", {})
+        call_id = call_data.get("call_id")
+        transcript = call_data.get("transcript", "")
+        
+        if call_id and transcript:
+            await recording_manager.add_transcript_entry(
+                call_id=call_id,
+                speaker="user",
+                content=transcript,
+                event_type="speech_transcription"
+            )
+        
+        return JSONResponse({"status": "noted"})
+    
+    elif event_type == "realtime.function_call_request":
+        # Handle function call requests from the assistant
+        call_data = event.get("data", {})
+        call_id = call_data.get("call_id")
+        function_call_id = call_data.get("call_id")  # Function call specific ID
+        function_name = call_data.get("name")
+        arguments_json = call_data.get("arguments", "{}")
+        
+        if not call_id or not function_name:
+            logger.error(f"Invalid function call request: missing call_id or function_name")
+            return JSONResponse({"status": "error", "message": "Invalid function call request"})
+        
+        try:
+            arguments = json.loads(arguments_json) if arguments_json else {}
+        except json.JSONDecodeError:
+            logger.error(f"Invalid function arguments JSON: {arguments_json}")
+            return JSONResponse({"status": "error", "message": "Invalid function arguments"})
+        
+        # Execute function in background and send result back to OpenAI
+        background_tasks.add_task(
+            execute_and_send_function_result,
+            call_id, function_call_id, function_name, arguments
+        )
+        
+        return JSONResponse({"status": "accepted"})
+    
     else:
         logger.debug(f"Unhandled event type: {event_type}")
         return JSONResponse({"status": "ignored"})
@@ -446,6 +514,9 @@ async def accept_call(call_id: str, caller: str):
     
     url = f"https://api.openai.com/v1/realtime/calls/{call_id}/accept"
     
+    # Get function definitions for this session
+    function_definitions = function_manager.get_openai_function_definitions()
+    
     payload = {
         "type": "realtime",
         "model": AGENT_CONFIG["model"],
@@ -453,6 +524,17 @@ async def accept_call(call_id: str, caller: str):
         "voice": AGENT_CONFIG["voice"],
         # Optional: add tools, turn detection settings, etc.
     }
+    
+    # Add function definitions if available
+    if function_definitions:
+        payload["tools"] = [
+            {
+                "type": "function",
+                "function": func_def
+            }
+            for func_def in function_definitions
+        ]
+        logger.info(f"Added {len(function_definitions)} functions to call session")
     
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
@@ -475,6 +557,56 @@ async def accept_call(call_id: str, caller: str):
     
     except Exception as e:
         logger.error(f"Error accepting call {call_id}: {e}")
+
+
+async def execute_and_send_function_result(call_id: str, function_call_id: str, 
+                                         function_name: str, arguments: Dict[str, Any]):
+    """
+    Execute a function call and send the result back to OpenAI.
+    """
+    logger.info(f"Executing function {function_name} for call {call_id}")
+    
+    # Execute the function
+    result = await function_manager.execute_function(call_id, function_name, arguments)
+    
+    # Log the function call to transcript
+    await recording_manager.add_transcript_entry(
+        call_id=call_id,
+        speaker="system",
+        content=f"Function call: {function_name}({json.dumps(arguments)}) -> {result.result if result.success else result.error}",
+        event_type="function_call",
+        metadata={
+            "function_name": function_name,
+            "arguments": arguments,
+            "success": result.success,
+            "execution_time": result.execution_time
+        }
+    )
+    
+    # Send result back to OpenAI
+    url = f"https://api.openai.com/v1/realtime/calls/{call_id}/function_call_output"
+    
+    payload = {
+        "call_id": function_call_id,
+        "output": json.dumps(result.result) if result.success else json.dumps({"error": result.error})
+    }
+    
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                logger.info(f"Function result sent for {function_name} in call {call_id}")
+            else:
+                logger.error(f"Failed to send function result: {response.status_code} - {response.text}")
+                
+    except Exception as e:
+        logger.error(f"Error sending function result for call {call_id}: {e}")
 
 
 async def handle_twilio_webhook(event: dict):
@@ -770,6 +902,39 @@ async def delete_call_record(call_id: str, delete_files: bool = Query(False)):
 async def get_storage_stats():
     """Get storage statistics for recordings."""
     return recording_manager.get_storage_stats()
+
+@app.get("/functions")
+async def list_available_functions():
+    """List all available functions for calling during conversations."""
+    function_definitions = function_manager.get_openai_function_definitions()
+    
+    functions_info = []
+    for func_name, func_def in function_manager.functions.items():
+        functions_info.append({
+            "name": func_name,
+            "description": func_def.description,
+            "parameters": func_def.parameters,
+            "handler_type": "python" if func_def.handler else "openclaw" if func_def.openclaw_tool else "none",
+            "openclaw_tool": func_def.openclaw_tool,
+            "examples": func_def.examples
+        })
+    
+    return {
+        "enabled": function_manager.ENABLE_FUNCTION_CALLING,
+        "total_functions": len(functions_info),
+        "functions": functions_info
+    }
+
+@app.get("/history/{call_id}/functions")
+async def get_call_functions(call_id: str):
+    """Get function call history for a specific call."""
+    function_history = function_manager.get_call_function_history(call_id)
+    
+    return {
+        "call_id": call_id,
+        "function_calls": len(function_history),
+        "history": function_history
+    }
 
 @app.get("/")
 async def root():
