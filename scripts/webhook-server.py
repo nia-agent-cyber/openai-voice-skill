@@ -364,7 +364,7 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
         from_header = next((h["value"] for h in sip_headers if h["name"] == "From"), "unknown")
         to_header = next((h["value"] for h in sip_headers if h["name"] == "To"), "unknown")
         
-        logger.info(f"Incoming call: {call_id} from {from_header} to {to_header}")
+        logger.info(f"Incoming call: {call_id} from {mask_phone_number(from_header)} to {mask_phone_number(to_header)}")
         
         # Accept the call in background (don't block webhook response)
         background_tasks.add_task(accept_call, call_id, from_header)
