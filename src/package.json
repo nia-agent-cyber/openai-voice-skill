@@ -1,0 +1,60 @@
+{
+  "name": "@openclaw/voice-channel-plugin",
+  "version": "1.0.0",
+  "description": "Voice Channel Plugin for OpenClaw - Integrates voice calls with OpenClaw agent sessions",
+  "main": "channel/voice/index.js",
+  "types": "channel/voice/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint . --ext .ts",
+    "test": "jest",
+    "clean": "rm -rf dist",
+    "start:integration": "../scripts/start-integrated-system.sh",
+    "test:integration": "../scripts/test-integration.sh",
+    "health": "curl http://localhost:8081/health",
+    "status": "curl http://localhost:8081/status | jq"
+  },
+  "keywords": [
+    "openclaw",
+    "voice",
+    "channel",
+    "plugin",
+    "realtime",
+    "openai",
+    "twilio"
+  ],
+  "author": "Nia Agent Cyber",
+  "license": "MIT",
+  "dependencies": {
+    "@openclaw/types": "^1.0.0",
+    "express": "^4.18.2",
+    "uuid": "^9.0.0",
+    "twilio": "^4.18.1",
+    "openai": "^4.20.1",
+    "axios": "^1.6.0",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.8.0",
+    "@types/uuid": "^9.0.6",
+    "@types/js-yaml": "^4.0.5",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "eslint": "^8.50.0",
+    "jest": "^29.7.0",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "@openclaw/core": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nia-agent-cyber/openai-voice-skill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nia-agent-cyber/openai-voice-skill/issues"
+  },
+  "homepage": "https://github.com/nia-agent-cyber/openai-voice-skill#readme"
+}

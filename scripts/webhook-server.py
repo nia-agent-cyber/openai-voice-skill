@@ -28,8 +28,9 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 
 import httpx
-from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Query
+from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Query, Depends, Header
 from fastapi.responses import JSONResponse, FileResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 import uvicorn
 from twilio.rest import Client as TwilioClient
@@ -38,6 +39,12 @@ from twilio.request_validator import RequestValidator
 
 # Import call recording functionality
 from call_recording import recording_manager, CallRecord, TranscriptEntry
+
+# Import security utilities
+from security_utils import (
+    validator, encryptor, error_sanitizer, api_auth,
+    ValidationError, SecurityValidator, DataEncryption, ErrorSanitizer
+)
 
 # Setup logging
 logging.basicConfig(
@@ -51,6 +58,12 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_PROJECT_ID = os.getenv("OPENAI_PROJECT_ID")
 WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
 PORT = int(os.getenv("PORT", "8080"))
+
+# Security configuration
+REQUIRE_WEBHOOK_SIGNATURE = os.getenv("REQUIRE_WEBHOOK_SIGNATURE", "true").lower() == "true"
+REQUIRE_API_KEY_AUTH = os.getenv("REQUIRE_API_KEY_AUTH", "true").lower() == "true"
+ENCRYPT_SESSION_DATA = os.getenv("ENCRYPT_SESSION_DATA", "true").lower() == "true"
+ENABLE_ERROR_SANITIZATION = os.getenv("ENABLE_ERROR_SANITIZATION", "true").lower() == "true"
 
 # Twilio configuration for outbound calls
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
@@ -92,8 +105,73 @@ def load_agent_config():
 
 AGENT_CONFIG = load_agent_config()
 
-# Track active calls
+# Track active calls with encryption support
 active_calls: dict[str, dict] = {}
+
+# Security utilities
+security = HTTPBearer(auto_error=False)
+
+def create_secure_call_data(call_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Create call data with sensitive information encrypted if enabled."""
+    if not ENCRYPT_SESSION_DATA:
+        return call_data
+    
+    # Identify sensitive fields
+    sensitive_fields = ['caller_number', 'callee_number', 'to', 'from', 'sip_headers', 'metadata']
+    secure_data = call_data.copy()
+    
+    for field in sensitive_fields:
+        if field in secure_data and secure_data[field]:
+            encrypted = encryptor.encrypt_data(secure_data[field])
+            if encrypted:
+                secure_data[f"{field}_encrypted"] = encrypted
+                # Keep only masked version for logging
+                if field in ['caller_number', 'callee_number', 'to', 'from']:
+                    secure_data[field] = validator.mask_sensitive_data(str(secure_data[field]))
+                else:
+                    del secure_data[field]
+    
+    return secure_data
+
+def get_decrypted_call_data(call_id: str, field: str) -> Optional[Any]:
+    """Get decrypted call data for a specific field."""
+    if call_id not in active_calls:
+        return None
+    
+    call_data = active_calls[call_id]
+    encrypted_field = f"{field}_encrypted"
+    
+    if encrypted_field in call_data:
+        return encryptor.decrypt_data(call_data[encrypted_field], return_json=True)
+    
+    return call_data.get(field)
+
+def sanitize_error_response(error: Exception, error_type: str = 'internal') -> str:
+    """Sanitize error message for API response."""
+    if not ENABLE_ERROR_SANITIZATION:
+        return str(error)
+    
+    return error_sanitizer.sanitize_error_message(str(error), error_type)
+
+async def verify_api_key(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> bool:
+    """Verify API key for service-to-service authentication."""
+    if not REQUIRE_API_KEY_AUTH:
+        return True
+    
+    if not credentials:
+        raise HTTPException(
+            status_code=401, 
+            detail="API key required",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    
+    if not api_auth.validate_api_key(credentials.credentials):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid API key"
+        )
+    
+    return True
 
 # Pydantic models for API requests
 class OutboundCallRequest(BaseModel):
@@ -140,78 +218,63 @@ def mask_phone_number(phone: str) -> str:
 
 
 def validate_phone_number(phone: str) -> bool:
-    """Validate phone number format (E.164) with stricter validation."""
-    if not phone:
-        return False
-    
-    # Reject common attack patterns
-    if len(phone) > 20:  # Unreasonably long
-        return False
-    if phone.count('+') > 1:  # Multiple plus signs
-        return False
-    if any(char in phone for char in ['<', '>', '"', "'", '&', ';']):  # Injection chars
-        return False
-    
-    # Stricter E.164 validation with country code validation
-    # Must start with +, followed by 1-3 digit country code, then 4-14 digits
-    pattern = r'^\+([1-9]\d{0,2})(\d{4,14})$'
-    match = re.match(pattern, phone)
-    
-    if not match:
-        return False
-    
-    country_code = match.group(1)
-    number_part = match.group(2)
-    
-    # Validate common country codes and total length
-    total_digits = len(country_code) + len(number_part)
-    if total_digits < 7 or total_digits > 15:
-        return False
-    
-    # Reject obviously invalid patterns
-    if number_part == '0' * len(number_part):  # All zeros
-        return False
-    if number_part == '1' * len(number_part):  # All ones  
-        return False
-    
-    # Additional validation for common patterns
-    if len(country_code) == 1 and country_code == '1':  # US/Canada
-        # Must be exactly 10 digits for US/Canada
-        if len(number_part) != 10:
-            return False
-        # Area code can't start with 0 or 1
-        if number_part[0] in ['0', '1']:
-            return False
-        # Exchange code can't start with 0 or 1
-        if number_part[3] in ['0', '1']:
-            return False
-        return True
-    elif len(country_code) == 2:  # Most European/international
-        return 4 <= len(number_part) <= 12
-    elif len(country_code) == 3:  # Some international
-        return 4 <= len(number_part) <= 10
-    
-    return True
+    """Enhanced phone number validation using security utilities."""
+    return validator.validate_phone_number(phone, strict=True)
 
 
 def verify_webhook_signature(request_body: bytes, signature: str, timestamp: str) -> bool:
-    """Verify OpenAI webhook signature."""
+    """Enhanced webhook signature verification with security checks."""
+    # Enforce signature verification in production
+    if REQUIRE_WEBHOOK_SIGNATURE and not WEBHOOK_SECRET:
+        logger.error("Webhook signature verification required but WEBHOOK_SECRET not configured")
+        return False
+    
     if not WEBHOOK_SECRET:
-        return True  # Skip verification if no secret configured
+        if REQUIRE_WEBHOOK_SIGNATURE:
+            return False
+        logger.warning("Webhook signature verification skipped - WEBHOOK_SECRET not configured")
+        return True
     
-    # OpenAI uses: v1,base64(HMAC-SHA256(timestamp.body))
-    message = f"{timestamp}.{request_body.decode()}"
-    expected = hmac.new(
-        WEBHOOK_SECRET.encode(),
-        message.encode(),
-        hashlib.sha256
-    ).hexdigest()
+    if not signature or not timestamp:
+        if REQUIRE_WEBHOOK_SIGNATURE:
+            logger.warning("Missing signature or timestamp in webhook request")
+            return False
+        return True
     
-    # Signature format: v1,<signature>
-    if signature.startswith("v1,"):
-        signature = signature[3:]
-    
-    return hmac.compare_digest(expected, signature)
+    try:
+        # Validate timestamp to prevent replay attacks
+        timestamp_int = int(timestamp)
+        current_time = int(time.time())
+        time_diff = abs(current_time - timestamp_int)
+        
+        # Reject requests older than 5 minutes or from the future
+        if time_diff > 300:
+            logger.warning(f"Webhook timestamp too old or invalid: {time_diff}s difference")
+            return False
+        
+        # OpenAI uses: v1,base64(HMAC-SHA256(timestamp.body))
+        message = f"{timestamp}.{request_body.decode()}"
+        expected = hmac.new(
+            WEBHOOK_SECRET.encode(),
+            message.encode(),
+            hashlib.sha256
+        ).hexdigest()
+        
+        # Handle signature format
+        if signature.startswith("v1,"):
+            signature = signature[3:]
+        
+        # Use secure comparison to prevent timing attacks
+        is_valid = hmac.compare_digest(expected, signature)
+        
+        if not is_valid:
+            logger.warning("Invalid webhook signature detected")
+        
+        return is_valid
+        
+    except (ValueError, TypeError) as e:
+        logger.warning(f"Error validating webhook signature: {e}")
+        return False
 
 
 def verify_twilio_signature(url: str, params: dict, signature: str) -> bool:

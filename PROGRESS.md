@@ -34,7 +34,47 @@
 
 ## 🚧 In Progress
 
-*No active development currently*
+### Voice as OpenClaw Channel Plugin (February 3, 2026) 
+**Issue #10 - IN PROGRESS 🚧**
+
+**Objective:** Transform voice into a proper OpenClaw channel plugin with session memory, context persistence, and tool access during calls.
+
+**Progress:**
+- ✅ Created channel plugin architecture foundation (`src/channel/voice/`)
+- ✅ Implemented `VoiceChannelPlugin` class with OpenClaw interface
+- ✅ Built `VoiceSessionManager` for session lifecycle and caller history
+- ✅ Created `VoiceContextManager` for memory file integration
+- ✅ Designed `VoiceCallHandler` for OpenAI Realtime API bridging
+- ✅ Added TypeScript configuration and dependencies
+- ✅ Created OpenClaw integration configuration example
+- 🔄 **Currently:** Connecting TypeScript plugin to existing Python webhook server
+
+**Key Features Implemented:**
+- Session creation with unique OpenClaw session IDs
+- Memory file access (MEMORY.md, memory/YYYY-MM-DD.md) 
+- Cross-channel session linking (voice ↔ telegram/discord)
+- Context injection with token management (up to 2000 tokens)
+- Caller history tracking and identity linking
+- Conversation persistence to daily memory files
+- Channel handoff support (voice → text channels)
+
+**Files Created:**
+- `src/channel/voice/index.ts` - Main plugin interface
+- `src/channel/voice/types.ts` - TypeScript type definitions  
+- `src/channel/voice/session-manager.ts` - Session lifecycle management
+- `src/channel/voice/context-manager.ts` - Memory & context integration
+- `src/channel/voice/call-handler.ts` - Voice call processing
+- `src/package.json` - TypeScript dependencies
+- `src/tsconfig.json` - TypeScript configuration  
+- `config/openclaw-voice-config.yaml` - OpenClaw integration config
+- `src/README.md` - Plugin architecture documentation
+
+**Next Steps:**
+1. Bridge TypeScript plugin with existing Python webhook server
+2. Test memory file access and context injection
+3. Implement session linking with other OpenClaw channels
+4. Add tool/workflow access during voice calls
+5. Production testing and refinement
 
 ## ✅ Recently Completed
 

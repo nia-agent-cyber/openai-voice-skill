@@ -1,0 +1,147 @@
+# OpenClaw Voice Channel Plugin Configuration
+# This shows how the voice channel would integrate with OpenClaw's config system
+
+# Core OpenClaw Configuration
+openclaw:
+  workspace: ~/.openclaw/workspace-voice-agent
+  
+# Channel Configuration
+channels:
+  voice:
+    # Enable the voice channel plugin
+    enabled: true
+    plugin: "@openclaw/voice-channel-plugin"
+    
+    # OpenAI Configuration
+    openai:
+      api_key: "${OPENAI_API_KEY}"
+      project_id: "${OPENAI_PROJECT_ID}"
+      model: "gpt-realtime"
+      voice: "nova"
+    
+    # Twilio Configuration (for outbound calls)
+    twilio:
+      account_sid: "${TWILIO_ACCOUNT_SID}"
+      auth_token: "${TWILIO_AUTH_TOKEN}"
+      phone_number: "${TWILIO_PHONE_NUMBER}"
+    
+    # Webhook Configuration
+    webhook:
+      port: 8080
+      base_url: "https://your-domain.com"
+      secret: "${WEBHOOK_SECRET}"
+    
+    # OpenClaw Integration Settings
+    integration:
+      # Memory and context settings
+      memory_enabled: true
+      context_max_tokens: 2000
+      cross_channel_enabled: true
+      
+      # Session linking options
+      auto_link_sessions: true
+      inherit_context: true
+      sync_memory: true
+      
+      # Channel handoff settings
+      handoff_enabled: true
+      handoff_channels: ["telegram", "discord", "email"]
+    
+    # Call Settings
+    call:
+      # Default agent instructions
+      default_instructions: |
+        You are a helpful AI assistant. This is a voice conversation, so be conversational and concise.
+        You have access to the caller's context and previous interactions.
+        Ask clarifying questions when needed and be friendly and professional.
+      
+      # Call management
+      record_calls: true
+      max_call_duration_minutes: 30
+      auto_end_on_silence: true
+      silence_timeout_seconds: 300
+      
+      # Voice settings
+      voice_model: "nova"
+      response_latency_ms: 200
+      interruption_enabled: true
+
+# Agent Configuration
+agent:
+  # Main session settings
+  main_session:
+    memory:
+      # Voice calls contribute to main memory
+      include_voice_calls: true
+      # Daily memory includes voice summaries
+      voice_summary_in_daily: true
+      # Cross-channel memory sharing
+      share_across_channels: true
+  
+  # Heartbeat settings for voice monitoring
+  heartbeat:
+    check_active_calls: true
+    call_health_monitoring: true
+    
+# Session Management
+sessions:
+  voice:
+    # Session persistence
+    persist_ended_sessions: true
+    session_cleanup_hours: 24
+    
+    # Caller tracking
+    caller_history_enabled: true
+    caller_identity_linking: true
+    
+    # Session linking
+    auto_link_by_phone: true
+    link_timeout_minutes: 5
+
+# Memory Configuration
+memory:
+  voice:
+    # Voice-specific memory files
+    call_summaries_file: "memory/voice-calls.md"
+    caller_history_file: "memory/callers.md"
+    
+    # Memory injection settings
+    inject_recent_memory_days: 2
+    inject_caller_history: true
+    inject_cross_channel_context: true
+    
+    # Memory persistence
+    persist_call_summaries: true
+    persist_transcripts: false  # Transcripts can be large
+    persist_caller_updates: true
+
+# Monitoring and Logging
+logging:
+  voice:
+    level: "info"
+    include_transcripts: false  # Privacy consideration
+    include_context_injection: true
+    call_events: true
+
+# Security Settings
+security:
+  voice:
+    # Webhook security
+    verify_webhook_signatures: true
+    
+    # Call security
+    whitelist_enabled: false
+    blacklist_enabled: true
+    unknown_caller_policy: "allow"  # or "block"
+    
+    # Context sharing
+    cross_channel_context_filtering: true
+    memory_access_filtering: true
+
+# Metrics and Analytics
+metrics:
+  voice:
+    collect_call_metrics: true
+    track_context_injection_latency: true
+    track_memory_persistence_latency: true
+    export_metrics: true
