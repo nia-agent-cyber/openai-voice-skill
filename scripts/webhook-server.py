@@ -46,6 +46,13 @@ from security_utils import (
     ValidationError, SecurityValidator, DataEncryption, ErrorSanitizer
 )
 
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # Import session context extraction (purely additive - no call handling)
 try:
     from session_context import create_context_extractor
@@ -54,13 +61,6 @@ try:
 except ImportError as e:
     logger.warning(f"Session context integration not available: {e}")
     context_extractor = None
-
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 # Load environment
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
