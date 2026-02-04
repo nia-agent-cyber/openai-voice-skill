@@ -307,7 +307,6 @@ class RealtimeToolHandler:
         Sends as a function_call_output with a generated call_id,
         then triggers response.create so the model speaks it.
         """
-        import websockets
         if not self.ws or self.ws.state != websockets.State.OPEN:
             logger.warning("Cannot send followup chunk - WebSocket closed")
             return
@@ -325,7 +324,7 @@ class RealtimeToolHandler:
                     "role": "assistant",
                     "content": [
                         {
-                            "type": "input_text",
+                            "type": "text",
                             "text": chunk
                         }
                     ]
