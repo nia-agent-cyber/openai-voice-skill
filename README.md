@@ -105,6 +105,7 @@ cloudflared tunnel --url http://localhost:8080
 | `OPENAI_PROJECT_ID` | Yes | From platform.openai.com/settings |
 | `WEBHOOK_SECRET` | No | For signature verification |
 | `PORT` | No | Server port (default: 8080) |
+| `PUBLIC_URL` | Production | Public URL for webhooks (e.g. `https://api.niavoice.org`) |
 | `TWILIO_ACCOUNT_SID` | For outbound | Your Twilio Account SID |
 | `TWILIO_AUTH_TOKEN` | For outbound | Your Twilio Auth Token |
 | `TWILIO_PHONE_NUMBER` | For outbound | Default caller ID (E.164 format) |
