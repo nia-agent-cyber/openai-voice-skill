@@ -1,14 +1,27 @@
 {
   "$schema": "https://openclaw.dev/schemas/plugin.json",
-  "name": "voice-channel",
+  "id": "voice-channel",
+  "name": "Voice Channel",
   "version": "0.1.0",
   "description": "Voice channel for OpenClaw - make and receive phone calls",
   "author": "Nia",
   "license": "MIT",
   "main": "dist/index.js",
+  "configSchema": {
+    "type": "object",
+    "properties": {},
+    "additionalProperties": false
+  },
   "openclaw": {
     "minVersion": "0.50.0",
-    "channels": ["voice"]
+    "channel": {
+      "id": "voice",
+      "label": "Voice",
+      "selectionLabel": "Voice (Phone Calls)",
+      "docsPath": "/channels/voice",
+      "blurb": "Make and receive phone calls via Twilio + OpenAI Realtime",
+      "aliases": ["phone", "call"]
+    }
   },
   "repository": {
     "type": "git",
