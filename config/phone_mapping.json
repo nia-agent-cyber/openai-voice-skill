@@ -1,0 +1,35 @@
+{
+  "_comment": "Phone number to OpenClaw session mapping",
+  "_format": "E.164 format (+1234567890)",
+  "_fields": {
+    "name": "User's preferred name for voice calls",
+    "session_id": "OpenClaw session identifier (main, guest, etc.)",
+    "relationship": "primary_user, team_member, client, family, unknown",
+    "preferred_name": "How the AI should address them",
+    "context_level": "full, work_only, limited"
+  },
+  
+  "+1234567890": {
+    "name": "Remi",
+    "session_id": "main",
+    "relationship": "primary_user",
+    "preferred_name": "Remi",
+    "context_level": "full"
+  },
+  
+  "+1987654321": {
+    "name": "Team Member",
+    "session_id": "team",
+    "relationship": "team_member", 
+    "preferred_name": "teammate",
+    "context_level": "work_only"
+  },
+  
+  "+1555000001": {
+    "name": "Example Client",
+    "session_id": "guest",
+    "relationship": "client",
+    "preferred_name": "sir/ma'am",
+    "context_level": "limited"
+  }
+}

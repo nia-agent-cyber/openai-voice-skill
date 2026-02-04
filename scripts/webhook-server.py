@@ -46,6 +46,9 @@ from security_utils import (
     ValidationError, SecurityValidator, DataEncryption, ErrorSanitizer
 )
 
+# Import OpenClaw session context integration
+from openclaw_bridge import create_openclaw_bridge
+
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -107,6 +110,9 @@ AGENT_CONFIG = load_agent_config()
 
 # Track active calls with encryption support
 active_calls: dict[str, dict] = {}
+
+# Initialize OpenClaw bridge for session context
+openclaw_bridge = create_openclaw_bridge()
 
 # Security utilities
 security = HTTPBearer(auto_error=False)
@@ -484,9 +490,32 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
             call_id, "completed"
         )
         
+        # Finalize OpenClaw session context
         if call_id in active_calls:
-            duration = time.time() - active_calls[call_id].get("started_at", time.time())
-            logger.info(f"Call ended: {call_id} (duration: {duration:.1f}s)")
+            call_info = active_calls[call_id]
+            duration = time.time() - call_info.get("started_at", time.time())
+            
+            # Prepare call summary for OpenClaw memory
+            caller_info = call_info.get("caller_info") or call_info.get("callee_info", {})
+            caller_name = caller_info.get("name", "Unknown")
+            
+            call_summary = {
+                "call_id": call_id,
+                "caller_name": caller_name,
+                "duration_seconds": duration,
+                "call_type": call_info.get("type", "unknown"),
+                "summary": f"Voice call with {caller_name} completed ({duration:.1f}s)",
+                "context_used": not call_info.get("fallback_mode", False),
+                "openclaw_session": call_info.get("openclaw_session", "guest")
+            }
+            
+            # Finalize context in background
+            background_tasks.add_task(
+                openclaw_bridge.finalize_call_context,
+                call_id, call_summary
+            )
+            
+            logger.info(f"Call ended: {call_id} with {caller_name} (duration: {duration:.1f}s)")
             del active_calls[call_id]
         
         return JSONResponse({"status": "noted"})
@@ -498,46 +527,119 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
 
 async def accept_call(call_id: str, caller: str):
     """
-    Accept an incoming call with agent configuration.
+    Accept an incoming call with agent configuration and session context.
     
     This calls OpenAI's accept endpoint to bridge the SIP call
-    to a Realtime session with our custom instructions.
+    to a Realtime session with our custom instructions enhanced with
+    OpenClaw session context.
     """
     if not OPENAI_API_KEY:
         logger.error("OPENAI_API_KEY not set - cannot accept call")
         return
     
-    url = f"https://api.openai.com/v1/realtime/calls/{call_id}/accept"
-    
-    payload = {
-        "type": "realtime",
-        "model": AGENT_CONFIG["model"],
-        "instructions": AGENT_CONFIG["instructions"],
-        "voice": AGENT_CONFIG["voice"],
-        # Optional: add tools, turn detection settings, etc.
-    }
-    
-    headers = {
-        "Authorization": f"Bearer {OPENAI_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    
     try:
+        # Identify caller and get session context
+        logger.info(f"Identifying caller and extracting context for {mask_phone_number(caller)}")
+        
+        caller_info = await openclaw_bridge.identify_caller(caller)
+        if not caller_info:
+            logger.warning(f"Failed to identify caller {mask_phone_number(caller)}, using default context")
+            caller_info = {
+                "phone": caller,
+                "name": "Unknown Caller",
+                "session_id": "guest",
+                "relationship": "unknown",
+                "known_caller": False
+            }
+        
+        # Get full context for this caller
+        context = await openclaw_bridge.get_caller_context(caller_info)
+        
+        # Format context into OpenAI instructions
+        enhanced_instructions = openclaw_bridge.format_context_for_voice(
+            context, 
+            call_type="inbound"
+        )
+        
+        logger.info(f"Generated enhanced instructions for {caller_info['name']} ({len(enhanced_instructions)} chars)")
+        
+        url = f"https://api.openai.com/v1/realtime/calls/{call_id}/accept"
+        
+        payload = {
+            "type": "realtime",
+            "model": AGENT_CONFIG["model"],
+            "instructions": enhanced_instructions,
+            "voice": AGENT_CONFIG["voice"],
+            # Optional: add tools, turn detection settings, etc.
+        }
+        
+        headers = {
+            "Authorization": f"Bearer {OPENAI_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        
         async with httpx.AsyncClient() as client:
             response = await client.post(url, json=payload, headers=headers, timeout=10)
             
             if response.status_code == 200:
-                logger.info(f"Call {call_id} accepted successfully")
-                active_calls[call_id] = {
+                logger.info(f"Call {call_id} accepted successfully with context for {caller_info['name']}")
+                
+                # Store enhanced call data
+                call_data = create_secure_call_data({
                     "caller": caller,
+                    "caller_info": caller_info,
+                    "context_summary": context.get("context_summary", ""),
                     "started_at": time.time(),
-                    "config": AGENT_CONFIG["name"]
-                }
+                    "config": AGENT_CONFIG["name"],
+                    "type": "inbound",
+                    "openclaw_session": caller_info.get("session_id", "guest")
+                })
+                
+                active_calls[call_id] = call_data
+                
+                # Update call context for tracking
+                await openclaw_bridge.update_call_context(call_id, {
+                    "call_accepted": True,
+                    "instructions_length": len(enhanced_instructions),
+                    "context_items": len(context.get("conversation_history", []))
+                })
+                
             else:
                 logger.error(f"Failed to accept call: {response.status_code} - {response.text}")
     
     except Exception as e:
         logger.error(f"Error accepting call {call_id}: {e}")
+        
+        # Fallback: accept with basic instructions if context extraction fails
+        try:
+            url = f"https://api.openai.com/v1/realtime/calls/{call_id}/accept"
+            
+            payload = {
+                "type": "realtime",
+                "model": AGENT_CONFIG["model"],
+                "instructions": AGENT_CONFIG["instructions"] + f"\n\nYou are speaking with a caller from {mask_phone_number(caller)}. Context extraction failed - be helpful but ask for details.",
+                "voice": AGENT_CONFIG["voice"],
+            }
+            
+            headers = {
+                "Authorization": f"Bearer {OPENAI_API_KEY}",
+                "Content-Type": "application/json"
+            }
+            
+            async with httpx.AsyncClient() as client:
+                fallback_response = await client.post(url, json=payload, headers=headers, timeout=10)
+                
+                if fallback_response.status_code == 200:
+                    logger.info(f"Call {call_id} accepted with fallback instructions")
+                    active_calls[call_id] = {
+                        "caller": caller,
+                        "started_at": time.time(),
+                        "config": AGENT_CONFIG["name"],
+                        "fallback_mode": True
+                    }
+                    
+        except Exception as fallback_error:
+            logger.error(f"Fallback call acceptance also failed: {fallback_error}")
 
 
 async def handle_twilio_webhook(event: dict):
@@ -573,43 +675,110 @@ async def handle_twilio_webhook(event: dict):
 
 async def setup_outbound_realtime_session(call_id: str, initial_message: Optional[str] = None):
     """
-    Set up OpenAI Realtime session for outbound call.
+    Set up OpenAI Realtime session for outbound call with session context.
     
     For outbound calls, we need to wait for the call to be answered
-    before setting up the Realtime session. This is typically done
-    via webhook events from Twilio.
+    before setting up the Realtime session. This includes injecting
+    OpenClaw session context for the person being called.
     """
     if not OPENAI_API_KEY:
         logger.error("OPENAI_API_KEY not set - cannot setup Realtime session")
         return
-    
-    # For outbound calls, we might need to wait for call answered event
-    # This is a simplified version - in production you'd want more sophisticated
-    # call state management based on Twilio webhooks
     
     try:
         # Update call status
         if call_id in active_calls:
             active_calls[call_id]["status"] = "setting_up_realtime"
         
-        # Create custom instructions for outbound call
-        instructions = AGENT_CONFIG["instructions"]
-        if initial_message:
-            instructions += f"\n\nStart the conversation by saying: {initial_message}"
+        # Get call data to identify who we're calling
+        call_data = active_calls.get(call_id, {})
+        phone_number = get_decrypted_call_data(call_id, "to") or call_data.get("to", "unknown")
         
-        # Note: For outbound calls, OpenAI might require a different API endpoint
-        # or flow. This is a placeholder for the actual implementation
-        # which would depend on OpenAI's specific outbound call handling
+        logger.info(f"Setting up outbound realtime session for {mask_phone_number(phone_number)}")
         
-        logger.info(f"Realtime session setup initiated for outbound call {call_id}")
+        # Identify the person being called and get their context
+        callee_info = await openclaw_bridge.identify_caller(phone_number)
+        if not callee_info:
+            logger.warning(f"Failed to identify callee {mask_phone_number(phone_number)}, using default context")
+            callee_info = {
+                "phone": phone_number,
+                "name": "Unknown Person",
+                "session_id": "guest",
+                "relationship": "unknown",
+                "known_caller": False
+            }
+        
+        # Get full context for the person being called
+        context = await openclaw_bridge.get_caller_context(callee_info)
+        
+        # Format context for outbound call
+        enhanced_instructions = openclaw_bridge.format_context_for_voice(
+            context,
+            call_type="outbound",
+            initial_message=initial_message
+        )
+        
+        logger.info(f"Generated outbound context for {callee_info['name']} ({len(enhanced_instructions)} chars)")
+        
+        # Store enhanced call information
+        if call_id in active_calls:
+            call_data_update = {
+                "callee_info": callee_info,
+                "context_summary": context.get("context_summary", ""),
+                "instructions_ready": True,
+                "enhanced_instructions": enhanced_instructions,
+                "openclaw_session": callee_info.get("session_id", "guest")
+            }
+            
+            # Update with encryption if needed
+            if ENCRYPT_SESSION_DATA:
+                for field, value in call_data_update.items():
+                    if field in ["callee_info", "enhanced_instructions"]:
+                        encrypted = encryptor.encrypt_data(value)
+                        if encrypted:
+                            active_calls[call_id][f"{field}_encrypted"] = encrypted
+                        else:
+                            active_calls[call_id][field] = value
+                    else:
+                        active_calls[call_id][field] = value
+            else:
+                active_calls[call_id].update(call_data_update)
+        
+        # Update call context for tracking
+        await openclaw_bridge.update_call_context(call_id, {
+            "outbound_setup": True,
+            "instructions_length": len(enhanced_instructions),
+            "context_items": len(context.get("conversation_history", [])),
+            "callee_known": callee_info.get("known_caller", False)
+        })
+        
+        logger.info(f"Outbound realtime session prepared for {callee_info['name']} - ready for call answer event")
         
         if call_id in active_calls:
             active_calls[call_id]["status"] = "realtime_ready"
             
     except Exception as e:
-        logger.error(f"Error setting up Realtime session for call {call_id}: {e}")
-        if call_id in active_calls:
-            active_calls[call_id]["status"] = "realtime_failed"
+        logger.error(f"Error setting up outbound Realtime session for call {call_id}: {e}")
+        
+        # Fallback: prepare basic instructions
+        try:
+            basic_instructions = AGENT_CONFIG["instructions"]
+            if initial_message:
+                basic_instructions += f"\n\nStart the conversation by saying: {initial_message}"
+            
+            if call_id in active_calls:
+                active_calls[call_id].update({
+                    "enhanced_instructions": basic_instructions,
+                    "status": "realtime_ready",
+                    "fallback_mode": True
+                })
+                
+            logger.info(f"Outbound call {call_id} prepared with fallback instructions")
+            
+        except Exception as fallback_error:
+            logger.error(f"Fallback outbound setup also failed: {fallback_error}")
+            if call_id in active_calls:
+                active_calls[call_id]["status"] = "realtime_failed"
 
 
 async def reject_call(call_id: str, reason: str = "busy"):
