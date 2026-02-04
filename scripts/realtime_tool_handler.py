@@ -124,7 +124,7 @@ class RealtimeToolHandler:
         
         while self.running:
             try:
-                if not self.ws or self.ws.closed:
+                if not self.ws or self.ws.state != websockets.State.OPEN:
                     if reconnect_attempts >= MAX_RECONNECT_ATTEMPTS:
                         logger.warning(f"Max reconnect attempts reached for call {self.call_id}")
                         break
@@ -157,7 +157,7 @@ class RealtimeToolHandler:
     async def stop(self):
         """Stop the handler and close the connection."""
         self.running = False
-        if self.ws and not self.ws.closed:
+        if self.ws and self.ws.state == websockets.State.OPEN:
             await self.ws.close()
     
     async def _handle_events(self):
