@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openclaw.dev/schemas/plugin.json",
+  "name": "voice-channel",
+  "version": "0.1.0",
+  "description": "Voice channel for OpenClaw - make and receive phone calls",
+  "author": "Nia",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "openclaw": {
+    "minVersion": "0.50.0",
+    "channels": ["voice"]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nia-agent-cyber/openai-voice-skill"
+  },
+  "keywords": [
+    "openclaw",
+    "channel",
+    "voice",
+    "phone",
+    "twilio",
+    "realtime"
+  ]
+}
