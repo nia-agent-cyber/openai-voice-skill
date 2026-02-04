@@ -11,7 +11,9 @@ import json
 import logging
 import os
 import subprocess
-from typing import Optional
+from typing import AsyncGenerator, Optional
+
+from smart_chunker import SmartChunker
 
 logger = logging.getLogger(__name__)
 
@@ -94,6 +96,148 @@ class OpenClawExecutor:
             logger.error(f"OpenClaw execution error: {e}")
             return "Something went wrong processing that request. Let me know if you'd like to try again."
     
+    async def execute_streaming(
+        self,
+        request: str,
+        chunk_size: int = 500
+    ) -> AsyncGenerator[str, None]:
+        """
+        Execute a request through OpenClaw, yielding chunks as they're generated.
+        
+        Runs `openclaw agent` as a subprocess and streams stdout line-by-line,
+        using SmartChunker to buffer and yield chunks at natural boundaries.
+        
+        Args:
+            request: Natural language request to execute
+            chunk_size: Target chunk size in characters (~500 for TTS)
+            
+        Yields:
+            Text chunks as they become available
+        """
+        if not request or not request.strip():
+            yield "I didn't receive a valid request. Could you repeat that?"
+            return
+        
+        logger.info(f"OpenClaw streaming request: {request[:100]}...")
+        
+        process = None
+        chunker = SmartChunker(target_size=chunk_size, min_size=100, max_size=1000)
+        chunks_yielded = 0
+        
+        try:
+            # Build command
+            cmd = [
+                "openclaw", "agent",
+                "--message", request,
+                "--session-id", "voice-assistant",
+                "--local"
+            ]
+            cmd.extend(["--thinking", "low"])
+            
+            # Start subprocess with pipe for stdout
+            process = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            
+            # Read stdout line-by-line as it's generated
+            async def read_with_timeout():
+                """Read lines with overall timeout."""
+                start_time = asyncio.get_event_loop().time()
+                
+                while True:
+                    # Check timeout
+                    elapsed = asyncio.get_event_loop().time() - start_time
+                    if elapsed > self.timeout:
+                        raise asyncio.TimeoutError()
+                    
+                    # Read next line with short timeout
+                    try:
+                        line = await asyncio.wait_for(
+                            process.stdout.readline(),
+                            timeout=min(5.0, self.timeout - elapsed)
+                        )
+                    except asyncio.TimeoutError:
+                        # No data available - check if process ended
+                        if process.returncode is not None:
+                            break
+                        continue
+                    
+                    if not line:
+                        break  # EOF
+                    
+                    yield line.decode()
+            
+            # Process lines and yield chunks
+            async for line in read_with_timeout():
+                # Format and add to chunker
+                formatted = self._format_for_voice(line)
+                if formatted and formatted.strip():
+                    chunker.add_text(formatted + " ")
+                    
+                    # Yield any ready chunks
+                    for chunk in chunker.get_chunks():
+                        chunk = chunk.strip()
+                        if chunk:
+                            chunks_yielded += 1
+                            logger.debug(f"Yielding chunk {chunks_yielded}: {len(chunk)} chars")
+                            yield chunk
+            
+            # Wait for process to finish
+            await process.wait()
+            
+            # Flush remaining buffer
+            final = chunker.flush()
+            if final and final.strip():
+                final = final.strip()
+                chunks_yielded += 1
+                logger.debug(f"Yielding final chunk {chunks_yielded}: {len(final)} chars")
+                yield final
+            
+            # Handle empty output
+            if chunks_yielded == 0:
+                logger.warning("OpenClaw returned no output")
+                yield "Done."
+            
+            # Check for errors
+            if process.returncode != 0:
+                stderr_data = await process.stderr.read()
+                error_msg = stderr_data.decode().strip() if stderr_data else "Unknown error"
+                logger.error(f"OpenClaw process failed with code {process.returncode}: {error_msg}")
+                # Only yield error if we haven't yielded anything useful
+                if chunks_yielded == 0:
+                    yield "I ran into an issue processing that request."
+            
+            logger.info(f"OpenClaw streaming completed: {chunks_yielded} chunks yielded")
+        
+        except asyncio.TimeoutError:
+            logger.warning(f"OpenClaw streaming timed out after {self.timeout}s")
+            if chunks_yielded > 0:
+                yield "... I'm still working on this, but it's taking too long."
+            else:
+                yield "That request took too long. Could you try a simpler request?"
+        
+        except FileNotFoundError:
+            logger.error("openclaw CLI not found in PATH")
+            yield "I'm having trouble connecting to my tools right now."
+        
+        except Exception as e:
+            logger.error(f"OpenClaw streaming error: {e}")
+            if chunks_yielded > 0:
+                yield "... Something went wrong while processing."
+            else:
+                yield "Something went wrong processing that request."
+        
+        finally:
+            # Clean up process if still running
+            if process and process.returncode is None:
+                try:
+                    process.terminate()
+                    await asyncio.wait_for(process.wait(), timeout=2.0)
+                except:
+                    process.kill()
+    
     def _format_for_voice(self, text: str) -> str:
         """
         Format text output for voice (TTS) delivery.
@@ -151,18 +295,42 @@ async def execute_openclaw_request(request: str) -> str:
     return await executor.execute(request)
 
 
+async def execute_openclaw_streaming(request: str) -> AsyncGenerator[str, None]:
+    """
+    Convenience function for streaming OpenClaw requests.
+    
+    Usage:
+        from openclaw_executor import execute_openclaw_streaming
+        async for chunk in execute_openclaw_streaming("Tell me about today"):
+            send_to_tts(chunk)
+    """
+    async for chunk in executor.execute_streaming(request):
+        yield chunk
+
+
 # CLI test interface
 if __name__ == "__main__":
     import sys
     
     if len(sys.argv) < 2:
-        print("Usage: python openclaw_executor.py 'request'")
+        print("Usage: python openclaw_executor.py [--stream] 'request'")
         sys.exit(1)
     
-    request = ' '.join(sys.argv[1:])
+    # Parse args
+    stream_mode = "--stream" in sys.argv
+    args = [a for a in sys.argv[1:] if a != "--stream"]
+    request = ' '.join(args)
     
     async def test():
-        result = await execute_openclaw_request(request)
-        print(f"\n--- Result ---\n{result}")
+        if stream_mode:
+            print("\n--- Streaming Result ---")
+            chunk_num = 0
+            async for chunk in execute_openclaw_streaming(request):
+                chunk_num += 1
+                print(f"[Chunk {chunk_num}]: {chunk}")
+            print(f"\n--- Done ({chunk_num} chunks) ---")
+        else:
+            result = await execute_openclaw_request(request)
+            print(f"\n--- Result ---\n{result}")
     
     asyncio.run(test())
