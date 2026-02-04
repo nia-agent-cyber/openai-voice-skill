@@ -500,8 +500,46 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
             {"sip_headers": sip_headers}
         )
         
+        # Check for pre-prepared instructions (for outbound calls that arrive via OpenAI webhook)
+        enhanced_instructions = None
+        matched_call_id = None
+        
+        # Strategy 1: Match by destination number (most reliable)
+        caller_number = re.search(r'\+?[\d]+', from_header or "")
+        caller_number = caller_number.group() if caller_number else None
+        
+        if caller_number:
+            for stored_call_id, call_data in active_calls.items():
+                if (call_data.get("enhanced_instructions") and 
+                    call_data.get("status") == "realtime_ready" and
+                    call_data.get("to") == caller_number):
+                    enhanced_instructions = call_data.get("enhanced_instructions")
+                    matched_call_id = stored_call_id
+                    logger.info(f"Matched call {call_id} to outbound call {stored_call_id} by destination number")
+                    break
+        
+        # Strategy 2: Fallback to time window (most recent call within 60 seconds)
+        if not enhanced_instructions:
+            best_call_id = None
+            best_time_diff = float('inf')
+            
+            for stored_call_id, call_data in active_calls.items():
+                if call_data.get("enhanced_instructions") and call_data.get("status") == "realtime_ready":
+                    time_diff = time.time() - call_data.get("started_at", 0)
+                    if time_diff < 60 and time_diff < best_time_diff:
+                        enhanced_instructions = call_data.get("enhanced_instructions")
+                        matched_call_id = stored_call_id
+                        best_time_diff = time_diff
+            
+            if enhanced_instructions:
+                logger.info(f"Matched call {call_id} to outbound call {matched_call_id} by time window ({best_time_diff:.1f}s ago)")
+        
+        # Link OpenAI call ID to matched outbound call
+        if matched_call_id and enhanced_instructions:
+            active_calls[matched_call_id]["openai_call_id"] = call_id
+        
         # Accept the call in background (don't block webhook response)
-        background_tasks.add_task(accept_call, call_id, from_header)
+        background_tasks.add_task(accept_call, call_id, from_header, enhanced_instructions)
         
         return JSONResponse({"status": "accepted", "call_id": call_id})
     
@@ -533,13 +571,16 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
         return JSONResponse({"status": "ignored"})
 
 
-async def accept_call(call_id: str, caller: str):
+async def accept_call(call_id: str, caller: str, enhanced_instructions: str = None):
     """
     Accept an incoming call with agent configuration and session context.
     
     This calls OpenAI's accept endpoint to bridge the SIP call
     to a Realtime session with our custom instructions enhanced with
     OpenClaw session context.
+    
+    For outbound calls, enhanced_instructions should be pre-prepared.
+    For inbound calls, context will be generated from caller info.
     """
     if not OPENAI_API_KEY:
         logger.error("OPENAI_API_KEY not set - cannot accept call")
@@ -547,13 +588,21 @@ async def accept_call(call_id: str, caller: str):
     
     url = f"https://api.openai.com/v1/realtime/calls/{call_id}/accept"
     
-    # CONTEXT INJECTION: Enhance instructions with session context (purely additive)
+    # CONTEXT INJECTION: Use pre-prepared instructions for outbound calls,
+    # or enhance instructions with session context for inbound calls
     instructions = AGENT_CONFIG["instructions"]
-    if context_extractor:
+    
+    if enhanced_instructions:
+        # Use pre-prepared instructions (for outbound calls)
+        instructions = enhanced_instructions
+        logger.info(f"Using pre-prepared instructions for call {call_id} ({len(instructions)} chars)")
+    elif context_extractor:
+        # Generate instructions for inbound calls
         try:
             instructions = context_extractor.get_enhanced_instructions(
                 caller, AGENT_CONFIG["instructions"], "inbound"
             )
+            logger.info(f"Generated enhanced instructions for inbound call {call_id} ({len(instructions)} chars)")
         except Exception as e:
             logger.warning(f"Context enhancement failed, using base instructions: {e}")
             instructions = AGENT_CONFIG["instructions"]
@@ -577,14 +626,22 @@ async def accept_call(call_id: str, caller: str):
             if response.status_code == 200:
                 logger.info(f"Call {call_id} accepted successfully with enhanced instructions ({len(instructions)} chars)")
                 
-                # Store call data
-                active_calls[call_id] = {
-                    "caller": caller,
-                    "started_at": time.time(),
-                    "config": AGENT_CONFIG["name"],
-                    "type": "inbound",
-                    "instructions_length": len(instructions)
-                }
+                # Store call data (only if not already stored for outbound calls)
+                if call_id not in active_calls:
+                    active_calls[call_id] = {
+                        "caller": caller,
+                        "started_at": time.time(),
+                        "config": AGENT_CONFIG["name"],
+                        "type": "inbound" if not enhanced_instructions else "outbound",
+                        "instructions_length": len(instructions)
+                    }
+                else:
+                    # Update existing call data for outbound calls
+                    active_calls[call_id].update({
+                        "openai_call_id": call_id,
+                        "realtime_accepted": True,
+                        "instructions_length": len(instructions)
+                    })
                 
             else:
                 logger.error(f"Failed to accept call: {response.status_code} - {response.text}")
