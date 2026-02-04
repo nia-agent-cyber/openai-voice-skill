@@ -461,8 +461,8 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
     """
     body = await request.body()
     
-    # DEBUG: Log raw webhook body
-    logger.info(f"[DEBUG] Raw webhook body: {body[:500] if body else 'empty'}")
+    # Log raw webhook body for debugging
+    logger.debug(f"Raw webhook body: {body[:500] if body else 'empty'}")
     
     # Check if this is a Twilio webhook by looking for CallStatus or Twilio signature
     twilio_signature = request.headers.get("X-Twilio-Signature")
