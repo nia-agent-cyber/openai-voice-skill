@@ -236,8 +236,13 @@ def validate_phone_number(phone: str) -> bool:
 
 def get_base_url() -> str:
     """Get the base URL for this server."""
-    # In production, this should be set via environment variable
-    # For now, use localhost with the configured port
+    # Use PUBLIC_URL if set (for production deployments with cloudflare tunnel, etc.)
+    public_url = os.getenv("PUBLIC_URL")
+    if public_url:
+        # Remove trailing slash if present
+        return public_url.rstrip('/')
+    
+    # Fallback to localhost construction for local development
     port = os.getenv("PORT", "8080")
     host = os.getenv("HOST", "localhost")
     protocol = os.getenv("PROTOCOL", "http")
