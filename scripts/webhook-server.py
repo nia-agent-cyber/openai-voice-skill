@@ -41,6 +41,13 @@ from twilio.request_validator import RequestValidator
 # Import call recording functionality
 from call_recording import recording_manager, CallRecord, TranscriptEntry
 
+# Setup logging (must be before imports that use logger)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # Import tool handler for OpenClaw integration
 try:
     from realtime_tool_handler import start_tool_handler, stop_tool_handler, get_active_handlers
@@ -62,13 +69,6 @@ from security_utils import (
     validator, encryptor, error_sanitizer, api_auth,
     ValidationError, SecurityValidator, DataEncryption, ErrorSanitizer
 )
-
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 # Import session context extraction (purely additive - no call handling)
 try:
@@ -673,8 +673,13 @@ async def accept_call(call_id: str, caller: str, enhanced_instructions: str = No
                 if TOOL_HANDLER_AVAILABLE and AGENT_CONFIG.get("tools"):
                     try:
                         # Extract session ID from response if available
-                        response_data = response.json()
-                        session_id = response_data.get("session_id", call_id)
+                        session_id = call_id  # Default to call_id
+                        try:
+                            if response.text:
+                                response_data = response.json()
+                                session_id = response_data.get("session_id", call_id)
+                        except Exception:
+                            pass  # Use call_id as session_id
                         
                         # Start handler in background
                         asyncio.create_task(start_tool_handler(
