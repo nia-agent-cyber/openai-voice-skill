@@ -73,7 +73,10 @@ class RealtimeToolHandler:
     
     async def connect(self) -> bool:
         """
-        Connect to the Realtime session via WebSocket.
+        Connect to the Realtime session via WebSocket sideband.
+        
+        Uses ?call_id= to connect to the existing call's control channel,
+        NOT ?model= which would create a new empty session.
         
         Returns:
             True if connected successfully
@@ -82,10 +85,12 @@ class RealtimeToolHandler:
             logger.error("OPENAI_API_KEY not set - cannot connect to Realtime")
             return False
         
-        url = f"{OPENAI_REALTIME_URL}?model={self.model}"
+        # CRITICAL: Connect to the call's sideband using call_id, not model
+        # Using ?model= creates a NEW session; ?call_id= joins the existing call
+        url = f"{OPENAI_REALTIME_URL}?call_id={self.call_id}"
         headers = {
             "Authorization": f"Bearer {OPENAI_API_KEY}",
-            "OpenAI-Beta": "realtime=v1"
+            # Note: OpenAI-Beta header not needed for GA API
         }
         
         try:
