@@ -1,0 +1,13 @@
+{
+  "_comment": "Phone number to OpenClaw user mapping for context injection",
+  "+250794002033": {
+    "name": "Remi",
+    "relationship": "primary_user",
+    "session_id": "main"
+  },
+  "+1234567890": {
+    "name": "Test User", 
+    "relationship": "team_member",
+    "session_id": "team"
+  }
+}
