@@ -41,6 +41,22 @@ from twilio.request_validator import RequestValidator
 # Import call recording functionality
 from call_recording import recording_manager, CallRecord, TranscriptEntry
 
+# Import tool handler for OpenClaw integration
+try:
+    from realtime_tool_handler import start_tool_handler, stop_tool_handler, get_active_handlers
+    TOOL_HANDLER_AVAILABLE = True
+    logger.info("OpenClaw tool handler integration enabled")
+except ImportError as e:
+    logger.warning(f"Tool handler not available: {e}")
+    TOOL_HANDLER_AVAILABLE = False
+    
+    async def start_tool_handler(*args, **kwargs):
+        pass
+    async def stop_tool_handler(*args, **kwargs):
+        pass
+    def get_active_handlers():
+        return {}
+
 # Import security utilities
 from security_utils import (
     validator, encryptor, error_sanitizer, api_auth,
@@ -553,6 +569,10 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
             call_id, "completed"
         )
         
+        # Stop tool handler for this call
+        if TOOL_HANDLER_AVAILABLE:
+            background_tasks.add_task(stop_tool_handler, call_id)
+        
         # Finalize OpenClaw session context
         if call_id in active_calls:
             call_info = active_calls[call_id]
@@ -614,6 +634,12 @@ async def accept_call(call_id: str, caller: str, enhanced_instructions: str = No
         # Note: voice parameter not supported in accept endpoint
     }
     
+    # Add tools if configured
+    if AGENT_CONFIG.get("tools"):
+        payload["tools"] = AGENT_CONFIG["tools"]
+        payload["tool_choice"] = "auto"
+        logger.info(f"Session configured with {len(AGENT_CONFIG['tools'])} tool(s)")
+    
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
         "Content-Type": "application/json"
@@ -642,6 +668,23 @@ async def accept_call(call_id: str, caller: str, enhanced_instructions: str = No
                         "realtime_accepted": True,
                         "instructions_length": len(instructions)
                     })
+                
+                # Start tool handler if tools are configured
+                if TOOL_HANDLER_AVAILABLE and AGENT_CONFIG.get("tools"):
+                    try:
+                        # Extract session ID from response if available
+                        response_data = response.json()
+                        session_id = response_data.get("session_id", call_id)
+                        
+                        # Start handler in background
+                        asyncio.create_task(start_tool_handler(
+                            call_id=call_id,
+                            session_id=session_id,
+                            model=AGENT_CONFIG["model"]
+                        ))
+                        logger.info(f"Tool handler started for call {call_id}")
+                    except Exception as e:
+                        logger.warning(f"Failed to start tool handler: {e}")
                 
             else:
                 logger.error(f"Failed to accept call: {response.status_code} - {response.text}")
@@ -880,7 +923,23 @@ async def health():
         "status": "ok",
         "agent": AGENT_CONFIG["name"],
         "active_calls": len(active_calls),
-        "config_loaded": CONFIG_PATH.exists()
+        "config_loaded": CONFIG_PATH.exists(),
+        "tools_enabled": TOOL_HANDLER_AVAILABLE and bool(AGENT_CONFIG.get("tools")),
+        "tool_count": len(AGENT_CONFIG.get("tools", []))
+    }
+
+
+@app.get("/tools/status")
+async def tool_handlers_status():
+    """Get status of active tool handlers."""
+    handlers = get_active_handlers()
+    tools = AGENT_CONFIG.get("tools", [])
+    
+    return {
+        "tool_handler_available": TOOL_HANDLER_AVAILABLE,
+        "configured_tools": [t.get("name") for t in tools],
+        "active_handlers": len(handlers),
+        "handlers": handlers
     }
 
 

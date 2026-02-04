@@ -5,3 +5,4 @@ httpx>=0.25.0
 python-dotenv>=1.0.0
 twilio>=8.0.0
 aiofiles>=23.0.0
+websockets>=12.0
