@@ -2,13 +2,18 @@
  * Voice Channel Outbound Adapter
  *
  * Handles sending messages via voice (text → TTS → phone call).
- * This is the core of outbound voice functionality.
+ * 
+ * This adapter is a BRIDGE to the existing webhook-server.py.
+ * It does NOT implement Twilio logic directly — it delegates to the
+ * working webhook server via HTTP POST.
  */
 
 import { voiceConfigAdapter } from "./config.js";
 
 // Using 'any' for OpenClawConfig to avoid tight coupling
 type OpenClawConfig = Record<string, unknown>;
+
+const DEFAULT_WEBHOOK_URL = "https://api.niavoice.org";
 
 /**
  * Result of an outbound delivery attempt
@@ -31,10 +36,20 @@ interface OutboundContext {
 }
 
 /**
+ * Response from the webhook server's /call endpoint
+ */
+interface CallInitiateResponse {
+  status: "initiated" | "error";
+  call_id?: string;
+  message?: string;
+  error?: string;
+}
+
+/**
  * Voice Outbound Adapter
  *
  * Implements ChannelOutboundAdapter pattern from OpenClaw.
- * Delivery is "direct" - we initiate calls immediately, not via gateway.
+ * Delivery is "direct" - we initiate calls immediately via the webhook server.
  */
 export const voiceOutboundAdapter = {
   /**
@@ -52,27 +67,18 @@ export const voiceOutboundAdapter = {
    * Send text message via voice call
    *
    * Flow:
-   * 1. Validate config and phone number
-   * 2. Initiate Twilio call to target number
-   * 3. Twilio webhook triggers OpenAI Realtime
-   * 4. OpenAI speaks the message (TTS)
+   * 1. Validate phone number
+   * 2. POST to webhook server's /call endpoint
+   * 3. Webhook server handles Twilio + OpenAI Realtime
    *
    * @param ctx - Outbound context with config, target, and message
-   * @returns Delivery result with call SID on success
+   * @returns Delivery result with call ID on success
    */
   sendText: async (ctx: OutboundContext): Promise<OutboundDeliveryResult> => {
     const { cfg, to, text, accountId } = ctx;
 
     // Resolve account config
     const account = voiceConfigAdapter.resolveAccount(cfg, accountId);
-
-    if (!account.configured) {
-      return {
-        channel: "voice",
-        success: false,
-        error: "Voice channel not configured. Set channels.voice in config.",
-      };
-    }
 
     // Validate phone number format
     const normalizedTo = normalizePhoneNumber(to);
@@ -84,42 +90,43 @@ export const voiceOutboundAdapter = {
       };
     }
 
-    // Get credentials from config
-    const {
-      twilioAccountSid,
-      twilioAuthToken,
-      twilioPhoneNumber,
-      webhookUrl,
-    } = account.config;
-
-    if (!twilioAccountSid || !twilioAuthToken || !twilioPhoneNumber) {
-      return {
-        channel: "voice",
-        success: false,
-        error: "Missing Twilio credentials in voice config",
-      };
-    }
+    // Get webhook URL from config, with sensible default
+    const webhookBaseUrl = account.config.webhookUrl ?? DEFAULT_WEBHOOK_URL;
 
     try {
-      // Dynamic import to avoid bundling Twilio when not needed
-      const twilio = await import("twilio");
-      const client = twilio.default(twilioAccountSid, twilioAuthToken);
-
-      // Build webhook URL with context
-      const twimlUrl = buildTwimlUrl(webhookUrl, text);
-
-      // Initiate the call
-      const call = await client.calls.create({
-        to: normalizedTo,
-        from: twilioPhoneNumber,
-        url: twimlUrl,
-        // TODO: Add status callback for call completion tracking
+      // POST to existing webhook server — it handles all Twilio logic
+      const response = await fetch(`${webhookBaseUrl}/call`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: normalizedTo,
+          message: text,
+        }),
       });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        return {
+          channel: "voice",
+          success: false,
+          error: `Webhook server error (${response.status}): ${errorText}`,
+        };
+      }
+
+      const result = (await response.json()) as CallInitiateResponse;
+
+      if (result.status === "error" || result.error) {
+        return {
+          channel: "voice",
+          success: false,
+          error: result.error ?? result.message ?? "Unknown error from webhook server",
+        };
+      }
 
       return {
         channel: "voice",
         success: true,
-        callSid: call.sid,
+        callSid: result.call_id,
       };
     } catch (error) {
       const message =
@@ -127,7 +134,7 @@ export const voiceOutboundAdapter = {
       return {
         channel: "voice",
         success: false,
-        error: message,
+        error: `Failed to reach webhook server: ${message}`,
       };
     }
   },
@@ -168,22 +175,6 @@ function normalizePhoneNumber(input: string): string | null {
   }
 
   return null;
-}
-
-/**
- * Build TwiML webhook URL with message context
- *
- * The webhook will receive this and pass to OpenAI Realtime
- * which handles the actual TTS and conversation.
- */
-function buildTwimlUrl(baseUrl: string | undefined, message: string): string {
-  const base = baseUrl ?? "https://api.niavoice.org";
-  const url = new URL("/voice/twiml", base);
-
-  // Encode message for the voice prompt
-  url.searchParams.set("message", message);
-
-  return url.toString();
 }
 
 export type VoiceOutboundAdapter = typeof voiceOutboundAdapter;

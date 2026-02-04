@@ -80,3 +80,33 @@ export interface ChannelAccountSnapshot {
   lastInboundAt?: number | null;
   lastOutboundAt?: number | null;
 }
+
+/**
+ * OpenClaw Plugin API (subset we need)
+ *
+ * This is the API object passed to the plugin's default export function.
+ * We only define the methods we use to avoid tight coupling.
+ */
+export interface PluginApi {
+  /**
+   * Register a channel plugin with OpenClaw
+   */
+  registerChannel(opts: { plugin: ChannelPlugin }): void;
+
+  /**
+   * Current OpenClaw configuration (read-only)
+   */
+  config: Record<string, unknown>;
+
+  /**
+   * Runtime helpers (TTS, etc.)
+   */
+  runtime?: {
+    tts?: {
+      textToSpeechTelephony(opts: {
+        text: string;
+        cfg: Record<string, unknown>;
+      }): Promise<{ buffer: Buffer; sampleRate: number }>;
+    };
+  };
+}

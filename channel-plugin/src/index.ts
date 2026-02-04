@@ -9,7 +9,7 @@
  * @module voice-channel
  */
 
-import type { ChannelPlugin } from "./types.js";
+import type { ChannelPlugin, PluginApi } from "./types.js";
 import { voiceMeta } from "./meta.js";
 import { voiceConfigAdapter } from "./adapters/config.js";
 import { voiceOutboundAdapter } from "./adapters/outbound.js";
@@ -71,8 +71,16 @@ export const voicePlugin: ChannelPlugin = {
   messageActions: undefined,
 };
 
-// Default export for OpenClaw plugin loader
-export default voicePlugin;
+/**
+ * Plugin registration function
+ *
+ * OpenClaw calls this function with the plugin API when loading the plugin.
+ * We register the voice channel so it appears in `openclaw status` and can
+ * be configured under `channels.voice`.
+ */
+export default function register(api: PluginApi): void {
+  api.registerChannel({ plugin: voicePlugin });
+}
 
 // Re-export types for consumers
 export type { VoiceConfig, VoiceAccountConfig } from "./adapters/config.js";
