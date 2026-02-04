@@ -52,7 +52,7 @@ class OpenClawExecutor:
             cmd = [
                 "openclaw", "agent",
                 "--message", request,
-                "--session-id", "voice-assistant",  # Dedicated session for voice calls
+                "--session-id", "agent:main:main",  # Dedicated session for voice calls
                 "--local"
             ]
             
@@ -129,7 +129,7 @@ class OpenClawExecutor:
             cmd = [
                 "openclaw", "agent",
                 "--message", request,
-                "--session-id", "voice-assistant",
+                "--session-id", "agent:main:main",
                 "--local"
             ]
             cmd.extend(["--thinking", "low"])
