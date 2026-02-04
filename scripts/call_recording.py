@@ -115,6 +115,18 @@ class CallRecordingManager:
         if not ENABLE_RECORDING:
             logger.debug(f"Recording disabled for call {call_id}")
             return None
+        
+        # === BRIDGE INTEGRATION ===
+        # Notify the OpenClaw session bridge that a call has started
+        try:
+            from session_context import notify_call_started
+            phone = caller_number if call_type == "inbound" else callee_number
+            if phone:
+                notify_call_started(call_id, phone, call_type)
+                logger.debug(f"Notified bridge of call start: {call_id}")
+        except Exception as e:
+            logger.debug(f"Bridge notification skipped (not critical): {e}")
+        # === END BRIDGE INTEGRATION ===
             
         call_record = CallRecord(
             call_id=call_id,
@@ -193,6 +205,22 @@ class CallRecordingManager:
             conn.commit()
         
         logger.info(f"Ended recording for call {call_id} (duration: {duration_seconds:.1f}s)")
+        
+        # === BRIDGE INTEGRATION ===
+        # Notify the OpenClaw session bridge that a call has ended
+        # This triggers transcript sync to the OpenClaw session
+        try:
+            from session_context import notify_call_ended
+            call_record = await self.get_call_record(call_id)
+            if call_record:
+                phone = call_record.caller_number or call_record.callee_number or ""
+                direction = call_record.call_type or "inbound"
+                notify_call_ended(call_id, phone, direction)
+                logger.debug(f"Notified bridge of call end: {call_id}")
+        except Exception as e:
+            logger.debug(f"Bridge notification skipped (not critical): {e}")
+        # === END BRIDGE INTEGRATION ===
+        
         return await self.get_call_record(call_id)
     
     async def add_transcript_entry(self, call_id: str, speaker: str, content: str,
@@ -238,6 +266,15 @@ class CallRecordingManager:
         call_record = await self.get_call_record(call_id)
         if call_record and call_record.transcript_path:
             await self._append_to_transcript_file(call_record.transcript_path, entry)
+        
+        # === BRIDGE INTEGRATION ===
+        # Send real-time transcript update to the OpenClaw session bridge
+        try:
+            from session_context import notify_transcript_update
+            notify_transcript_update(call_id, speaker, content)
+        except Exception as e:
+            logger.debug(f"Transcript notification skipped (not critical): {e}")
+        # === END BRIDGE INTEGRATION ===
         
         return True
     

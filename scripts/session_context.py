@@ -1,24 +1,157 @@
 #!/usr/bin/env python3
 """
-OpenClaw Session Context Extraction
+OpenClaw Session Context Extraction + Bridge Event Emitter
 
-This module provides functionality to extract conversation history and context
-from OpenClaw sessions and format it for injection into OpenAI Realtime API
-voice calls.
+This module provides:
+1. Context extraction from OpenClaw sessions for voice calls
+2. Event emission to the TypeScript session bridge for transcript sync
 
-SCOPE DISCIPLINE: This module ONLY extracts context. It does NOT modify 
-call initiation, SIP handling, or Twilio integration.
+SCOPE DISCIPLINE: This module handles context extraction and bridge events.
+It does NOT modify call initiation, SIP handling, or Twilio integration.
 """
 
 import json
 import logging
 import os
 import re
+import threading
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Callable
+
+import httpx  # For async HTTP (already a dep of webhook-server.py)
 
 logger = logging.getLogger(__name__)
+
+# Bridge configuration
+BRIDGE_URL = os.getenv("OPENCLAW_BRIDGE_URL", "http://localhost:8082")
+BRIDGE_ENABLED = os.getenv("OPENCLAW_BRIDGE_ENABLED", "true").lower() == "true"
+
+
+class BridgeEventEmitter:
+    """
+    Emits call events to the TypeScript session bridge.
+    
+    This enables transcript sync between voice calls and OpenClaw sessions
+    without modifying webhook-server.py.
+    
+    Events:
+    - call_started: When a call begins (maps call_id to session)
+    - transcript_update: Real-time transcript updates (if available)
+    - call_ended: When a call ends (triggers transcript sync)
+    """
+    
+    def __init__(self, bridge_url: str = BRIDGE_URL, enabled: bool = BRIDGE_ENABLED):
+        self.bridge_url = bridge_url.rstrip('/')
+        self.enabled = enabled
+        self._http_client: Optional[httpx.Client] = None
+    
+    @property
+    def http_client(self) -> httpx.Client:
+        """Lazy-init HTTP client."""
+        if self._http_client is None:
+            self._http_client = httpx.Client(timeout=5.0)
+        return self._http_client
+    
+    def emit_call_started(
+        self,
+        call_id: str,
+        phone_number: str,
+        direction: str = "inbound",
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> bool:
+        """Emit call_started event to bridge."""
+        return self._emit_event({
+            "callId": call_id,
+            "eventType": "call_started",
+            "phoneNumber": phone_number,
+            "direction": direction,
+            "timestamp": datetime.now().isoformat(),
+            "data": metadata or {}
+        })
+    
+    def emit_transcript_update(
+        self,
+        call_id: str,
+        speaker: str,
+        content: str,
+        timestamp: Optional[str] = None
+    ) -> bool:
+        """Emit real-time transcript update to bridge."""
+        return self._emit_event({
+            "callId": call_id,
+            "eventType": "transcript_update",
+            "phoneNumber": "",  # Not needed for updates
+            "direction": "",
+            "timestamp": datetime.now().isoformat(),
+            "data": {
+                "timestamp": timestamp or datetime.now().isoformat(),
+                "speaker": speaker,
+                "content": content
+            }
+        })
+    
+    def emit_call_ended(
+        self,
+        call_id: str,
+        phone_number: str,
+        direction: str = "inbound",
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> bool:
+        """Emit call_ended event to bridge (triggers transcript sync)."""
+        return self._emit_event({
+            "callId": call_id,
+            "eventType": "call_ended",
+            "phoneNumber": phone_number,
+            "direction": direction,
+            "timestamp": datetime.now().isoformat(),
+            "data": metadata or {}
+        })
+    
+    def _emit_event(self, event: Dict[str, Any]) -> bool:
+        """Send event to bridge (fire-and-forget, non-blocking)."""
+        if not self.enabled:
+            logger.debug(f"Bridge disabled, skipping event: {event.get('eventType')}")
+            return False
+        
+        def send():
+            try:
+                response = self.http_client.post(
+                    f"{self.bridge_url}/call-event",
+                    json=event,
+                    headers={"Content-Type": "application/json"}
+                )
+                if response.status_code == 200:
+                    logger.debug(f"Bridge event sent: {event.get('eventType')} for {event.get('callId')}")
+                else:
+                    logger.warning(f"Bridge event failed: HTTP {response.status_code}")
+                return response.status_code == 200
+            except Exception as e:
+                logger.debug(f"Bridge event send failed (bridge may not be running): {e}")
+                return False
+        
+        # Fire-and-forget in background thread to avoid blocking
+        thread = threading.Thread(target=send, daemon=True)
+        thread.start()
+        return True  # Returns immediately, actual result is async
+    
+    def close(self):
+        """Close HTTP client."""
+        if self._http_client:
+            self._http_client.close()
+            self._http_client = None
+
+
+# Global bridge emitter instance
+_bridge_emitter: Optional[BridgeEventEmitter] = None
+
+
+def get_bridge_emitter() -> BridgeEventEmitter:
+    """Get or create the global bridge emitter."""
+    global _bridge_emitter
+    if _bridge_emitter is None:
+        _bridge_emitter = BridgeEventEmitter()
+    return _bridge_emitter
 
 class SessionContextExtractor:
     """
@@ -369,3 +502,129 @@ class SessionContextExtractor:
 def create_context_extractor() -> SessionContextExtractor:
     """Create a new session context extractor instance."""
     return SessionContextExtractor()
+
+
+# =============================================================================
+# Bridge Integration Helpers
+# =============================================================================
+# These functions provide a simple interface for webhook-server.py to integrate
+# with the OpenClaw session bridge WITHOUT modifying webhook-server.py directly.
+#
+# Instead, these can be called from call_recording.py or a small integration
+# shim that wraps the existing webhook-server.py lifecycle hooks.
+# =============================================================================
+
+def notify_call_started(call_id: str, phone_number: str, direction: str = "inbound") -> bool:
+    """
+    Notify the bridge that a call has started.
+    
+    Call this when a new call is accepted (inbound or outbound).
+    The bridge will map this call to an OpenClaw session.
+    
+    Args:
+        call_id: Unique call identifier (e.g., Twilio CallSid or OpenAI call_id)
+        phone_number: Phone number of the caller/callee
+        direction: "inbound" or "outbound"
+    
+    Returns:
+        True if event was queued for sending
+    """
+    return get_bridge_emitter().emit_call_started(call_id, phone_number, direction)
+
+
+def notify_transcript_update(call_id: str, speaker: str, content: str) -> bool:
+    """
+    Send a real-time transcript update to the bridge.
+    
+    Call this when speech is transcribed during the call.
+    
+    Args:
+        call_id: Call identifier
+        speaker: "user" or "assistant"
+        content: Transcribed text
+    
+    Returns:
+        True if event was queued for sending
+    """
+    return get_bridge_emitter().emit_transcript_update(call_id, speaker, content)
+
+
+def notify_call_ended(call_id: str, phone_number: str, direction: str = "inbound") -> bool:
+    """
+    Notify the bridge that a call has ended.
+    
+    Call this when a call completes. The bridge will:
+    1. Fetch the full transcript from /history/{call_id}/transcript
+    2. Inject it into the corresponding OpenClaw session
+    
+    Args:
+        call_id: Call identifier
+        phone_number: Phone number of the caller/callee
+        direction: "inbound" or "outbound"
+    
+    Returns:
+        True if event was queued for sending
+    """
+    return get_bridge_emitter().emit_call_ended(call_id, phone_number, direction)
+
+
+def sync_call_to_session(call_id: str) -> bool:
+    """
+    Manually trigger a transcript sync for a call.
+    
+    Use this to force a sync without waiting for call_ended.
+    
+    Args:
+        call_id: Call identifier
+    
+    Returns:
+        True if sync request was sent
+    """
+    try:
+        import httpx
+        response = httpx.post(
+            f"{BRIDGE_URL}/sync-transcript",
+            json={"callId": call_id},
+            timeout=5.0
+        )
+        return response.status_code == 200
+    except Exception as e:
+        logger.warning(f"Manual sync failed: {e}")
+        return False
+
+
+# =============================================================================
+# Integration Guide
+# =============================================================================
+#
+# To integrate with webhook-server.py WITHOUT modifying it:
+#
+# Option 1: Modify call_recording.py (RECOMMENDED)
+# ------------------------------------------------
+# Add calls to notify_call_started/notify_call_ended in the recording manager:
+#
+#   async def start_call_recording(self, call_id, call_type, from_num, to_num, metadata):
+#       # ... existing code ...
+#       from session_context import notify_call_started
+#       phone = from_num if call_type == "inbound" else to_num
+#       notify_call_started(call_id, phone, call_type)
+#
+#   async def end_call_recording(self, call_id, status):
+#       # ... existing code ...
+#       from session_context import notify_call_ended
+#       record = self.get_call_record(call_id)
+#       if record:
+#           phone = record.caller_number or record.callee_number or ""
+#           notify_call_ended(call_id, phone, record.call_type)
+#
+# Option 2: Create a wrapper script
+# ---------------------------------
+# Create a new script that imports and wraps webhook-server.py,
+# adding bridge notifications to the appropriate lifecycle points.
+#
+# Option 3: Use environment hooks (if webhook-server supports them)
+# -----------------------------------------------------------------
+# Set OPENCLAW_BRIDGE_URL and check if webhook-server has any
+# configurable callback hooks.
+#
+# =============================================================================
