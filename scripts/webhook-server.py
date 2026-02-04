@@ -562,8 +562,7 @@ async def accept_call(call_id: str, caller: str):
         "type": "realtime",
         "model": AGENT_CONFIG["model"],
         "instructions": instructions,
-        "voice": AGENT_CONFIG["voice"],
-        # Optional: add tools, turn detection settings, etc.
+        # Note: voice parameter not supported in accept endpoint
     }
     
     headers = {
