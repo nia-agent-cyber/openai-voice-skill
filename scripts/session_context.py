@@ -150,27 +150,85 @@ class SessionContextExtractor:
         conversations = []
         
         try:
-            if not self.memory_path or not self.memory_path.exists():
+            if not self.workspace_path:
                 return conversations
             
-            # Look at recent memory files
-            for days in range(days_back):
-                date = datetime.now() - timedelta(days=days)
-                date_str = date.strftime("%Y-%m-%d")
-                memory_file = self.memory_path / f"{date_str}.md"
-                
-                if memory_file.exists():
-                    content = memory_file.read_text(encoding='utf-8')
-                    file_conversations = self._parse_conversations(content)
-                    conversations.extend(file_conversations)
+            # First, check for MEMORY.md in main session only (for primary user)
+            memory_md = self.workspace_path / "MEMORY.md"
+            if memory_md.exists():
+                try:
+                    content = memory_md.read_text(encoding='utf-8')
+                    # Extract key context from MEMORY.md
+                    recent_context = self._extract_memory_highlights(content)
+                    if recent_context:
+                        conversations.extend(recent_context)
+                except Exception as e:
+                    logger.debug(f"Could not read MEMORY.md: {e}")
             
-            # Return most recent 5 conversations
-            return conversations[-5:] if conversations else []
+            # Then check daily memory files
+            if self.memory_path and self.memory_path.exists():
+                for days in range(days_back):
+                    date = datetime.now() - timedelta(days=days)
+                    date_str = date.strftime("%Y-%m-%d")
+                    memory_file = self.memory_path / f"{date_str}.md"
+                    
+                    if memory_file.exists():
+                        content = memory_file.read_text(encoding='utf-8')
+                        file_conversations = self._parse_conversations(content)
+                        conversations.extend(file_conversations)
+            
+            # Return most recent conversations (prioritize quality over quantity for voice)
+            return conversations[-8:] if conversations else []
             
         except Exception as e:
             logger.warning(f"Error getting recent conversations: {e}")
             return []
     
+    def _extract_memory_highlights(self, content: str) -> List[Dict[str, str]]:
+        """Extract key highlights from MEMORY.md for voice context."""
+        highlights = []
+        
+        try:
+            lines = content.split('\n')
+            current_section = None
+            
+            for line in lines:
+                line = line.strip()
+                
+                # Track sections
+                if line.startswith('##'):
+                    current_section = line.replace('##', '').strip()
+                    continue
+                
+                # Extract key information for voice context
+                if current_section and line.startswith('-'):
+                    # Bullet points often contain key info
+                    context_item = line[1:].strip()
+                    if len(context_item) > 10 and len(context_item) < 100:
+                        highlights.append({
+                            "time": "recent",
+                            "speaker": "Memory",
+                            "message": f"{current_section}: {context_item}",
+                            "type": "memory_highlight"
+                        })
+                
+                # Look for recent context or current focus
+                if any(keyword in line.lower() for keyword in ['current', 'recent', 'working on', 'focus']):
+                    if len(line) > 15 and len(line) < 120:
+                        highlights.append({
+                            "time": "recent", 
+                            "speaker": "Context",
+                            "message": line,
+                            "type": "current_focus"
+                        })
+            
+            # Limit to most relevant highlights
+            return highlights[-3:] if highlights else []
+            
+        except Exception as e:
+            logger.debug(f"Error extracting memory highlights: {e}")
+            return []
+
     def _parse_conversations(self, content: str) -> List[Dict[str, str]]:
         """Parse conversations from memory file content."""
         conversations = []
@@ -223,36 +281,63 @@ class SessionContextExtractor:
             caller_info = context.get("caller_info", {})
             conversations = context.get("recent_conversations", [])
             
-            # Add caller context
+            # Add caller context with personalized greetings
             if caller_info.get("known_caller"):
                 name = caller_info.get("name", "caller")
+                preferred_name = caller_info.get("preferred_name", name)
                 relationship = caller_info.get("relationship", "unknown")
                 
                 enhanced.append(f"\\n\\nCALLER CONTEXT:")
-                enhanced.append(f"You are speaking with {name}.")
+                enhanced.append(f"You are speaking with {name} (address as {preferred_name}).")
                 
+                # Personalized greeting based on relationship
                 if relationship == "primary_user":
-                    enhanced.append("This is your primary user - be familiar and collaborative.")
+                    enhanced.append("This is your primary user - be familiar, collaborative, and greet warmly.")
+                    enhanced.append(f"Start by greeting: 'Hi {preferred_name}! Good to hear from you.'")
                 elif relationship == "team_member":
                     enhanced.append("This is a team member - be professional but friendly.")
+                    enhanced.append(f"Start by greeting: 'Hello {preferred_name}, how can I help?'")
+                elif relationship == "client":
+                    enhanced.append("This is a client - be professional and helpful.")
+                    enhanced.append(f"Start by greeting: 'Good day, how may I assist you today?'")
                 
-                # Add recent conversation context
+                # Add recent conversation context (limited to avoid latency)
                 if conversations:
-                    enhanced.append("\\nRecent conversation highlights:")
-                    for conv in conversations[-3:]:  # Last 3 messages
-                        enhanced.append(f"- {conv['time']}: {conv['speaker']}: {conv['message']}")
+                    enhanced.append("\\nRECENT CONTEXT:")
+                    recent_topics = set()
+                    for conv in conversations[-5:]:  # Last 5 for better context
+                        # Extract key topics/entities from messages
+                        message = conv['message'].lower()
+                        if any(word in message for word in ['project', 'work', 'issue', 'feature']):
+                            recent_topics.add("project work")
+                        if any(word in message for word in ['call', 'voice', 'phone']):
+                            recent_topics.add("voice/call topics")
+                        if any(word in message for word in ['telegram', 'chat', 'message']):
+                            recent_topics.add("messaging")
+                    
+                    if recent_topics:
+                        enhanced.append(f"Recent topics discussed: {', '.join(recent_topics)}")
+                        enhanced.append("You can reference these topics naturally in conversation.")
+                    
+                    # Include most recent specific message if relevant
+                    if conversations:
+                        last_conv = conversations[-1]
+                        if len(last_conv['message']) < 80:  # Only short, relevant messages
+                            enhanced.append(f"Last exchange: {last_conv['speaker']}: {last_conv['message']}")
             else:
-                enhanced.append(f"\\n\\nYou are speaking with an unknown caller. Be polite and helpful.")
+                enhanced.append(f"\\n\\nUNKNOWN CALLER:")
+                enhanced.append("Be polite, introduce yourself, and ask how you can help.")
+                enhanced.append("Start by greeting: 'Hello, this is Nia. How can I assist you today?'")
             
-            # Add call type context
+            # Add call type specific context
             if call_type == "outbound":
-                enhanced.append("\\nYou initiated this call.")
+                enhanced.append("\\nCALL TYPE: You initiated this call.")
                 if initial_message:
-                    enhanced.append(f"Start by saying: {initial_message}")
+                    enhanced.append(f"Override greeting with: {initial_message}")
             else:
-                enhanced.append("\\nThey called you.")
+                enhanced.append("\\nCALL TYPE: Incoming call - they called you.")
             
-            enhanced.append("\\nBe natural, conversational, and concise in this voice conversation.")
+            enhanced.append("\\nSTYLE: Be natural, conversational, and concise. Keep responses under 30 seconds.")
             
             return "".join(enhanced)
             
