@@ -46,12 +46,16 @@ class OpenClawExecutor:
         logger.info(f"OpenClaw executing request: {request[:100]}...")
         
         try:
-            # Build command
-            cmd = ["openclaw", "chat", "--message", request, "--no-interactive"]
+            # Build command - use 'agent' command with a dedicated voice session
+            cmd = [
+                "openclaw", "agent",
+                "--message", request,
+                "--session-id", "voice-assistant",  # Dedicated session for voice calls
+                "--local"
+            ]
             
-            # Add model override if configured
-            if self.model:
-                cmd.extend(["--model", self.model])
+            # Add thinking for complex requests
+            cmd.extend(["--thinking", "low"])
             
             # Execute with timeout
             process = await asyncio.create_subprocess_exec(
