@@ -23,13 +23,14 @@ import logging
 import os
 import re
 import time
+import urllib.parse
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 
 import httpx
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Query, Depends, Header
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse, FileResponse, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 import uvicorn
@@ -228,6 +229,16 @@ def validate_phone_number(phone: str) -> bool:
     return validator.validate_phone_number(phone, strict=True)
 
 
+def get_base_url() -> str:
+    """Get the base URL for this server."""
+    # In production, this should be set via environment variable
+    # For now, use localhost with the configured port
+    port = os.getenv("PORT", "8080")
+    host = os.getenv("HOST", "localhost")
+    protocol = os.getenv("PROTOCOL", "http")
+    return f"{protocol}://{host}:{port}"
+
+
 def verify_webhook_signature(request_body: bytes, signature: str, timestamp: str) -> bool:
     """Enhanced webhook signature verification with security checks."""
     # Enforce signature verification in production
@@ -357,13 +368,17 @@ async def initiate_outbound_call(request: OutboundCallRequest, background_tasks:
         # Create OpenAI SIP URI
         sip_uri = f"sip:{OPENAI_PROJECT_ID}@sip.api.openai.com;transport=tls"
         
+        # Construct TwiML webhook URL
+        twiml_url = f"{get_base_url()}/twiml/outbound?sip_uri={urllib.parse.quote(sip_uri)}"
+        
         logger.info(f"Initiating outbound call: {mask_phone_number(request.to)} via {sip_uri}")
+        logger.info(f"Using TwiML webhook URL: {twiml_url}")
         
         # Create Twilio call
         call = twilio_client.calls.create(
             to=request.to,
             from_=from_number,
-            url=sip_uri,
+            url=twiml_url,  # Use TwiML webhook URL instead of SIP URI
             timeout=30,
             record=False  # We'll handle recording separately if needed
         )
@@ -873,6 +888,32 @@ async def list_calls():
         "active_calls": len(active_calls),
         "calls": call_list
     }
+
+
+@app.get("/twiml/outbound")
+@app.post("/twiml/outbound")
+async def outbound_twiml(request: Request, sip_uri: Optional[str] = Query(None)):
+    """
+    TwiML endpoint for outbound calls.
+    Returns XML instructions for Twilio to dial the SIP URI.
+    """
+    # Get SIP URI from query parameters
+    if not sip_uri:
+        raise HTTPException(
+            status_code=400,
+            detail="Missing required parameter: sip_uri"
+        )
+    
+    # Generate TwiML XML for dialing the SIP URI
+    twiml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Dial>
+        <Sip>{sip_uri}</Sip>
+    </Dial>
+</Response>'''
+    
+    logger.info(f"Generated TwiML for SIP URI: {sip_uri}")
+    return Response(content=twiml, media_type="application/xml")
 
 
 @app.get("/health")
