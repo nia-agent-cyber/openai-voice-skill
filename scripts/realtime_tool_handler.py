@@ -24,7 +24,7 @@ from typing import Dict, Optional, Callable, Any
 import websockets
 from websockets.exceptions import ConnectionClosed
 
-from openclaw_executor import execute_openclaw_request
+from openclaw_executor import execute_openclaw_request, execute_openclaw_streaming
 
 logger = logging.getLogger(__name__)
 
@@ -195,7 +195,8 @@ class RealtimeToolHandler:
         """
         Handle a function call from the Realtime session.
         
-        Executes the function via OpenClaw and returns the result.
+        Executes the function via OpenClaw with streaming support.
+        Chunks are sent progressively so the user hears responses quickly.
         """
         call_id = event.get("call_id")
         name = event.get("name", "")
@@ -209,15 +210,30 @@ class RealtimeToolHandler:
         except json.JSONDecodeError:
             arguments = {}
         
-        # Execute the function
-        result = await self._execute_function(name, arguments)
+        # Try streaming execution for ask_openclaw
+        if name == "ask_openclaw":
+            request = arguments.get("request", "")
+            if not request:
+                await self._send_function_result(
+                    call_id, 
+                    "I didn't receive a specific request. What would you like me to do?"
+                )
+                return
+            
+            try:
+                await self._execute_streaming_function(call_id, request)
+                return
+            except Exception as e:
+                logger.warning(f"Streaming execution failed, falling back to non-streaming: {e}")
+                # Fall through to non-streaming execution
         
-        # Send result back to Realtime
+        # Non-streaming fallback
+        result = await self._execute_function(name, arguments)
         await self._send_function_result(call_id, result)
     
     async def _execute_function(self, name: str, arguments: Dict[str, Any]) -> str:
         """
-        Execute a function and return the result.
+        Execute a function and return the result (non-streaming fallback).
         
         Currently only supports ask_openclaw, but can be extended.
         """
@@ -227,7 +243,7 @@ class RealtimeToolHandler:
                 if not request:
                     return "I didn't receive a specific request. What would you like me to do?"
                 
-                logger.info(f"Executing OpenClaw request: {request[:80]}...")
+                logger.info(f"Executing OpenClaw request (non-streaming): {request[:80]}...")
                 result = await execute_openclaw_request(request)
                 
                 self.stats["successful_calls"] += 1
@@ -242,6 +258,90 @@ class RealtimeToolHandler:
             logger.error(f"Function execution error: {e}")
             self.stats["failed_calls"] += 1
             return "I ran into an error processing that request. Please try again."
+    
+    async def _execute_streaming_function(self, call_id: str, request: str):
+        """
+        Execute ask_openclaw with streaming, sending chunks progressively.
+        
+        Each chunk is sent as a function_call_output (first chunk) or 
+        follow-up message (subsequent chunks), with response.create triggered
+        so the user hears each chunk immediately.
+        
+        Args:
+            call_id: The function call ID from the Realtime session
+            request: The user's request to process
+        """
+        logger.info(f"Executing OpenClaw request (streaming): {request[:80]}...")
+        
+        chunk_count = 0
+        
+        async for chunk in execute_openclaw_streaming(request):
+            if not chunk or not chunk.strip():
+                continue
+            
+            chunk = chunk.strip()
+            chunk_count += 1
+            
+            logger.info(f"Streaming chunk {chunk_count}: {len(chunk)} chars")
+            
+            if chunk_count == 1:
+                # First chunk: send as function_call_output (completes the function call)
+                await self._send_function_result(call_id, chunk)
+            else:
+                # Subsequent chunks: send as follow-up content
+                await self._send_followup_chunk(chunk)
+        
+        if chunk_count == 0:
+            # No chunks yielded - send a default response
+            logger.warning("Streaming yielded no chunks")
+            await self._send_function_result(call_id, "Done.")
+            self.stats["failed_calls"] += 1
+        else:
+            logger.info(f"Streaming complete: {chunk_count} chunks sent")
+            self.stats["successful_calls"] += 1
+    
+    async def _send_followup_chunk(self, chunk: str):
+        """
+        Send a follow-up chunk after the initial function result.
+        
+        Sends as a function_call_output with a generated call_id,
+        then triggers response.create so the model speaks it.
+        """
+        import websockets
+        if not self.ws or self.ws.state != websockets.State.OPEN:
+            logger.warning("Cannot send followup chunk - WebSocket closed")
+            return
+        
+        try:
+            # Generate a unique call_id for this continuation
+            import uuid
+            continuation_id = f"cont_{uuid.uuid4().hex[:8]}"
+            
+            # Send as an assistant message item for natural continuation
+            await self.ws.send(json.dumps({
+                "type": "conversation.item.create",
+                "item": {
+                    "type": "message",
+                    "role": "assistant",
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": chunk
+                        }
+                    ]
+                }
+            }))
+            
+            # Trigger response generation to speak this chunk
+            await self.ws.send(json.dumps({
+                "type": "response.create"
+            }))
+            
+            logger.debug(f"Follow-up chunk sent ({len(chunk)} chars)")
+            
+        except Exception as e:
+            logger.error(f"Failed to send follow-up chunk: {e}")
+            raise
     
     async def _send_function_result(self, call_id: str, result: str):
         """Send function result back to the Realtime session."""
