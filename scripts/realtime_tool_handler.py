@@ -73,7 +73,10 @@ class RealtimeToolHandler:
     
     async def connect(self) -> bool:
         """
-        Connect to the Realtime session via WebSocket.
+        Connect to the Realtime session via WebSocket sideband.
+        
+        Uses ?call_id= to connect to the existing call's control channel,
+        NOT ?model= which would create a new empty session.
         
         Returns:
             True if connected successfully
@@ -82,13 +85,16 @@ class RealtimeToolHandler:
             logger.error("OPENAI_API_KEY not set - cannot connect to Realtime")
             return False
         
-        url = f"{OPENAI_REALTIME_URL}?model={self.model}"
+        # CRITICAL: Connect to the call's sideband using call_id, not model
+        # Using ?model= creates a NEW session; ?call_id= joins the existing call
+        url = f"{OPENAI_REALTIME_URL}?call_id={self.call_id}"
         headers = {
             "Authorization": f"Bearer {OPENAI_API_KEY}",
-            "OpenAI-Beta": "realtime=v1"
+            # Note: OpenAI-Beta header not needed for GA API
         }
         
         try:
+            print(f"[TOOL_HANDLER] Attempting sideband connection to: {url}")
             self.ws = await websockets.connect(
                 url,
                 additional_headers=headers,
@@ -96,11 +102,13 @@ class RealtimeToolHandler:
                 ping_timeout=10
             )
             
+            print(f"[TOOL_HANDLER] ✅ Connected to Realtime session for call {self.call_id}")
             logger.info(f"Connected to Realtime session for call {self.call_id}")
             self._notify_status("connected")
             return True
             
         except Exception as e:
+            print(f"[TOOL_HANDLER] ❌ Failed to connect: {type(e).__name__}: {e}")
             logger.error(f"Failed to connect to Realtime: {e}")
             self._notify_status("connection_failed")
             return False
@@ -237,7 +245,9 @@ class RealtimeToolHandler:
     
     async def _send_function_result(self, call_id: str, result: str):
         """Send function result back to the Realtime session."""
-        if not self.ws or self.ws.closed:
+        # websockets 16.0+ uses 'state' instead of 'closed'
+        import websockets
+        if not self.ws or self.ws.state != websockets.State.OPEN:
             logger.warning("Cannot send function result - WebSocket closed")
             return
         

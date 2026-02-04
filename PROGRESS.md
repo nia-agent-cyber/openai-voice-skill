@@ -2,7 +2,7 @@
 
 ## Project Status: 🟡 MVP Complete, Production Features Needed
 
-**Last Updated:** February 3, 2026
+**Last Updated:** February 4, 2026 (15:33 GMT)
 
 ## ✅ Completed (v1.0.0)
 
@@ -33,6 +33,79 @@
 - [x] Structured logging with timestamps
 
 ## 🚧 In Progress
+
+### ask_openclaw Tool - Hybrid Architecture (February 4, 2026)
+**Issue #21 - CRITICAL BUG FOUND 🐛**
+
+**Objective:** Give OpenAI Realtime a single `ask_openclaw` tool that provides access to all OpenClaw agent capabilities during voice calls.
+
+**Status:** Tool handler implemented but NOT WORKING due to WebSocket connection bug.
+
+---
+
+#### ⚠️ CRITICAL BUG IDENTIFIED (February 4, 2026 @ 16:18 GMT)
+
+**Bug Analysis:** See `docs/BUG_ANALYSIS_ask_openclaw.md`
+
+**Root Cause:** The tool handler connects to the WRONG WebSocket endpoint!
+
+```python
+# CURRENT (WRONG) in realtime_tool_handler.py line ~79:
+url = f"wss://api.openai.com/v1/realtime?model={self.model}"
+
+# CORRECT - must use call_id to connect to the existing call's sideband:
+url = f"wss://api.openai.com/v1/realtime?call_id={self.call_id}"
+```
+
+**What's happening:**
+1. ✅ Call connects, Realtime says "let me check that"
+2. ✅ Tool handler starts and connects to WebSocket
+3. ❌ But it connects to a NEW empty session instead of the active call!
+4. ❌ Function call events go to the real call's session, which we're not listening to
+5. ❌ User waits forever, nothing happens
+
+**Fix Required:**
+1. Change WebSocket URL from `?model=` to `?call_id=`
+2. Remove `OpenAI-Beta: realtime=v1` header (not needed for GA API)
+3. Simplify handler to only need `call_id` parameter
+
+**Estimated Fix Time:** 30 minutes
+
+---
+
+**Architecture:**
+```
+Voice Call → OpenAI Realtime → ask_openclaw tool → WebSocket → OpenClaw Agent
+                                                  (sideband)        ↓
+Voice Call ← Realtime speaks ← Result text ← Claude + full tools ←─┘
+
+KEY INSIGHT: The WebSocket MUST connect with ?call_id={call_id}
+             to join the existing call's control channel
+```
+
+**Tasks:**
+- [x] Task 1: Tool Configuration (1-2h) - Update agent.json with tools array ✅
+- [x] Task 2: WebSocket Tool Handler (4-6h) - Handle tool calls from Realtime ✅
+- [x] Task 3: OpenClaw Executor (2-3h) - CLI/API to invoke OpenClaw ✅
+- [x] Task 4: Integration (2-3h) - Connect handler to call flow ✅
+- [x] Task 5: User Feedback (2-4h) - Verbal acknowledgment + optional audio ✅
+- [ ] **Task 6: FIX BUG** - WebSocket URL uses wrong parameter! 🐛
+- [ ] Task 7: Testing & Docs (2-3h) - Integration tests + documentation
+
+**User Feedback Strategy:**
+- Primary: Instructions tell Realtime to say "Let me check that..." before tool calls ✅ Working
+- Optional: Audio feedback if delays exceed 3 seconds
+
+---
+
+### Architecture Research (February 4, 2026)
+**COMPLETED ✅ - Decision Made**
+
+**Research Document:** `VOICE_ARCHITECTURE_RESEARCH.md`
+
+**Decision:** Hybrid approach (Option C) selected. Full STT→OpenClaw→TTS pipeline rejected due to 2-4 second latency impact.
+
+---
 
 ### Voice as OpenClaw Channel Plugin (February 3, 2026) 
 **Issue #10 - IN PROGRESS 🚧**
@@ -115,9 +188,11 @@
 
 ### High Priority
 - [x] **Outbound call support** - Agent-initiated calls ✅ COMPLETED
-- [ ] **Call recording & transcripts** - Conversation persistence
-- [ ] **Function calling during calls** - Tool use mid-conversation
-- [ ] **Session memory persistence** - Context across calls
+- [x] **Session context injection** - Context at call start ✅ COMPLETED
+- [x] **Transcript sync** - Post-call memory integration ✅ COMPLETED
+- [x] **Architecture research** - Evaluated full pipeline vs hybrid ✅ COMPLETED
+- [ ] **ask_openclaw tool** - OpenClaw tools during Realtime calls 🚧 IN PROGRESS (Issue #21)
+- [ ] **Call recording & transcripts** - Full conversation persistence
 
 ### Medium Priority  
 - [ ] **Call analytics** - Duration, cost, quality metrics
