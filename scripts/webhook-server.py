@@ -91,6 +91,10 @@ REQUIRE_API_KEY_AUTH = os.getenv("REQUIRE_API_KEY_AUTH", "true").lower() == "tru
 ENCRYPT_SESSION_DATA = os.getenv("ENCRYPT_SESSION_DATA", "true").lower() == "true"
 ENABLE_ERROR_SANITIZATION = os.getenv("ENABLE_ERROR_SANITIZATION", "true").lower() == "true"
 
+# Inbound call security - disabled by default (no authentication for inbound calls)
+# Set to "true" to allow inbound calls (future: implement whitelist)
+ALLOW_INBOUND_CALLS = os.getenv("ALLOW_INBOUND_CALLS", "false").lower() == "true"
+
 # Twilio configuration for outbound calls
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
@@ -457,6 +461,9 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
     """
     body = await request.body()
     
+    # DEBUG: Log raw webhook body
+    logger.info(f"[DEBUG] Raw webhook body: {body[:500] if body else 'empty'}")
+    
     # Check if this is a Twilio webhook by looking for CallStatus or Twilio signature
     twilio_signature = request.headers.get("X-Twilio-Signature")
     is_twilio_webhook = twilio_signature is not None
@@ -509,13 +516,6 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
         
         logger.info(f"Incoming call: {call_id} from {mask_phone_number(from_header)} to {mask_phone_number(to_header)}")
         
-        # Start call recording
-        background_tasks.add_task(
-            recording_manager.start_call_recording,
-            call_id, "inbound", from_header, to_header,
-            {"sip_headers": sip_headers}
-        )
-        
         # Check for pre-prepared instructions (for outbound calls that arrive via OpenAI webhook)
         enhanced_instructions = None
         matched_call_id = None
@@ -525,11 +525,11 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
         caller_number = caller_number.group() if caller_number else None
         
         if caller_number:
-            for stored_call_id, call_data in active_calls.items():
-                if (call_data.get("enhanced_instructions") and 
-                    call_data.get("status") == "realtime_ready" and
-                    call_data.get("to") == caller_number):
-                    enhanced_instructions = call_data.get("enhanced_instructions")
+            for stored_call_id, stored_data in active_calls.items():
+                if (stored_data.get("enhanced_instructions") and 
+                    stored_data.get("status") == "realtime_ready" and
+                    stored_data.get("to") == caller_number):
+                    enhanced_instructions = stored_data.get("enhanced_instructions")
                     matched_call_id = stored_call_id
                     logger.info(f"Matched call {call_id} to outbound call {stored_call_id} by destination number")
                     break
@@ -539,16 +539,32 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
             best_call_id = None
             best_time_diff = float('inf')
             
-            for stored_call_id, call_data in active_calls.items():
-                if call_data.get("enhanced_instructions") and call_data.get("status") == "realtime_ready":
-                    time_diff = time.time() - call_data.get("started_at", 0)
+            for stored_call_id, stored_data in active_calls.items():
+                if stored_data.get("enhanced_instructions") and stored_data.get("status") == "realtime_ready":
+                    time_diff = time.time() - stored_data.get("started_at", 0)
                     if time_diff < 60 and time_diff < best_time_diff:
-                        enhanced_instructions = call_data.get("enhanced_instructions")
+                        enhanced_instructions = stored_data.get("enhanced_instructions")
                         matched_call_id = stored_call_id
                         best_time_diff = time_diff
             
             if enhanced_instructions:
                 logger.info(f"Matched call {call_id} to outbound call {matched_call_id} by time window ({best_time_diff:.1f}s ago)")
+        
+        # SECURITY: Reject true inbound calls if not allowed
+        # Outbound calls that connect via OpenAI webhook will have matched_call_id
+        is_true_inbound = matched_call_id is None
+        
+        if is_true_inbound and not ALLOW_INBOUND_CALLS:
+            logger.warning(f"Inbound call rejected - disabled for security: {call_id} from {mask_phone_number(from_header)}")
+            background_tasks.add_task(reject_call, call_id, "unavailable")
+            return JSONResponse({"status": "rejected", "call_id": call_id, "reason": "inbound_disabled"})
+        
+        # Start call recording (only for accepted calls)
+        background_tasks.add_task(
+            recording_manager.start_call_recording,
+            call_id, "inbound", from_header, to_header,
+            {"sip_headers": sip_headers}
+        )
         
         # Link OpenAI call ID to matched outbound call
         if matched_call_id and enhanced_instructions:
