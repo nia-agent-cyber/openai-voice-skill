@@ -4,6 +4,32 @@ Architectural and design decisions. **Don't revisit these without good reason.**
 
 ---
 
+## 2026-02-05: Reliability Over Features
+
+**Decision:** All new feature work paused until reliability issues are fixed.
+
+**Why:**
+- Josh Pigford (@Shpigford) couldn't get voice working reliably, switched to Vapi
+- This is existential — if users can't rely on the product, features don't matter
+- Competitors (Vapi, Retell) are winning on "it just works"
+
+**What This Means:**
+- T4 (inbound), T6 (security), T7 (deploy) all paused
+- #31 is the only active work item
+- Code changes must improve reliability, not add features
+
+**Metrics to Track:**
+- Call success rate (target: >95%)
+- Time to first response (target: <3s)
+- WebSocket reconnection success rate
+
+**Exit Criteria:**
+- Complete #31 fixes
+- 10 successful test calls with tool use
+- No timeouts or connection drops in testing
+
+---
+
 ## 2026-02-04: ask_openclaw WebSocket Fix
 
 **Decision:** Tool handler connects to sideband WebSocket, not new session
