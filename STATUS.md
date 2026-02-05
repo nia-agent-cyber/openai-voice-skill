@@ -1,20 +1,26 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-05 by Nia
+**Last Updated:** 2026-02-05 09:40 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## Current State: ✅ CORE WORKING
+## Current State: ⚠️ RELIABILITY ISSUES
+
+### Critical Issue
+**Josh Pigford (@Shpigford) couldn't get the voice skill working reliably and switched to Vapi.**
+
+This is our top priority. See **#31** for full analysis and fixes.
 
 ### What's Live
-- ✅ `ask_openclaw` tool — full pipeline working (Phone → Twilio → OpenAI Realtime → OpenClaw Agent → Voice)
+- ✅ `ask_openclaw` tool — pipeline working but unreliable
 - ✅ Outbound calls via HTTP POST to `https://api.niavoice.org/call`
 - ✅ Session bridge (T3) — transcripts sync to OpenClaw sessions
 - ✅ Streaming responses (PR #30 merged)
 - ✅ Security: inbound disabled by default (PR #29)
 
 ### In Progress
+- [ ] **#31** — 🔴 CRITICAL: Reliability fixes (WebSocket reconnection, timeouts, error handling)
 - [ ] **#27** — Integration testing for streaming responses
 - [ ] **T4** — Inbound Handler (phone → session creation)
 
@@ -25,11 +31,28 @@
 
 ## Next Steps (Priority Order)
 
-1. **Test streaming in live call** — needs Remi
-2. **#27** — Integration testing for streaming
-3. **T4** — Inbound call handler
-4. **T6** — Security allowlist enforcement (P2)
-5. **T7** — Full E2E deployment testing
+### 🔴 P0 - This Week (Reliability)
+1. **#31** — Reliability fixes (assigned: PM to coordinate)
+   - [ ] Add exponential backoff to WebSocket reconnection
+   - [ ] Reduce default timeout to 10s
+   - [ ] Add basic call metrics (`/metrics` endpoint)
+   - [ ] Improve error messages with call_id
+
+2. **Manual testing** — Full call flow with tool use
+   - [ ] Outbound call with ask_openclaw
+   - [ ] Multiple tool invocations in one call
+   - [ ] Test timeout/failure scenarios
+
+### P1 - This Month
+3. **#27** — Integration testing for streaming
+4. **T4** — Inbound call handler
+5. Replace subprocess with HTTP API for lower latency
+6. Add structured logging (JSON with call_id, latency)
+
+### P2 - Later
+7. **T6** — Security allowlist enforcement
+8. **T7** — Full E2E deployment testing
+9. Real-time transcript streaming (during call, not just after)
 
 ---
 
@@ -37,6 +60,7 @@
 
 | Task | Priority | Status | Description |
 |------|----------|--------|-------------|
+| **T8: Reliability** | **P0** | **🔴 IN PROGRESS** | **Fix reliability issues (#31)** |
 | T1: Fix Entry Point | P0 | ✅ DONE | registerChannel() works |
 | T2: Add Config | P0 | ✅ DONE | `channels: ["voice"]` in manifest |
 | T3: Session Bridge | P0 | ✅ DONE | Post-call transcript sync |
@@ -51,6 +75,7 @@
 
 | Issue | Description | Priority |
 |-------|-------------|----------|
+| **#31** | **🔴 Critical: Reliability Issues - User Switched to Vapi** | **P0** |
 | #20 | Complete Voice Channel Plugin | P1 |
 | #27 | Integration testing for streaming | P1 |
 
