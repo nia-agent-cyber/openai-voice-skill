@@ -29,6 +29,28 @@ How to work on this project. **Read this first every session.**
 
 ---
 
+## PR Workflow (CRITICAL)
+
+### Coder: Before Marking PR Ready
+1. **Rebase on main:** `git fetch origin && git rebase origin/main`
+2. **Run tests:** `npm test`
+3. **Check mergeable:** `gh pr view <number> --json mergeable`
+4. Only mark ready if mergeable=MERGEABLE
+
+### QA: Before Approving PR
+1. **Check for conflicts:** `gh pr view <number> --json mergeable`
+2. **If CONFLICTING:** Do NOT approve. Request coder to rebase first.
+3. Only approve clean, mergeable PRs
+
+### PM: Final Check Before Marking Ready for Remi
+1. **Review the PR yourself** — don't just trust QA approval
+2. **Verify mergeable:** `gh pr view <number> --json mergeable`
+3. **If conflicts exist:** Ask coder to fix before sending to Remi
+
+**Rule: Never send a conflicting PR to Remi.**
+
+---
+
 ## File Purposes
 
 | File | Purpose | Update Frequency |
