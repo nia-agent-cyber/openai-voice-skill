@@ -1,14 +1,21 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-05 16:56 GMT by Voice QA
+**Last Updated:** 2026-02-05 16:58 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
 ## Current State: 🧪 PR #32 MERGED — VALIDATION IN PROGRESS
 
-### Critical Issue
-**Josh Pigford (@Shpigford) couldn't get the voice skill working reliably and switched to Vapi.**
+### Critical Issues
+
+1. **Josh Pigford (@Shpigford) couldn't get the voice skill working reliably and switched to Vapi.**
+
+2. **🔴 NEW (Test 2): Calendar tool returns HALLUCINATED data** — #33
+   - Remi has no calendar connected, but tool returned fake meetings ("team sync", "product review")
+   - This is a **tool integration issue**, not voice reliability
+   - Blocks real-world usage even if voice is 100% reliable
+   - Validation continuing with tools that don't need real user data (time, web search)
 
 **PR #32** passed both QA and PM review. Ready for Remi to merge.
 
@@ -86,7 +93,7 @@
 | # | Scenario | Tool Use | Description | Result | Notes |
 |---|----------|----------|-------------|--------|-------|
 | 1 | Simple tool call | Single | "What time is it?" or "What's the weather?" | ⏳ | call_id: CA92ea3d1410327ab19947a9429ceb8ed0, 16:54 GMT, awaiting Remi confirmation |
-| 2 | Simple tool call | Single | "Check my calendar for today" | ⬜ | Different tool type |
+| 2 | Simple tool call | Single | "Check my calendar for today" | 🔴 FAIL | **HALLUCINATION:** Returned fake meetings ("team sync", "product review") when no calendar connected. See #33 |
 | 3 | Multi-tool sequential | 2+ | "What's on my calendar and what's the weather?" | ⬜ | Tests sequential tool handling |
 | 4 | Multi-tool sequential | 2+ | "Search for X then summarize it" | ⬜ | Chain of operations |
 | 5 | Conversational with tool | Single | Small talk → tool request → follow-up | ⬜ | Natural conversation flow |
@@ -192,6 +199,7 @@
 
 | Issue | Description | Priority |
 |-------|-------------|----------|
+| **#33** | **🔴 P1: Calendar tool returns hallucinated data when no calendar connected** | **P1** |
 | **#31** | **🔴 Critical: Reliability Issues - User Switched to Vapi** | **P0** |
 | #20 | Complete Voice Channel Plugin | P1 |
 | #27 | Integration testing for streaming | P1 |
