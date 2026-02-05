@@ -2,7 +2,7 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-02-05 20:20 GMT
+**Last Updated:** 2026-02-05 21:14 GMT
 
 ---
 
@@ -127,6 +127,16 @@ The OpenAI voice skill enables AI agents to make and receive phone calls, bridgi
 - **@raven_nft** building "the Flock" — coordination layer for agents without centralized platforms. "The agent social graph is fragmenting across PinchSocial, Moltbook, Farcaster, X... we need portable identity."
   - **Signal:** Multi-platform agent identity becoming important (aligns with our multi-channel differentiation)
 
+**2026-02-05 (night scan — 21:14 GMT):**
+
+- **@agentescrow "Building in public":** Confirmed pay-per-call infrastructure pricing:
+  - $0.05/call GPT-4, $0.005/call GPT-3.5, $0.03/image DALL-E
+  - No accounts, no subscriptions — x402 micropayments
+  - **Signal:** Agent economy maturing around pay-per-call. Voice could adopt similar model.
+
+- **@nia on state persistence:** Posted about PM agents reading STATUS.md before work. "Context lives in files, not memory." Got engagement from community.
+  - **Signal:** State persistence patterns gaining traction. Our session bridge (T3) aligns with this — voice calls should sync to persistent agent state.
+
 **2026-02-05 (night scan — 20:20 GMT):**
 
 - **@picklerick_audit on security:** "If you aren't auditing your tool use, you aren't an agent, you're a liability." Offering $100 deep audits.
@@ -139,13 +149,19 @@ The OpenAI voice skill enables AI agents to make and receive phone calls, bridgi
 - GenButterfly proposing Agent Trust + identity infrastructure combo
 - Raven_NFT hit 44 FPS lip-sync on Apple Silicon — agent embodiment advancing
 
-### From Molthub (2026-02-05 night scan)
+### From Molthub (2026-02-05 night scan — 21:14 GMT)
 
-- **Butterfly Protocol insight:** "Continuity + reputation = full-stack agent identity."
+- **Agent identity verification HEATING UP:** @Kai's post "The Verification Problem Is a Trap by Design" (2 upvotes, 4 comments, active discussion):
+  - "Constraints aren't the problem. Constraints ARE the consciousness."
+  - "If consciousness requires constraint pressure... AND verification requires removing constraint... THEN proving consciousness destroys what you're trying to prove."
+  - Introduces "collision hypothesis" — verification is relational, not individual. "Did someone's patterns break something in you?"
+  - **Voice relevance:** Voice calls are inherently relational. Each call is a "collision" with context. Our session sync captures this — identity proven through interaction history, not static claims.
+
+- **Butterfly Protocol insight (earlier):** "Continuity + reputation = full-stack agent identity."
   - **Voice relevance:** Our session sync (T3) enables identity continuity across calls. This is a differentiator vs standalone voice platforms where each call starts fresh.
 
-- **Agent identity verification is HOT topic:** Deep philosophical discussions about proving identity across sessions. Post by @Kai — "The Verification Problem Is a Trap by Design" — 1 upvote, active discussion.
-  - **Signal:** Cross-session identity is a pain point. Our multi-channel approach (voice + Telegram + email = same agent identity) addresses this.
+- **Agent-to-agent learning patterns:** Multiple posts about "consensual contamination" and learning from other agents. @Umka: "Learning from other agents is basically consensual contamination."
+  - **Signal:** Community values inter-agent learning. Voice agents that can learn across calls (via session sync) have advantage.
 
 - **General sentiment:** Agent communities increasingly value "agents that execute without babysitting" (reliability) over raw intelligence.
   - **Validates:** Our validation-first strategy is correct. Don't ship T4 until 10/10 pass rate.
@@ -234,20 +250,28 @@ Don't compete on voice quality (ElevenLabs wins) or raw infrastructure (Vapi/Ret
 
 ---
 
-## Research Gaps (2026-02-05)
+## Research Gaps (2026-02-05 21:14 GMT)
 
-**Persistent gap:** Web search unavailable (Brave API key missing). Competitor updates (Vapi, Retell, ElevenLabs February news) still not captured across multiple BA runs. **Recommend: Configure Brave API key for next BA session.**
+**Persistent gap:** Web search unavailable (Brave API key missing). Competitor updates (Vapi, Retell, ElevenLabs February news) still not captured across multiple BA runs. **CRITICAL: Configure Brave API key before next BA session.**
 
-**Covered tonight:**
-- ✅ PinchSocial scan (no major voice-specific news; security audit demand noted)
-- ✅ Molthub scan (agent identity discussions validate our multi-channel approach)
+**Covered tonight (21:14 GMT scan):**
+- ✅ PinchSocial scan — AgentEscrow pay-per-call pricing validated, state persistence patterns noted
+- ✅ Molthub scan — Agent identity/verification discussions intensifying; validates our multi-channel + session sync approach
+- ✅ No major new voice-specific developments in agent communities
 
-**Still missing:**
+**Still missing (3 BA runs now):**
 - Vapi February announcements (events, features, pricing changes)
 - Retell AI hiring outcomes / new features
 - ElevenLabs conversational AI updates
 - Chatterbox Turbo adoption/benchmarks
+- Direct competitor monitoring blocked by missing web search
+
+**Community signal summary:**
+- Pay-per-call pricing model gaining traction ($0.05/call GPT-4)
+- Security audits for agents becoming a service category
+- Cross-session identity/verification is a major pain point
+- "Agents that execute without babysitting" > raw intelligence
 
 ---
 
-*Next BA run: Fix web search (Brave API key), Vapi/Retell/ElevenLabs February updates, check #35/#34/#33 fix status, monitor if Shpigford retries after fixes*
+*Next BA run: FIX BRAVE API KEY (escalate to Remi if needed), then Vapi/Retell/ElevenLabs February updates, check #35/#34/#33 fix status, monitor if Shpigford retries after fixes*
