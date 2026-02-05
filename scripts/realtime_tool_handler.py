@@ -24,15 +24,18 @@ from typing import Dict, Optional, Callable, Any
 import websockets
 from websockets.exceptions import ConnectionClosed
 
-from openclaw_executor import execute_openclaw_request, execute_openclaw_streaming
+from openclaw_executor import execute_openclaw_request, execute_openclaw_streaming, set_call_id
 
 logger = logging.getLogger(__name__)
 
 # Configuration
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_REALTIME_URL = "wss://api.openai.com/v1/realtime"
-RECONNECT_DELAY = 2  # seconds
-MAX_RECONNECT_ATTEMPTS = 3
+
+# Exponential backoff configuration
+INITIAL_RECONNECT_DELAY = 0.5  # Start at 500ms
+MAX_RECONNECT_DELAY = 30  # Cap at 30 seconds
+MAX_RECONNECT_ATTEMPTS = 10  # Allow more attempts with backoff
 
 
 class RealtimeToolHandler:
@@ -118,6 +121,7 @@ class RealtimeToolHandler:
         Start handling events for this session.
         
         This runs until the session ends or connection is lost.
+        Uses exponential backoff for reconnection attempts.
         """
         self.running = True
         reconnect_attempts = 0
@@ -126,33 +130,62 @@ class RealtimeToolHandler:
             try:
                 if not self.ws or self.ws.state != websockets.State.OPEN:
                     if reconnect_attempts >= MAX_RECONNECT_ATTEMPTS:
-                        logger.warning(f"Max reconnect attempts reached for call {self.call_id}")
+                        logger.error(f"[call_id={self.call_id}] Max reconnect attempts ({MAX_RECONNECT_ATTEMPTS}) reached, giving up")
                         break
                     
                     connected = await self.connect()
                     if not connected:
                         reconnect_attempts += 1
-                        await asyncio.sleep(RECONNECT_DELAY)
+                        delay = self._get_backoff_delay(reconnect_attempts)
+                        logger.warning(
+                            f"[call_id={self.call_id}] Connection attempt {reconnect_attempts}/{MAX_RECONNECT_ATTEMPTS} failed, "
+                            f"retrying in {delay:.1f}s (exponential backoff)"
+                        )
+                        await asyncio.sleep(delay)
                         continue
                     
+                    if reconnect_attempts > 0:
+                        logger.info(f"[call_id={self.call_id}] Reconnected successfully after {reconnect_attempts} attempts")
                     reconnect_attempts = 0
                 
                 # Listen for events
                 await self._handle_events()
                 
             except ConnectionClosed as e:
-                logger.info(f"WebSocket closed for call {self.call_id}: {e}")
+                reconnect_attempts += 1
+                delay = self._get_backoff_delay(reconnect_attempts)
+                logger.warning(
+                    f"[call_id={self.call_id}] WebSocket closed (code={e.code}, reason={e.reason}), "
+                    f"attempt {reconnect_attempts}/{MAX_RECONNECT_ATTEMPTS}, retrying in {delay:.1f}s"
+                )
                 if self.running:
-                    reconnect_attempts += 1
-                    await asyncio.sleep(RECONNECT_DELAY)
+                    await asyncio.sleep(delay)
                     
             except Exception as e:
-                logger.error(f"Error in tool handler for call {self.call_id}: {e}")
+                reconnect_attempts += 1
+                delay = self._get_backoff_delay(reconnect_attempts)
+                logger.error(
+                    f"[call_id={self.call_id}] Unexpected error in tool handler: {type(e).__name__}: {e}, "
+                    f"attempt {reconnect_attempts}/{MAX_RECONNECT_ATTEMPTS}, retrying in {delay:.1f}s"
+                )
                 if self.running:
-                    await asyncio.sleep(RECONNECT_DELAY)
+                    await asyncio.sleep(delay)
         
         self._notify_status("stopped")
-        logger.info(f"Tool handler stopped for call {self.call_id}: {self.stats}")
+        logger.info(f"[call_id={self.call_id}] Tool handler stopped. Stats: {self.stats}")
+    
+    def _get_backoff_delay(self, attempt: int) -> float:
+        """
+        Calculate exponential backoff delay with jitter.
+        
+        Formula: min(MAX_DELAY, INITIAL_DELAY * 2^(attempt-1)) + random jitter
+        """
+        import random
+        base_delay = INITIAL_RECONNECT_DELAY * (2 ** (attempt - 1))
+        capped_delay = min(base_delay, MAX_RECONNECT_DELAY)
+        # Add 10% jitter to prevent thundering herd
+        jitter = capped_delay * 0.1 * random.random()
+        return capped_delay + jitter
     
     async def stop(self):
         """Stop the handler and close the connection."""
@@ -169,7 +202,7 @@ class RealtimeToolHandler:
                 
                 # Log important events
                 if event_type.startswith("response."):
-                    logger.debug(f"Realtime event: {event_type}")
+                    logger.debug(f"[call_id={self.call_id}] Realtime event: {event_type}")
                 
                 # Handle function call completion
                 if event_type == "response.function_call_arguments.done":
@@ -177,19 +210,21 @@ class RealtimeToolHandler:
                 
                 # Handle session end
                 elif event_type == "session.closed":
-                    logger.info(f"Session closed for call {self.call_id}")
+                    logger.info(f"[call_id={self.call_id}] Session closed by server")
                     self.running = False
                     break
                 
                 # Handle errors
                 elif event_type == "error":
                     error = event.get("error", {})
-                    logger.error(f"Realtime error: {error.get('message', 'Unknown error')}")
+                    error_code = error.get("code", "unknown")
+                    error_msg = error.get("message", "Unknown error")
+                    logger.error(f"[call_id={self.call_id}] Realtime API error (code={error_code}): {error_msg}")
                     
             except json.JSONDecodeError:
-                logger.warning(f"Invalid JSON from Realtime: {message[:100]}")
+                logger.warning(f"[call_id={self.call_id}] Invalid JSON from Realtime: {message[:100]}")
             except Exception as e:
-                logger.error(f"Error processing Realtime event: {e}")
+                logger.error(f"[call_id={self.call_id}] Error processing event: {type(e).__name__}: {e}")
     
     async def _handle_function_call(self, event: Dict[str, Any]):
         """
@@ -198,38 +233,43 @@ class RealtimeToolHandler:
         Executes the function via OpenClaw with streaming support.
         Chunks are sent progressively so the user hears responses quickly.
         """
-        call_id = event.get("call_id")
+        function_call_id = event.get("call_id")  # OpenAI function call ID
         name = event.get("name", "")
         arguments_str = event.get("arguments", "{}")
         
+        # Set call_id for error tracking in executor logs
+        set_call_id(self.call_id)
+        
         self.stats["function_calls"] += 1
-        logger.info(f"Function call received: {name} (call_id: {call_id})")
+        logger.info(f"[call_id={self.call_id}] Function call received: {name} (function_call_id: {function_call_id})")
         
         try:
             arguments = json.loads(arguments_str)
         except json.JSONDecodeError:
+            logger.warning(f"[call_id={self.call_id}] Invalid JSON arguments: {arguments_str[:100]}")
             arguments = {}
         
         # Try streaming execution for ask_openclaw
         if name == "ask_openclaw":
             request = arguments.get("request", "")
             if not request:
+                logger.warning(f"[call_id={self.call_id}] ask_openclaw called with empty request")
                 await self._send_function_result(
-                    call_id, 
+                    function_call_id, 
                     "I didn't receive a specific request. What would you like me to do?"
                 )
                 return
             
             try:
-                await self._execute_streaming_function(call_id, request)
+                await self._execute_streaming_function(function_call_id, request)
                 return
             except Exception as e:
-                logger.warning(f"Streaming execution failed, falling back to non-streaming: {e}")
+                logger.warning(f"[call_id={self.call_id}] Streaming execution failed, falling back to non-streaming: {type(e).__name__}: {e}")
                 # Fall through to non-streaming execution
         
         # Non-streaming fallback
         result = await self._execute_function(name, arguments)
-        await self._send_function_result(call_id, result)
+        await self._send_function_result(function_call_id, result)
     
     async def _execute_function(self, name: str, arguments: Dict[str, Any]) -> str:
         """
@@ -243,23 +283,23 @@ class RealtimeToolHandler:
                 if not request:
                     return "I didn't receive a specific request. What would you like me to do?"
                 
-                logger.info(f"Executing OpenClaw request (non-streaming): {request[:80]}...")
+                logger.info(f"[call_id={self.call_id}] Executing OpenClaw request (non-streaming): {request[:80]}...")
                 result = await execute_openclaw_request(request)
                 
                 self.stats["successful_calls"] += 1
                 return result
             
             else:
-                logger.warning(f"Unknown function: {name}")
+                logger.warning(f"[call_id={self.call_id}] Unknown function: {name}")
                 self.stats["failed_calls"] += 1
                 return f"I don't know how to handle the '{name}' function."
                 
         except Exception as e:
-            logger.error(f"Function execution error: {e}")
+            logger.error(f"[call_id={self.call_id}] Function execution error: {type(e).__name__}: {e}")
             self.stats["failed_calls"] += 1
             return "I ran into an error processing that request. Please try again."
     
-    async def _execute_streaming_function(self, call_id: str, request: str):
+    async def _execute_streaming_function(self, function_call_id: str, request: str):
         """
         Execute ask_openclaw with streaming, sending chunks progressively.
         
@@ -268,10 +308,10 @@ class RealtimeToolHandler:
         so the user hears each chunk immediately.
         
         Args:
-            call_id: The function call ID from the Realtime session
+            function_call_id: The OpenAI function call ID for the response
             request: The user's request to process
         """
-        logger.info(f"Executing OpenClaw request (streaming): {request[:80]}...")
+        logger.info(f"[call_id={self.call_id}] Executing streaming request: {request[:80]}...")
         
         chunk_count = 0
         
@@ -282,40 +322,36 @@ class RealtimeToolHandler:
             chunk = chunk.strip()
             chunk_count += 1
             
-            logger.info(f"Streaming chunk {chunk_count}: {len(chunk)} chars")
+            logger.debug(f"[call_id={self.call_id}] Streaming chunk {chunk_count}: {len(chunk)} chars")
             
             if chunk_count == 1:
                 # First chunk: send as function_call_output (completes the function call)
-                await self._send_function_result(call_id, chunk)
+                await self._send_function_result(function_call_id, chunk)
             else:
                 # Subsequent chunks: send as follow-up content
                 await self._send_followup_chunk(chunk)
         
         if chunk_count == 0:
             # No chunks yielded - send a default response
-            logger.warning("Streaming yielded no chunks")
-            await self._send_function_result(call_id, "Done.")
+            logger.warning(f"[call_id={self.call_id}] Streaming yielded no chunks")
+            await self._send_function_result(function_call_id, "Done.")
             self.stats["failed_calls"] += 1
         else:
-            logger.info(f"Streaming complete: {chunk_count} chunks sent")
+            logger.info(f"[call_id={self.call_id}] Streaming complete: {chunk_count} chunks sent")
             self.stats["successful_calls"] += 1
     
     async def _send_followup_chunk(self, chunk: str):
         """
         Send a follow-up chunk after the initial function result.
         
-        Sends as a function_call_output with a generated call_id,
-        then triggers response.create so the model speaks it.
+        Sends as an assistant message item, then triggers response.create
+        so the model speaks it.
         """
         if not self.ws or self.ws.state != websockets.State.OPEN:
-            logger.warning("Cannot send followup chunk - WebSocket closed")
+            logger.warning(f"[call_id={self.call_id}] Cannot send followup chunk - WebSocket closed")
             return
         
         try:
-            # Generate a unique call_id for this continuation
-            import uuid
-            continuation_id = f"cont_{uuid.uuid4().hex[:8]}"
-            
             # Send as an assistant message item for natural continuation
             await self.ws.send(json.dumps({
                 "type": "conversation.item.create",
@@ -336,18 +372,18 @@ class RealtimeToolHandler:
                 "type": "response.create"
             }))
             
-            logger.debug(f"Follow-up chunk sent ({len(chunk)} chars)")
+            logger.debug(f"[call_id={self.call_id}] Follow-up chunk sent ({len(chunk)} chars)")
             
         except Exception as e:
-            logger.error(f"Failed to send follow-up chunk: {e}")
+            logger.error(f"[call_id={self.call_id}] Failed to send follow-up chunk: {type(e).__name__}: {e}")
             raise
     
-    async def _send_function_result(self, call_id: str, result: str):
+    async def _send_function_result(self, function_call_id: str, result: str):
         """Send function result back to the Realtime session."""
         # websockets 16.0+ uses 'state' instead of 'closed'
         import websockets
         if not self.ws or self.ws.state != websockets.State.OPEN:
-            logger.warning("Cannot send function result - WebSocket closed")
+            logger.warning(f"[call_id={self.call_id}] Cannot send function result - WebSocket closed")
             return
         
         try:
@@ -356,7 +392,7 @@ class RealtimeToolHandler:
                 "type": "conversation.item.create",
                 "item": {
                     "type": "function_call_output",
-                    "call_id": call_id,
+                    "call_id": function_call_id,
                     "output": result
                 }
             }))
@@ -366,10 +402,10 @@ class RealtimeToolHandler:
                 "type": "response.create"
             }))
             
-            logger.info(f"Function result sent ({len(result)} chars)")
+            logger.info(f"[call_id={self.call_id}] Function result sent ({len(result)} chars)")
             
         except Exception as e:
-            logger.error(f"Failed to send function result: {e}")
+            logger.error(f"[call_id={self.call_id}] Failed to send function result: {type(e).__name__}: {e}")
     
     def _notify_status(self, status: str):
         """Notify status change callback if configured."""

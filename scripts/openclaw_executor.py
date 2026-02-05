@@ -18,8 +18,23 @@ from smart_chunker import SmartChunker
 logger = logging.getLogger(__name__)
 
 # Configuration
-OPENCLAW_TIMEOUT = int(os.getenv("OPENCLAW_TIMEOUT", "30"))
+# Reduced from 30s to 5s for voice responsiveness (users expect fast replies)
+OPENCLAW_TIMEOUT = int(os.getenv("OPENCLAW_VOICE_TIMEOUT", os.getenv("OPENCLAW_TIMEOUT", "5")))
 OPENCLAW_MODEL = os.getenv("OPENCLAW_MODEL", "")  # Empty = use default
+
+# Global call_id for error tracking (set per-request)
+_current_call_id: Optional[str] = None
+
+
+def set_call_id(call_id: str):
+    """Set the current call_id for error tracking in logs."""
+    global _current_call_id
+    _current_call_id = call_id
+
+
+def get_call_id() -> str:
+    """Get the current call_id or 'unknown' if not set."""
+    return _current_call_id or "unknown"
 
 
 class OpenClawExecutor:
@@ -42,10 +57,13 @@ class OpenClawExecutor:
         Returns:
             String result suitable for speaking back to the caller
         """
+        call_id = get_call_id()
+        
         if not request or not request.strip():
+            logger.warning(f"[call_id={call_id}] Empty request received")
             return "I didn't receive a valid request. Could you repeat that?"
         
-        logger.info(f"OpenClaw executing request: {request[:100]}...")
+        logger.info(f"[call_id={call_id}] Executing request (timeout={self.timeout}s): {request[:100]}...")
         
         try:
             # Build command - use 'agent' command with a dedicated voice session
@@ -77,23 +95,23 @@ class OpenClawExecutor:
                 # Post-process for voice output
                 result = self._format_for_voice(result)
                 
-                logger.info(f"OpenClaw completed successfully ({len(result)} chars)")
+                logger.info(f"[call_id={call_id}] Request completed successfully ({len(result)} chars)")
                 return result
             else:
                 error_msg = stderr.decode().strip() or stdout.decode().strip()
-                logger.error(f"OpenClaw command failed: {error_msg}")
+                logger.error(f"[call_id={call_id}] Command failed (exit={process.returncode}): {error_msg[:200]}")
                 return "I ran into an issue processing that request. Let me try a different approach, or you can try asking again."
         
         except asyncio.TimeoutError:
-            logger.warning(f"OpenClaw request timed out after {self.timeout}s")
+            logger.error(f"[call_id={call_id}] Request timed out after {self.timeout}s: {request[:50]}...")
             return "That request took too long. Could you try a simpler request?"
         
         except FileNotFoundError:
-            logger.error("openclaw CLI not found in PATH")
+            logger.error(f"[call_id={call_id}] openclaw CLI not found in PATH")
             return "I'm having trouble connecting to my tools right now. Please try again in a moment."
         
         except Exception as e:
-            logger.error(f"OpenClaw execution error: {e}")
+            logger.error(f"[call_id={call_id}] Execution error: {type(e).__name__}: {e}")
             return "Something went wrong processing that request. Let me know if you'd like to try again."
     
     async def execute_streaming(
@@ -114,15 +132,19 @@ class OpenClawExecutor:
         Yields:
             Text chunks as they become available
         """
+        call_id = get_call_id()
+        
         if not request or not request.strip():
+            logger.warning(f"[call_id={call_id}] Empty streaming request received")
             yield "I didn't receive a valid request. Could you repeat that?"
             return
         
-        logger.info(f"OpenClaw streaming request: {request[:100]}...")
+        logger.info(f"[call_id={call_id}] Streaming request (timeout={self.timeout}s): {request[:100]}...")
         
         process = None
         chunker = SmartChunker(target_size=chunk_size, min_size=100, max_size=1000)
         chunks_yielded = 0
+        start_time = asyncio.get_event_loop().time()
         
         try:
             # Build command
@@ -144,11 +166,11 @@ class OpenClawExecutor:
             # Read stdout line-by-line as it's generated
             async def read_with_timeout():
                 """Read lines with overall timeout."""
-                start_time = asyncio.get_event_loop().time()
+                stream_start = asyncio.get_event_loop().time()
                 
                 while True:
                     # Check timeout
-                    elapsed = asyncio.get_event_loop().time() - start_time
+                    elapsed = asyncio.get_event_loop().time() - stream_start
                     if elapsed > self.timeout:
                         raise asyncio.TimeoutError()
                     
@@ -181,7 +203,7 @@ class OpenClawExecutor:
                         chunk = chunk.strip()
                         if chunk:
                             chunks_yielded += 1
-                            logger.debug(f"Yielding chunk {chunks_yielded}: {len(chunk)} chars")
+                            logger.debug(f"[call_id={call_id}] Yielding chunk {chunks_yielded}: {len(chunk)} chars")
                             yield chunk
             
             # Wait for process to finish
@@ -192,38 +214,40 @@ class OpenClawExecutor:
             if final and final.strip():
                 final = final.strip()
                 chunks_yielded += 1
-                logger.debug(f"Yielding final chunk {chunks_yielded}: {len(final)} chars")
+                logger.debug(f"[call_id={call_id}] Yielding final chunk {chunks_yielded}: {len(final)} chars")
                 yield final
             
             # Handle empty output
             if chunks_yielded == 0:
-                logger.warning("OpenClaw returned no output")
+                logger.warning(f"[call_id={call_id}] No output returned from request")
                 yield "Done."
             
             # Check for errors
             if process.returncode != 0:
                 stderr_data = await process.stderr.read()
                 error_msg = stderr_data.decode().strip() if stderr_data else "Unknown error"
-                logger.error(f"OpenClaw process failed with code {process.returncode}: {error_msg}")
+                logger.error(f"[call_id={call_id}] Process failed (exit={process.returncode}): {error_msg[:200]}")
                 # Only yield error if we haven't yielded anything useful
                 if chunks_yielded == 0:
                     yield "I ran into an issue processing that request."
             
-            logger.info(f"OpenClaw streaming completed: {chunks_yielded} chunks yielded")
+            elapsed = asyncio.get_event_loop().time() - start_time
+            logger.info(f"[call_id={call_id}] Streaming completed: {chunks_yielded} chunks in {elapsed:.1f}s")
         
         except asyncio.TimeoutError:
-            logger.warning(f"OpenClaw streaming timed out after {self.timeout}s")
+            elapsed = asyncio.get_event_loop().time() - start_time
+            logger.error(f"[call_id={call_id}] Streaming timed out after {elapsed:.1f}s (limit={self.timeout}s)")
             if chunks_yielded > 0:
                 yield "... I'm still working on this, but it's taking too long."
             else:
                 yield "That request took too long. Could you try a simpler request?"
         
         except FileNotFoundError:
-            logger.error("openclaw CLI not found in PATH")
+            logger.error(f"[call_id={call_id}] openclaw CLI not found in PATH")
             yield "I'm having trouble connecting to my tools right now."
         
         except Exception as e:
-            logger.error(f"OpenClaw streaming error: {e}")
+            logger.error(f"[call_id={call_id}] Streaming error: {type(e).__name__}: {e}")
             if chunks_yielded > 0:
                 yield "... Something went wrong while processing."
             else:
@@ -237,6 +261,7 @@ class OpenClawExecutor:
                     await asyncio.wait_for(process.wait(), timeout=2.0)
                 except:
                     process.kill()
+                logger.debug(f"[call_id={call_id}] Cleaned up lingering process")
     
     def _format_for_voice(self, text: str) -> str:
         """
