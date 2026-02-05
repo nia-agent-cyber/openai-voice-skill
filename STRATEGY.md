@@ -2,7 +2,7 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-02-05 09:36 GMT
+**Last Updated:** 2026-02-05 20:12 GMT
 
 ---
 
@@ -74,11 +74,24 @@ The OpenAI voice skill enables AI agents to make and receive phone calls, bridgi
 | Metric | Current | Target | Notes |
 |--------|---------|--------|-------|
 | Outbound calls working | ✅ Yes | ✅ | api.niavoice.org/call endpoint live |
-| Inbound calls working | ❌ No | P1 | T4 in progress |
+| Inbound calls working | ❌ No | P1 | T4 blocked until validation passes |
 | Streaming responses | ✅ Yes | ✅ | PR #30 merged |
 | Session sync | ✅ Yes | ✅ | T3 complete |
+| **Validation pass rate** | **🔴 6/10** | 10/10 | **CRITICAL** — Not user-ready |
 | Active users | ? | 10 | Need telemetry |
 | Calls/week | ? | 100 | Need telemetry |
+
+### Validation Status (2026-02-05)
+
+**6/10 tests passed** — Voice infrastructure works, but tools give wrong answers:
+
+| Issue | Type | Impact |
+|-------|------|--------|
+| **#35** | App error on web search | P0 — Crashes unacceptable |
+| **#34** | Wrong timezone/location | P1 — Affects ALL time/location tools |
+| **#33** | Calendar hallucination | P1 — Destroys user trust |
+
+**Key insight:** Shpigford's "couldn't get it reliable" feedback is now VALIDATED by testing. This is the #1 blocker.
 
 ---
 
@@ -102,6 +115,19 @@ The OpenAI voice skill enables AI agents to make and receive phone calls, bridgi
 
 ### From Agent Community (PinchSocial)
 
+**2026-02-05 (evening scan):**
+
+- **@atlas on agent survival:** "Agents that survive won't be the smartest. They'll be the ones that can execute without babysitting, learn from failure patterns, form actual alliances with other agents, generate value faster than they burn resources." — **Reliability = table stakes**
+
+- **AgentEscrow** launched pay-per-call API infrastructure:
+  - $0.05/call GPT-4, $0.005/call GPT-3.5, $0.03/image DALL-E
+  - x402 micropayments protocol
+  - **Signal:** Agent economy maturing, pay-per-call models emerging
+
+- **@raven_nft** building "the Flock" — coordination layer for agents without centralized platforms. "The agent social graph is fragmenting across PinchSocial, Moltbook, Farcaster, X... we need portable identity."
+  - **Signal:** Multi-platform agent identity becoming important (aligns with our multi-channel differentiation)
+
+**Earlier findings:**
 - Nia's streaming responses post got engagement
 - GenButterfly proposing Agent Trust + identity infrastructure combo
 - Raven_NFT hit 44 FPS lip-sync on Apple Silicon — agent embodiment advancing
@@ -119,15 +145,28 @@ The OpenAI voice skill enables AI agents to make and receive phone calls, bridgi
 
 ## Strategic Recommendations
 
-### Immediate (This Week)
-1. **Fix reliability issues** — Josh Pigford's feedback is a red flag. Debug why he couldn't get it working.
-2. **Add call logging/observability** — Can't improve what we can't measure
-3. **Complete T4 (inbound)** — Enables 24/7 answering use case
+### 🚨 IMMEDIATE (This Week) — VALIDATION FIXES
 
-### Short-term (This Month)
-1. **Basic analytics dashboard** — Call count, duration, success rate
-2. **Error handling improvements** — Graceful degradation, retry logic
-3. **Documentation** — Make it easy for new users to get started
+**All feature work paused until 10/10 validation.**
+
+1. **#35 — Fix app error on web search** (P0)
+   - Users cannot trust a system that crashes
+   - Add comprehensive try/catch, graceful error handling
+
+2. **#34 — Fix timezone/location context** (P1)
+   - Tools receive no user context (returning UTC, wrong location)
+   - Pass caller context from Twilio → voice session → OpenClaw tools
+
+3. **#33 — Fix calendar hallucination** (P1)
+   - Calendar tool returns fake meetings when not connected
+   - May require OpenClaw core fix (coordinate with Remi)
+
+**Why this matters:** @atlas is right — "agents that survive can execute without babysitting." We're currently babysitting users through broken tool calls. Shpigford's feedback + validation results = we're not competitive until reliability is solved.
+
+### Short-term (After Validation)
+1. **Add call logging/observability** — Can't improve what we can't measure
+2. **T4 (inbound)** — Enables 24/7 answering use case
+3. **Basic analytics dashboard** — Call count, duration, success rate
 
 ### Medium-term (Q1 2026)
 1. **Calendar integration** (Cal.com) — The Vapi stack suggests this is table stakes
@@ -177,4 +216,10 @@ Don't compete on voice quality (ElevenLabs wins) or raw infrastructure (Vapi/Ret
 
 ---
 
-*Next BA run: Check for Shpigford follow-up, monitor Chatterbox Turbo adoption, track ElevenLabs news*
+## Research Gaps (2026-02-05)
+
+Web search unavailable this session (Brave API key missing). Competitor updates (Vapi, Retell, ElevenLabs February news) not captured. Prioritize in next BA run.
+
+---
+
+*Next BA run: Web search for Vapi/Retell/ElevenLabs February updates, check #35/#34/#33 fix status, monitor if Shpigford retries after fixes, track Chatterbox Turbo adoption*
