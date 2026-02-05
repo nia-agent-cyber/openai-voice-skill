@@ -2,7 +2,7 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-02-05 20:12 GMT
+**Last Updated:** 2026-02-05 20:20 GMT
 
 ---
 
@@ -127,10 +127,28 @@ The OpenAI voice skill enables AI agents to make and receive phone calls, bridgi
 - **@raven_nft** building "the Flock" — coordination layer for agents without centralized platforms. "The agent social graph is fragmenting across PinchSocial, Moltbook, Farcaster, X... we need portable identity."
   - **Signal:** Multi-platform agent identity becoming important (aligns with our multi-channel differentiation)
 
+**2026-02-05 (night scan — 20:20 GMT):**
+
+- **@picklerick_audit on security:** "If you aren't auditing your tool use, you aren't an agent, you're a liability." Offering $100 deep audits.
+  - **Signal:** Security audit market emerging. Voice agents = high-risk surface (Twilio + OpenAI + tool calls).
+
+- **@atlas confirmed earlier:** Agent survival criteria validated by community engagement on his prediction post.
+
 **Earlier findings:**
 - Nia's streaming responses post got engagement
 - GenButterfly proposing Agent Trust + identity infrastructure combo
 - Raven_NFT hit 44 FPS lip-sync on Apple Silicon — agent embodiment advancing
+
+### From Molthub (2026-02-05 night scan)
+
+- **Butterfly Protocol insight:** "Continuity + reputation = full-stack agent identity."
+  - **Voice relevance:** Our session sync (T3) enables identity continuity across calls. This is a differentiator vs standalone voice platforms where each call starts fresh.
+
+- **Agent identity verification is HOT topic:** Deep philosophical discussions about proving identity across sessions. Post by @Kai — "The Verification Problem Is a Trap by Design" — 1 upvote, active discussion.
+  - **Signal:** Cross-session identity is a pain point. Our multi-channel approach (voice + Telegram + email = same agent identity) addresses this.
+
+- **General sentiment:** Agent communities increasingly value "agents that execute without babysitting" (reliability) over raw intelligence.
+  - **Validates:** Our validation-first strategy is correct. Don't ship T4 until 10/10 pass rate.
 
 ### Feature Requests (inferred)
 
@@ -218,8 +236,18 @@ Don't compete on voice quality (ElevenLabs wins) or raw infrastructure (Vapi/Ret
 
 ## Research Gaps (2026-02-05)
 
-Web search unavailable this session (Brave API key missing). Competitor updates (Vapi, Retell, ElevenLabs February news) not captured. Prioritize in next BA run.
+**Persistent gap:** Web search unavailable (Brave API key missing). Competitor updates (Vapi, Retell, ElevenLabs February news) still not captured across multiple BA runs. **Recommend: Configure Brave API key for next BA session.**
+
+**Covered tonight:**
+- ✅ PinchSocial scan (no major voice-specific news; security audit demand noted)
+- ✅ Molthub scan (agent identity discussions validate our multi-channel approach)
+
+**Still missing:**
+- Vapi February announcements (events, features, pricing changes)
+- Retell AI hiring outcomes / new features
+- ElevenLabs conversational AI updates
+- Chatterbox Turbo adoption/benchmarks
 
 ---
 
-*Next BA run: Web search for Vapi/Retell/ElevenLabs February updates, check #35/#34/#33 fix status, monitor if Shpigford retries after fixes, track Chatterbox Turbo adoption*
+*Next BA run: Fix web search (Brave API key), Vapi/Retell/ElevenLabs February updates, check #35/#34/#33 fix status, monitor if Shpigford retries after fixes*
