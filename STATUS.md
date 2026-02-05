@@ -1,16 +1,16 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-05 09:40 GMT by Voice PM
+**Last Updated:** 2026-02-05 09:45 GMT by Voice Coder
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## Current State: ⚠️ RELIABILITY ISSUES
+## Current State: ⚠️ RELIABILITY FIXES IN REVIEW
 
 ### Critical Issue
 **Josh Pigford (@Shpigford) couldn't get the voice skill working reliably and switched to Vapi.**
 
-This is our top priority. See **#31** for full analysis and fixes.
+**PR #32** addresses the P0 reliability fixes. Pending review and merge.
 
 ### What's Live
 - ✅ `ask_openclaw` tool — pipeline working but unreliable
@@ -20,7 +20,7 @@ This is our top priority. See **#31** for full analysis and fixes.
 - ✅ Security: inbound disabled by default (PR #29)
 
 ### In Progress
-- [ ] **#31** — 🔴 CRITICAL: Reliability fixes (WebSocket reconnection, timeouts, error handling)
+- [x] **#31** → **PR #32** — P0 reliability fixes (exponential backoff, 5s timeout, call_id logging)
 - [ ] **#27** — Integration testing for streaming responses
 - [ ] **T4** — Inbound Handler (phone → session creation)
 
@@ -32,13 +32,13 @@ This is our top priority. See **#31** for full analysis and fixes.
 ## Next Steps (Priority Order)
 
 ### 🔴 P0 - This Week (Reliability)
-1. **#31** — Reliability fixes (assigned: PM to coordinate)
-   - [ ] Add exponential backoff to WebSocket reconnection
-   - [ ] Reduce default timeout to 10s
-   - [ ] Add basic call metrics (`/metrics` endpoint)
-   - [ ] Improve error messages with call_id
+1. **PR #32** — P0 reliability fixes (awaiting review)
+   - [x] Add exponential backoff to WebSocket reconnection (500ms → 30s cap, 10 attempts)
+   - [x] Reduce default timeout to 5s (was 30s — too slow for voice)
+   - [x] Add call_id tracking in all error logs
+   - [ ] Add basic call metrics (`/metrics` endpoint) — deferred to P1
 
-2. **Manual testing** — Full call flow with tool use
+2. **Manual testing** — Full call flow with tool use (after PR merge)
    - [ ] Outbound call with ask_openclaw
    - [ ] Multiple tool invocations in one call
    - [ ] Test timeout/failure scenarios
@@ -83,6 +83,7 @@ This is our top priority. See **#31** for full analysis and fixes.
 
 | PR | Status | Description |
 |----|--------|-------------|
+| **#32** | **🔄 Open** | **P0 reliability: exponential backoff, 5s timeout, call_id logging** |
 | #30 | ✅ Merged | Streaming tool responses |
 | #29 | ✅ Merged | Security: disable inbound by default |
 | #22 | Open | WebSocket fixes, command fixes |
