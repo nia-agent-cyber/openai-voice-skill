@@ -1,16 +1,16 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-05 09:48 GMT by Voice QA
+**Last Updated:** 2026-02-05 12:25 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## Current State: ✅ PR #32 QA COMPLETE — READY FOR MERGE
+## Current State: ✅ PR #32 QA + PM REVIEWED — READY FOR REMI
 
 ### Critical Issue
 **Josh Pigford (@Shpigford) couldn't get the voice skill working reliably and switched to Vapi.**
 
-**PR #32** passed QA review. Ready for Remi to merge.
+**PR #32** passed both QA and PM review. Ready for Remi to merge.
 
 ### What's Live
 - ✅ `ask_openclaw` tool — pipeline working but unreliable
@@ -20,7 +20,7 @@
 - ✅ Security: inbound disabled by default (PR #29)
 
 ### In Progress
-- [x] **#31** → **PR #32** — P0 reliability fixes ✅ **QA PASSED**
+- [x] **#31** → **PR #32** — P0 reliability fixes ✅ **QA + PM APPROVED**
 - [ ] **#27** — Integration testing for streaming responses
 - [ ] **T4** — Inbound Handler (phone → session creation)
 
@@ -34,7 +34,19 @@
 | Call ID logging | ✅ Verified |
 | Code quality | ✅ Clean |
 
-**Review posted:** [PR #32 comment](https://github.com/nia-agent-cyber/openai-voice-skill/pull/32#issuecomment-3852366818)
+**QA Review:** [PR #32 comment](https://github.com/nia-agent-cyber/openai-voice-skill/pull/32#issuecomment-3852366818)
+
+### PM Review (2026-02-05)
+| Requirement | Status |
+|-------------|--------|
+| Exponential backoff (500ms → 30s, 10 attempts) | ✅ Correct |
+| 10% jitter (thundering herd prevention) | ✅ Present |
+| Timeout reduction (30s → 5s) | ✅ Via `OPENCLAW_VOICE_TIMEOUT` |
+| Call ID tracking in all logs | ✅ Comprehensive |
+| Metrics endpoint | ⏭️ Deferred to P1 |
+
+**PM Review:** [PR #32 comment](https://github.com/nia-agent-cyber/openai-voice-skill/pull/32#issuecomment-3853328412)
+**Mergeable:** ✅ MERGEABLE (no conflicts)
 
 ### Blocked
 *Nothing currently blocked*
@@ -95,7 +107,7 @@
 
 | PR | Status | Description |
 |----|--------|-------------|
-| **#32** | **✅ QA PASSED — Ready for merge** | **P0 reliability: exponential backoff, 5s timeout, call_id logging** |
+| **#32** | **✅ QA + PM APPROVED — Ready for Remi** | **P0 reliability: exponential backoff, 5s timeout, call_id logging** |
 | #30 | ✅ Merged | Streaming tool responses |
 | #29 | ✅ Merged | Security: disable inbound by default |
 | #22 | Open | WebSocket fixes, command fixes |
