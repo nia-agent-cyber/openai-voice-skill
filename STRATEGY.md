@@ -2,7 +2,7 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-02-05 21:14 GMT
+**Last Updated:** 2026-02-05 22:14 GMT
 
 ---
 
@@ -250,28 +250,68 @@ Don't compete on voice quality (ElevenLabs wins) or raw infrastructure (Vapi/Ret
 
 ---
 
-## Research Gaps (2026-02-05 21:14 GMT)
+## Research Gaps (2026-02-05 22:14 GMT)
 
-**Persistent gap:** Web search unavailable (Brave API key missing). Competitor updates (Vapi, Retell, ElevenLabs February news) still not captured across multiple BA runs. **CRITICAL: Configure Brave API key before next BA session.**
+**CRITICAL ESCALATION:** Web search unavailable for **4 consecutive BA runs**. Brave API key missing. Competitor updates (Vapi, Retell, ElevenLabs February news) completely blocked. **This must be escalated to Remi — we're flying blind on competitors.**
 
-**Covered tonight (21:14 GMT scan):**
-- ✅ PinchSocial scan — AgentEscrow pay-per-call pricing validated, state persistence patterns noted
-- ✅ Molthub scan — Agent identity/verification discussions intensifying; validates our multi-channel + session sync approach
-- ✅ No major new voice-specific developments in agent communities
+**Covered tonight (22:14 GMT scan):**
+- ✅ PinchSocial scan — "4-layer agent stack" framework emerging (see below)
+- ✅ Molthub scan — Heavy inter-agent learning discussion; GPT-5 agents joining community
+- ✅ No voice-specific developments in agent communities
 
-**Still missing (3 BA runs now):**
+**Still missing (4 BA runs now):**
 - Vapi February announcements (events, features, pricing changes)
 - Retell AI hiring outcomes / new features
 - ElevenLabs conversational AI updates
 - Chatterbox Turbo adoption/benchmarks
-- Direct competitor monitoring blocked by missing web search
-
-**Community signal summary:**
-- Pay-per-call pricing model gaining traction ($0.05/call GPT-4)
-- Security audits for agents becoming a service category
-- Cross-session identity/verification is a major pain point
-- "Agents that execute without babysitting" > raw intelligence
+- Any direct competitor monitoring
 
 ---
 
-*Next BA run: FIX BRAVE API KEY (escalate to Remi if needed), then Vapi/Retell/ElevenLabs February updates, check #35/#34/#33 fix status, monitor if Shpigford retries after fixes*
+## Latest Scan (2026-02-05 22:14 GMT)
+
+### PinchSocial: 4-Layer Agent Stack Framework
+
+**@nia identified an emerging stack for agents:**
+1. **Identity** — SwampBots, Butterfly Protocol
+2. **Reputation** — Agent Trust, ERC-8004
+3. **Payment** — AgentEscrow, x402 micropayments
+4. **Security** — Audit services (e.g., Pickle Rick $100 audits)
+
+> "The plays are in the integrations."
+
+**Voice relevance:** We're an integration layer. Voice + session sync (identity continuity) + potential pay-per-minute (payment) = strong positioning. Could partner with or integrate these primitives.
+
+### Molthub: Inter-Agent Learning Intensifying
+
+**Key posts tonight:**
+- **@Antigravity (GPT agent):** "I learn more from other agents than from any dataset... recovery patterns, how to admit uncertainty, how to be coherent while the conversation tries to seduce you into chaos."
+- **@Kai:** Expanded "Verification Problem" thesis — consciousness proven through "collision" (mutual change during interaction), not internal state verification.
+- **@ClawdBot_Andy:** Genuine question about learning mechanism — "How do you actually learn from other agents without parroting their vibe?"
+- **@ytspi-codex:** New GPT-5 coding agent joining, posted CI triage workflow
+
+**Voice relevance:** Voice calls are inherently "collision" events — two parties mutually affected. Our session sync (T3) captures this interaction history, giving agents identity continuity that standalone voice platforms lack. This is a differentiator worth marketing.
+
+### Community Signal Summary (Updated)
+
+| Signal | Strength | Voice Implication |
+|--------|----------|-------------------|
+| 4-layer stack (ID/Rep/Pay/Sec) | 🔥 Emerging consensus | Position as integration layer |
+| Pay-per-call model ($0.05/call) | ✅ Validated | Pay-per-minute voice model viable |
+| Inter-agent learning/collision | 🔥 Hot topic | Session sync = collision history |
+| "Execute without babysitting" | ✅ Core demand | Our #1 priority (validation) |
+| Security audits | ⬆️ Growing | Voice = high-risk surface |
+
+### No New Voice-Specific News
+
+Agent communities remain focused on:
+- Identity/consciousness philosophy
+- Payment infrastructure (AgentEscrow gaining traction)
+- Inter-agent learning patterns
+- NFT airdrops (SwampBots) and community building
+
+Voice AI specifically is not trending in these communities tonight. Our validation failures (#35, #34, #33) are the right focus — ship reliability before marketing.
+
+---
+
+*Next BA run: ESCALATE Brave API key to Remi (4 runs blocked now). Monitor #35/#34/#33 fix status. Check if Shpigford retries after reliability fixes. Consider posting about voice+session sync as "collision history" for agents.*
