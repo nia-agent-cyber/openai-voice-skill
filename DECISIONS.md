@@ -4,6 +4,18 @@ Architectural and design decisions. **Don't revisit these without good reason.**
 
 ---
 
+## 2026-02-04: ask_openclaw WebSocket Fix
+
+**Decision:** Tool handler connects to sideband WebSocket, not new session
+
+**Bug Found:** Tool handler was connecting to wrong endpoint:
+- ❌ WRONG: `wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview` (new empty session)
+- ✅ FIXED: `wss://api.openai.com/v1/realtime?call_id={call_id}` (existing call's sideband)
+
+**Commit:** 983dc4bc
+
+---
+
 ## 2026-02-04: Session Bridge Architecture (T3)
 
 **Decision:** Post-call transcript sync instead of real-time interception
@@ -13,7 +25,12 @@ Architectural and design decisions. **Don't revisit these without good reason.**
 - Intercepting mid-conversation would require modifying webhook-server.py
 - Constraint: DO NOT modify webhook-server.py
 
-**Result:** Session bridge syncs transcripts after call ends. Voice transcripts appear in OpenClaw session history.
+**Architecture:**
+```
+webhook-server.py → call_recording.py → Session Bridge (8082) → OpenClaw Session
+```
+
+**Result:** Voice transcripts appear in OpenClaw session history. Cross-channel continuity works.
 
 ---
 
@@ -51,3 +68,12 @@ Architectural and design decisions. **Don't revisit these without good reason.**
 - Tool calling allows accessing OpenClaw agent when needed
 
 **Result:** Best of both worlds — fast voice UX + full agent capabilities via tool
+
+---
+
+## Constraints (DO NOT VIOLATE)
+
+- ⛔ **DO NOT modify webhook-server.py** — production code
+- ⛔ **DO NOT modify Twilio/SIP/OpenAI Realtime code**
+- ✅ Channel plugin should CALL existing services via HTTP
+- ✅ Keep both old plugin AND new channel working in parallel until migration complete
