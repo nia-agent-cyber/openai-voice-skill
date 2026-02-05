@@ -8,7 +8,8 @@ How to work on this project. **Read this first every session.**
 
 1. Read `STATUS.md` — current state, blockers, next steps
 2. Read `DECISIONS.md` — don't revisit settled decisions
-3. Check GitHub issues/PRs: `gh issue list` / `gh pr list`
+3. Read `STRATEGY.md` — market context, KPIs, direction (updated by BA)
+4. Check GitHub issues/PRs: `gh issue list` / `gh pr list`
 
 ## During Work
 
@@ -34,6 +35,7 @@ How to work on this project. **Read this first every session.**
 |------|---------|------------------|
 | `STATUS.md` | Current state, what's active NOW | Every session |
 | `DECISIONS.md` | Why we chose X over Y | When decisions made |
+| `STRATEGY.md` | Market research, KPIs, direction | Daily (by BA) |
 | `PROTOCOL.md` | How to work (this file) | Rarely |
 
 ---
