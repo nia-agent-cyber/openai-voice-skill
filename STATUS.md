@@ -30,7 +30,7 @@
 
 | Issue | Priority | Type | Description | Impact |
 |-------|----------|------|-------------|--------|
-| **#35** | **P0** | Reliability | Application error during web search | **FIX IN PR** |
+| **#35** | **P0** | Reliability | Application error during web search | **PR #36** |
 | **#34** | **P1** | Context | Wrong timezone and location passed to tools | Affects ALL location/time tools |
 | **#33** | **P1** | Data Integrity | Calendar returns hallucinated data | Destroys user trust |
 
@@ -38,7 +38,7 @@
 
 ## 🔧 Fix Plan
 
-### Phase 1: P0 Reliability (#35) — FIX SUBMITTED
+### Phase 1: P0 Reliability (#35) — PR #36 READY FOR REVIEW
 
 **Problem:** Test 4 ("Search for X then summarize") caused an application error.
 
@@ -47,16 +47,18 @@
 - Streaming execution errors could propagate without graceful fallback
 - `_send_function_result` failures could crash the handler
 
-**Fix Applied (PR pending):**
+**Fix Applied (PR #36):**
 1. ✅ Wrapped entire `_handle_function_call` in comprehensive try/except
 2. ✅ Added `_send_function_result_safe` (no-throw version) for error handlers
 3. ✅ Improved `_execute_streaming_function` to handle mid-stream errors gracefully
 4. ✅ Enhanced `_execute_function` with specific error handling for timeouts, execution errors
-5. ✅ Added 8 unit tests for error handling scenarios
+5. ✅ Added 8 unit tests for error handling scenarios (all passing)
 
-**Changes:**
+**Changes (PR #36):**
 - `scripts/realtime_tool_handler.py` - Comprehensive error handling
-- `tests/test_error_handling.py` - 8 new tests (all passing)
+- `tests/test_error_handling.py` - 8 new tests
+
+**Status:** Rebased on main, mergeable, ready for QA review
 
 ---
 
@@ -158,8 +160,8 @@
 
 ## Next Steps
 
-1. **Spawn coder** for #35 (P0 application error) — IMMEDIATE
-2. **Spawn coder** for #34 (timezone/location context) — after #35
+1. ✅ **#35 Fix submitted** — PR #36 ready for QA review
+2. **Spawn coder** for #34 (timezone/location context) — after #35 merged
 3. **#33 may require OpenClaw core fix** — coordinate with Remi
 4. **Re-run validation** after fixes
 
@@ -196,7 +198,7 @@ These issues have been OPEN since 2026-02-05 (~13 hours). No coder has been assi
 
 | Issue | Description | Priority | Status |
 |-------|-------------|----------|--------|
-| **#35** | **Application error during web search** | **P0** | **OPEN - NEEDS FIX** |
+| **#35** | **Application error during web search** | **P0** | **PR #36 Ready** |
 | **#34** | **Wrong timezone and location context** | **P1** | **OPEN - NEEDS FIX** |
 | **#33** | **Calendar hallucination** | **P1** | **OPEN - NEEDS FIX** |
 | #31 | Reliability fixes | P0 | ✅ Fixed (PR #32) |
@@ -206,6 +208,7 @@ These issues have been OPEN since 2026-02-05 (~13 hours). No coder has been assi
 
 | PR | Status | Description |
 |----|--------|-------------|
+| #36 | 🔍 Review | Fix #35: Comprehensive error handling for ask_openclaw |
 | #32 | ✅ Merged | P0 reliability: exponential backoff, 5s timeout, call_id logging |
 | #30 | ✅ Merged | Streaming tool responses |
 | #29 | ✅ Merged | Security: disable inbound by default |
