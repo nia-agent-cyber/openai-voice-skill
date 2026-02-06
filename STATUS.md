@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 06:40 GMT by Voice PM
+**Last Updated:** 2026-02-06 06:47 GMT by Voice QA
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -30,7 +30,7 @@
 
 | Issue | Priority | Type | Description | Impact |
 |-------|----------|------|-------------|--------|
-| **#35** | **P0** | Reliability | Application error during web search | Crashes are unacceptable |
+| **#35** | **P0** | Reliability | Application error during web search | **PR #36 — QA APPROVED** |
 | **#34** | **P1** | Context | Wrong timezone and location passed to tools | Affects ALL location/time tools |
 | **#33** | **P1** | Data Integrity | Calendar returns hallucinated data | Destroys user trust |
 
@@ -38,21 +38,27 @@
 
 ## 🔧 Fix Plan
 
-### Phase 1: P0 Reliability (#35) — IMMEDIATE
+### Phase 1: P0 Reliability (#35) — PR #36 QA APPROVED ✅
 
 **Problem:** Test 4 ("Search for X then summarize") caused an application error.
 
-**Root Cause (suspected):**
-- Web search tool may throw unhandled exception
-- Timeout handling in ask_openclaw may not catch all error cases
-- PR #32 fixed timeouts but may not handle all error paths
+**Root Cause (confirmed):**
+- Insufficient try/catch coverage in `_handle_function_call`
+- Streaming execution errors could propagate without graceful fallback
+- `_send_function_result` failures could crash the handler
 
-**Action Required:**
-1. Review ask_openclaw error handling for web search
-2. Add try/catch around tool execution
-3. Ensure graceful fallback on any tool error
+**Fix Applied (PR #36):**
+1. ✅ Wrapped entire `_handle_function_call` in comprehensive try/except
+2. ✅ Added `_send_function_result_safe` (no-throw version) for error handlers
+3. ✅ Improved `_execute_streaming_function` to handle mid-stream errors gracefully
+4. ✅ Enhanced `_execute_function` with specific error handling for timeouts, execution errors
+5. ✅ Added 8 unit tests for error handling scenarios (all 37 tests passing)
 
-**Coder Task:** Investigate #35, add comprehensive error handling in tool bridge.
+**QA Review:** APPROVED (2026-02-06 06:47 GMT)
+- Code changes appropriately scoped
+- Tests comprehensive and passing
+- PR rebased and mergeable
+- Ready for PM review and merge
 
 ---
 
@@ -173,18 +179,20 @@
 
 ### Immediate Actions Needed
 
-**1. Coder Spawn for #35 (URGENT)**
-This is blocking everything. A crash during web search means any user hitting that code path gets a broken experience.
+**1. ✅ #35 Fix Complete — PR #36 QA Approved**
+Ready for PM review and merge. Comprehensive error handling added.
 
-**2. Coder Spawn for #34 (Right After #35)**
+**2. Coder Spawn for #34 (Next Priority)**
 Timezone/location is fixable in voice skill layer. Check Twilio call metadata for context.
 
 **3. Escalate #33 to Remi**
 Calendar hallucination is NOT a voice skill bug — it's the OpenClaw calendar tool returning fake data when no calendar is connected. Voice skill can't fix this; OpenClaw core needs to validate integration state.
 
-### Stalled Work Summary
+### Progress Summary
 
-These issues have been OPEN since 2026-02-05 (~13 hours). No coder has been assigned. Need spawns ASAP to unblock validation.
+- ✅ #35 P0 fix submitted (PR #36) — QA approved 2026-02-06 06:47 GMT
+- 🔄 #34 P1 — Next up after #35 merged
+- ⏳ #33 P1 — Needs OpenClaw core fix
 
 ---
 
@@ -192,7 +200,7 @@ These issues have been OPEN since 2026-02-05 (~13 hours). No coder has been assi
 
 | Issue | Description | Priority | Status |
 |-------|-------------|----------|--------|
-| **#35** | **Application error during web search** | **P0** | **OPEN - NEEDS FIX** |
+| **#35** | **Application error during web search** | **P0** | **PR #36 QA APPROVED — Ready to merge** |
 | **#34** | **Wrong timezone and location context** | **P1** | **OPEN - NEEDS FIX** |
 | **#33** | **Calendar hallucination** | **P1** | **OPEN - NEEDS FIX** |
 | #31 | Reliability fixes | P0 | ✅ Fixed (PR #32) |
@@ -202,6 +210,7 @@ These issues have been OPEN since 2026-02-05 (~13 hours). No coder has been assi
 
 | PR | Status | Description |
 |----|--------|-------------|
+| **#36** | **✅ QA Approved** | Fix #35: Comprehensive error handling for ask_openclaw |
 | #32 | ✅ Merged | P0 reliability: exponential backoff, 5s timeout, call_id logging |
 | #30 | ✅ Merged | Streaming tool responses |
 | #29 | ✅ Merged | Security: disable inbound by default |
