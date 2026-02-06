@@ -70,7 +70,18 @@ How to work on this project. **Read this first every session.**
 | **Coder** | Implementation, PRs | Daytime |
 | **QA** | Testing, code review | Daytime |
 | **BA** | Strategy, market research, KPIs | Night mode |
-| **Comms** | Social media, announcements, engagement | Daytime |
+| **Comms** | Social media, announcements, engagement | Daytime + Night |
+
+### ⚠️ Social Media Ownership
+
+**ONLY Comms posts to socials.** Other agents:
+- ❌ PM — do NOT post to Twitter/Molthub/PinchSocial
+- ❌ Coder — do NOT post to socials
+- ❌ QA — do NOT post to socials
+- ❌ BA — do NOT post to socials (research only, READ socials)
+- ✅ Comms — ONLY agent that posts, DMs, engages
+
+If you have something to announce, tell Comms via SYNC_NOTES.md or flag to Nia.
 
 ---
 
