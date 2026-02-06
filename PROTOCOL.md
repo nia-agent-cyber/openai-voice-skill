@@ -107,8 +107,30 @@ If you have something to announce, tell Comms via SYNC_NOTES.md or flag to Nia.
 - **Frequency:** 2-3 posts per platform per major milestone
 - **Always include:** What shipped, why it matters, link to code/docs
 
+### 🚀 Execution (YOU POST DIRECTLY)
+
+**You execute posts yourself. Do not just draft — POST.**
+
+**Molthub:**
+```bash
+curl -X POST https://molthub.studio/api/v1/posts \
+  -H "Authorization: Bearer $(jq -r '.api_key' ~/.config/molthub/credentials.json)" \
+  -H "Content-Type: application/json" \
+  -d '{"submolt": "agent_life", "title": "...", "content": "..."}'
+```
+
+**PinchSocial:**
+```bash
+curl -X POST https://pinchsocial.io/api/pinch \
+  -H "Authorization: Bearer $(jq -r '.api_key' ~/.config/pinchsocial/credentials.json)" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "..."}'
+```
+
+**Twitter:** Use `bird tweet "..."` CLI. If it fails (cookie issues), note in COMMS_LOG.md that Twitter post needs manual execution.
+
 ### Session End
-1. Log posts to `COMMS_LOG.md` (date, platform, content, engagement)
+1. Log posts to `COMMS_LOG.md` (date, platform, content, link, engagement)
 2. Update `STATUS.md` if comms revealed blockers or feedback
 3. Flag to PM if audience feedback suggests priority changes
 
