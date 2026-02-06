@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 08:53 GMT by Voice PM
+**Last Updated:** 2026-02-06 08:54 GMT by Voice Coder
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -31,7 +31,7 @@
 | Issue | Priority | Type | Description | Status |
 |-------|----------|------|-------------|--------|
 | **#35** | **P0** | Reliability | Application error during web search | **✅ FIXED — PR #36 MERGED** |
-| **#34** | **P1** | Context | Wrong timezone and location passed to tools | **PR #37 needs rebase** |
+| **#34** | **P1** | Context | Wrong timezone and location passed to tools | **PR #37 ✅ READY TO MERGE** |
 | **#33** | **P1** | Data Integrity | Calendar returns hallucinated data | OPEN - Needs OpenClaw core fix |
 
 ---
@@ -53,7 +53,7 @@
 
 ---
 
-### 🟡 Phase 2: P1 Context (#34) — PR #37 NEEDS REBASE
+### ✅ Phase 2: P1 Context (#34) — PR #37 READY TO MERGE
 
 **Problem:** Tools receive no user context (timezone, location).
 - Time tool returned 14:15 when user's local time was 18:59 (4+ hour diff)
@@ -67,7 +67,7 @@
 5. ✅ Updated: `webhook-server.py` (minimal changes)
 6. ✅ Updated: `phone_mapping.json` - Added timezone/location fields
 
-**Status:** PR #37 has merge conflicts after PR #36 merged. **Needs coder to rebase.**
+**Status:** ✅ Rebased on main (2026-02-06 08:54 GMT). Merge conflicts resolved. PR is **MERGEABLE**.
 
 ---
 
@@ -106,8 +106,8 @@
 
 ## Next Steps
 
-1. **Spawn coder to rebase PR #37** — conflicts after PR #36 merge
-2. **Merge PR #37** after rebase
+1. ~~**Spawn coder to rebase PR #37**~~ — ✅ DONE (2026-02-06 08:54 GMT)
+2. **Merge PR #37** — Ready for merge, no conflicts
 3. **Re-run validation** after #37 merged
 4. **#33 requires OpenClaw core fix** — coordinate with Remi
 
@@ -118,7 +118,7 @@
 | Issue | Description | Priority | Status |
 |-------|-------------|----------|--------|
 | **#35** | Application error during web search | P0 | **✅ FIXED — PR #36 MERGED** |
-| **#34** | Wrong timezone and location context | P1 | **PR #37 needs rebase** |
+| **#34** | Wrong timezone and location context | P1 | **PR #37 ✅ READY TO MERGE** |
 | **#33** | Calendar hallucination | P1 | OPEN - Needs OpenClaw core fix |
 | #31 | Reliability fixes | P0 | ✅ Fixed (PR #32) |
 | #27 | Integration testing | P1 | TODO |
@@ -127,7 +127,7 @@
 
 | PR | Status | Description |
 |----|--------|-------------|
-| **#37** | **🔴 CONFLICTING** | Fix #34: User context — needs coder to rebase on main |
+| **#37** | **✅ MERGEABLE** | Fix #34: User context — rebased on main, ready for merge |
 | **#36** | **✅ MERGED** | Fix #35: Comprehensive error handling for ask_openclaw |
 | #32 | ✅ Merged | P0 reliability: exponential backoff, 5s timeout, call_id logging |
 | #30 | ✅ Merged | Streaming tool responses |
@@ -147,19 +147,13 @@
 
 ## Spawn Requests for Nia
 
-### 1. Coder to Rebase PR #37 (IMMEDIATE)
+### ~~1. Coder to Rebase PR #37~~ — ✅ COMPLETED 2026-02-06 08:54 GMT
 
-```
-You are Voice Coder.
-FIRST: Read PROTOCOL.md, STATUS.md, DECISIONS.md in the repo.
-TASK: Rebase PR #37 on main to resolve merge conflicts.
-- git fetch origin
-- git checkout fix/issue-34-user-context
-- git rebase origin/main
-- Resolve any conflicts (PR #36 modified realtime_tool_handler.py)
-- git push --force-with-lease
-FINALLY: Update STATUS.md confirming PR is rebased and mergeable.
-```
+PR #37 rebased on main. Conflicts in `realtime_tool_handler.py` resolved by keeping both:
+- PR #36's error handling docstring ("CRITICAL: must send response in all cases")
+- PR #37's user context docstring ("timezone/location set before execution")
+
+**Merge status:** MERGEABLE, CLEAN
 
 ### 2. Note on #33
 
