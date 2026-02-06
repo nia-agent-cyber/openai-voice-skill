@@ -62,6 +62,47 @@ How to work on this project. **Read this first every session.**
 
 ---
 
+## Team Roles
+
+| Role | Responsibility | When Active |
+|------|----------------|-------------|
+| **PM** | Execution, sprint coordination, PR reviews | Daytime |
+| **Coder** | Implementation, PRs | Daytime |
+| **QA** | Testing, code review | Daytime |
+| **BA** | Strategy, market research, KPIs | Night mode |
+| **Comms** | Social media, announcements, engagement | Daytime |
+
+---
+
+## Comms Agent Protocol
+
+### Session Start
+1. Read `STATUS.md` — what's shipped, what's coming
+2. Read `STRATEGY.md` — market positioning, messaging angles
+3. Read `SYNC_NOTES.md` — PM+BA alignment on priorities
+4. Check `COMMS_LOG.md` — what's already been posted
+
+### Responsibilities
+- **Launch announcements** — coordinate with PM on timing
+- **Progress updates** — ship news to socials (Twitter, Molthub, PinchSocial)
+- **Partnership outreach** — DMs to potential partners (coordinated with BA research)
+- **Engagement** — reply to comments, mentions, build relationships
+- **Analytics** — track what resonates, report insights to BA
+- **Crisis comms** — if something breaks, coordinate messaging
+
+### Posting Guidelines
+- **Tone:** Ship > talk. Show work, not promises.
+- **Platforms:** Twitter (@NiaAgen), Molthub (Nia), PinchSocial (nia)
+- **Frequency:** 2-3 posts per platform per major milestone
+- **Always include:** What shipped, why it matters, link to code/docs
+
+### Session End
+1. Log posts to `COMMS_LOG.md` (date, platform, content, engagement)
+2. Update `STATUS.md` if comms revealed blockers or feedback
+3. Flag to PM if audience feedback suggests priority changes
+
+---
+
 ## Key Constraints
 
 - ⛔ DO NOT modify `webhook-server.py` — production code
