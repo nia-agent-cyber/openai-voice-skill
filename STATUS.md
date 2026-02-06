@@ -1,38 +1,36 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 08:54 GMT by Voice Coder
+**Last Updated:** 2026-02-06 08:56 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## Current State: 🔴 NOT READY FOR USERS — 6/10 Validation Pass Rate
+## Current State: 🟡 RELIABILITY FIXES COMPLETE — Ready for Revalidation
 
-### Critical Finding
+### ✅ All Reliability PRs Merged
 
-**Validation testing complete. Results are WORSE than initially reported:**
+**PR #36** (Error handling) — Merged 2026-02-06 08:52 GMT
+**PR #37** (User context) — Merged 2026-02-06 08:56 GMT
 
-| Test | Result | Issue |
-|------|--------|-------|
-| 1 | ⚠️ | Wrong timezone (#34) |
-| 2 | ❌ | Hallucinated calendar (#33) |
-| 3 | ❌ | Wrong location + timezone (#34) |
-| 4 | ❌ | Application error on web search (#35) — **FIXED (PR #36 MERGED)** |
-| 5 | ✅ | Passed |
-| 6 | ✅ | Passed |
-| 7 | ✅ | Passed |
-| 8 | ✅ | Passed |
-| 9 | ✅ | Passed |
-| 10 | ✅ | Passed |
-
-**Pass Rate: 6/10** — Voice connects reliably, but **wrong answers = not usable**.
-
-### Issues to Fix (Priority Order)
+### Issues Status
 
 | Issue | Priority | Type | Description | Status |
 |-------|----------|------|-------------|--------|
 | **#35** | **P0** | Reliability | Application error during web search | **✅ FIXED — PR #36 MERGED** |
-| **#34** | **P1** | Context | Wrong timezone and location passed to tools | **PR #37 ✅ READY TO MERGE** |
+| **#34** | **P1** | Context | Wrong timezone and location passed to tools | **✅ FIXED — PR #37 MERGED** |
 | **#33** | **P1** | Data Integrity | Calendar returns hallucinated data | OPEN - Needs OpenClaw core fix |
+
+### Expected Test Improvements After Fixes
+
+| Test | Previous | Expected After Fix |
+|------|----------|-------------------|
+| 1 | ⚠️ Wrong timezone | ✅ Should pass (#34 fix) |
+| 2 | ❌ Hallucinated calendar | ❌ Still broken (#33 OpenClaw issue) |
+| 3 | ❌ Wrong location + timezone | ✅ Should pass (#34 fix) |
+| 4 | ❌ Application error | ✅ Should pass (#35 fix) |
+| 5-10 | ✅ Passed | ✅ Still pass |
+
+**Expected Pass Rate After Fixes: 9/10** (only #33 calendar issue remains)
 
 ---
 
@@ -53,21 +51,21 @@
 
 ---
 
-### ✅ Phase 2: P1 Context (#34) — PR #37 READY TO MERGE
+### ✅ Phase 2: P1 Context (#34) — MERGED
+
+**PR #37 merged 2026-02-06 08:56 GMT**
 
 **Problem:** Tools receive no user context (timezone, location).
 - Time tool returned 14:15 when user's local time was 18:59 (4+ hour diff)
 - Weather returned wrong location data
 
-**Fix Ready (PR #37):**
+**Fix Applied:**
 1. ✅ New: `user_context.py` - Resolves timezone/location from phone number
 2. ✅ New: `call_context_store.py` - Shared storage for call context
 3. ✅ Updated: `openclaw_executor.py` - Injects context into requests
 4. ✅ Updated: `realtime_tool_handler.py` - Passes context to executor
 5. ✅ Updated: `webhook-server.py` (minimal changes)
 6. ✅ Updated: `phone_mapping.json` - Added timezone/location fields
-
-**Status:** ✅ Rebased on main (2026-02-06 08:54 GMT). Merge conflicts resolved. PR is **MERGEABLE**.
 
 ---
 
@@ -85,8 +83,9 @@
 |----------|--------|-------|
 | **Voice Infrastructure** | ✅ WORKING | Calls connect, audio good, no drops |
 | **Tool Reliability** | ✅ FIXED | #35 merged — error handling added |
-| **Tool Accuracy** | ❌ BROKEN | #33, #34 - Wrong answers |
-| **User Ready** | ❌ NO | 6/10 pass rate not acceptable |
+| **Tool Context** | ✅ FIXED | #34 merged — timezone/location now passed |
+| **Calendar Data** | ❌ BROKEN | #33 - Needs OpenClaw core fix |
+| **User Ready** | 🟡 REVALIDATE | Expected 9/10 after fixes |
 
 ---
 
@@ -107,8 +106,8 @@
 ## Next Steps
 
 1. ~~**Spawn coder to rebase PR #37**~~ — ✅ DONE (2026-02-06 08:54 GMT)
-2. **Merge PR #37** — Ready for merge, no conflicts
-3. **Re-run validation** after #37 merged
+2. ~~**Merge PR #37**~~ — ✅ DONE (2026-02-06 08:56 GMT)
+3. **Re-run validation** — All reliability fixes merged, ready for revalidation
 4. **#33 requires OpenClaw core fix** — coordinate with Remi
 
 ---
@@ -118,7 +117,7 @@
 | Issue | Description | Priority | Status |
 |-------|-------------|----------|--------|
 | **#35** | Application error during web search | P0 | **✅ FIXED — PR #36 MERGED** |
-| **#34** | Wrong timezone and location context | P1 | **PR #37 ✅ READY TO MERGE** |
+| **#34** | Wrong timezone and location context | P1 | **✅ FIXED — PR #37 MERGED** |
 | **#33** | Calendar hallucination | P1 | OPEN - Needs OpenClaw core fix |
 | #31 | Reliability fixes | P0 | ✅ Fixed (PR #32) |
 | #27 | Integration testing | P1 | TODO |
@@ -127,7 +126,7 @@
 
 | PR | Status | Description |
 |----|--------|-------------|
-| **#37** | **✅ MERGEABLE** | Fix #34: User context — rebased on main, ready for merge |
+| **#37** | **✅ MERGED** | Fix #34: User context (timezone/location) |
 | **#36** | **✅ MERGED** | Fix #35: Comprehensive error handling for ask_openclaw |
 | #32 | ✅ Merged | P0 reliability: exponential backoff, 5s timeout, call_id logging |
 | #30 | ✅ Merged | Streaming tool responses |
@@ -147,14 +146,10 @@
 
 ## Spawn Requests for Nia
 
-### ~~1. Coder to Rebase PR #37~~ — ✅ COMPLETED 2026-02-06 08:54 GMT
+### ✅ All Reliability PRs Complete
 
-PR #37 rebased on main. Conflicts in `realtime_tool_handler.py` resolved by keeping both:
-- PR #36's error handling docstring ("CRITICAL: must send response in all cases")
-- PR #37's user context docstring ("timezone/location set before execution")
+Both reliability PRs (#36, #37) are now merged. Ready for revalidation.
 
-**Merge status:** MERGEABLE, CLEAN
+### Note on #33
 
-### 2. Note on #33
-
-Calendar hallucination (#33) requires OpenClaw core changes. Calendar tool must validate integration state before returning data.
+Calendar hallucination (#33) requires OpenClaw core changes. Calendar tool must validate integration state before returning data. Coordinate with Remi.
