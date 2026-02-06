@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 06:45 GMT by Voice Coder
+**Last Updated:** 2026-02-06 08:53 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -16,7 +16,7 @@
 | 1 | ⚠️ | Wrong timezone (#34) |
 | 2 | ❌ | Hallucinated calendar (#33) |
 | 3 | ❌ | Wrong location + timezone (#34) |
-| 4 | ❌ | Application error on web search (#35) — **FIX IN PR** |
+| 4 | ❌ | Application error on web search (#35) — **FIXED (PR #36 MERGED)** |
 | 5 | ✅ | Passed |
 | 6 | ✅ | Passed |
 | 7 | ✅ | Passed |
@@ -28,75 +28,54 @@
 
 ### Issues to Fix (Priority Order)
 
-| Issue | Priority | Type | Description | Impact |
+| Issue | Priority | Type | Description | Status |
 |-------|----------|------|-------------|--------|
-| **#35** | **P0** | Reliability | Application error during web search | **PR #36** |
-| **#34** | **P1** | Context | Wrong timezone and location passed to tools | Affects ALL location/time tools |
-| **#33** | **P1** | Data Integrity | Calendar returns hallucinated data | Destroys user trust |
+| **#35** | **P0** | Reliability | Application error during web search | **✅ FIXED — PR #36 MERGED** |
+| **#34** | **P1** | Context | Wrong timezone and location passed to tools | **PR #37 needs rebase** |
+| **#33** | **P1** | Data Integrity | Calendar returns hallucinated data | OPEN - Needs OpenClaw core fix |
 
 ---
 
-## 🔧 Fix Plan
+## 🔧 Fix Progress
 
-### Phase 1: P0 Reliability (#35) — PR #36 READY FOR REVIEW
+### ✅ Phase 1: P0 Reliability (#35) — MERGED
+
+**PR #36 merged 2026-02-06 08:52 GMT**
 
 **Problem:** Test 4 ("Search for X then summarize") caused an application error.
 
-**Root Cause (confirmed):**
-- Insufficient try/catch coverage in `_handle_function_call`
-- Streaming execution errors could propagate without graceful fallback
-- `_send_function_result` failures could crash the handler
-
-**Fix Applied (PR #36):**
+**Fix Applied:**
 1. ✅ Wrapped entire `_handle_function_call` in comprehensive try/except
 2. ✅ Added `_send_function_result_safe` (no-throw version) for error handlers
 3. ✅ Improved `_execute_streaming_function` to handle mid-stream errors gracefully
 4. ✅ Enhanced `_execute_function` with specific error handling for timeouts, execution errors
 5. ✅ Added 8 unit tests for error handling scenarios (all passing)
 
-**Changes (PR #36):**
-- `scripts/realtime_tool_handler.py` - Comprehensive error handling
-- `tests/test_error_handling.py` - 8 new tests
-
-**Status:** Rebased on main, mergeable, ready for QA review
-
 ---
 
-### Phase 2: P1 Context (#34) — This Week
+### 🟡 Phase 2: P1 Context (#34) — PR #37 NEEDS REBASE
 
 **Problem:** Tools receive no user context (timezone, location).
 - Time tool returned 14:15 when user's local time was 18:59 (4+ hour diff)
 - Weather returned wrong location data
 
-**Root Cause (suspected):**
-- Voice session doesn't pass user timezone/location to OpenClaw
-- Tools default to UTC or server location
-- Context may be available in Twilio call metadata but not forwarded
+**Fix Ready (PR #37):**
+1. ✅ New: `user_context.py` - Resolves timezone/location from phone number
+2. ✅ New: `call_context_store.py` - Shared storage for call context
+3. ✅ Updated: `openclaw_executor.py` - Injects context into requests
+4. ✅ Updated: `realtime_tool_handler.py` - Passes context to executor
+5. ✅ Updated: `webhook-server.py` (minimal changes)
+6. ✅ Updated: `phone_mapping.json` - Added timezone/location fields
 
-**Action Required:**
-1. Check if Twilio provides caller timezone/location
-2. Pass user context from voice session to ask_openclaw
-3. Ensure OpenClaw tools receive and use context
-
-**Coder Task:** Add user context (timezone, location) to voice → OpenClaw bridge.
+**Status:** PR #37 has merge conflicts after PR #36 merged. **Needs coder to rebase.**
 
 ---
 
-### Phase 3: P1 Data Integrity (#33) — This Week
+### Phase 3: P1 Data Integrity (#33) — OPEN
 
 **Problem:** Calendar tool returns fake meetings when no calendar connected.
 
-**Root Cause (suspected):**
-- OpenClaw calendar tool doesn't validate connection state
-- Falls back to LLM generating plausible responses
-- No "calendar not connected" error path
-
-**Action Required:**
-1. Calendar tool must validate connection before returning data
-2. Return explicit error when no calendar connected
-3. Voice agent should say "No calendar connected" not hallucinate
-
-**Note:** This may be an OpenClaw core fix, not voice skill.
+**Note:** This is an OpenClaw core issue, not voice skill. Calendar tool needs to validate connection state before returning data.
 
 ---
 
@@ -105,7 +84,7 @@
 | Category | Status | Notes |
 |----------|--------|-------|
 | **Voice Infrastructure** | ✅ WORKING | Calls connect, audio good, no drops |
-| **Tool Reliability** | ❌ BROKEN | #35 - Application crashes |
+| **Tool Reliability** | ✅ FIXED | #35 merged — error handling added |
 | **Tool Accuracy** | ❌ BROKEN | #33, #34 - Wrong answers |
 | **User Ready** | ❌ NO | 6/10 pass rate not acceptable |
 
@@ -116,7 +95,8 @@
 - ✅ Session bridge (T3) — transcripts sync to OpenClaw sessions
 - ✅ Streaming responses (PR #30 merged)
 - ✅ Security: inbound disabled by default (PR #29)
-- ⚠️ `ask_openclaw` tool — connects but gives wrong/broken answers
+- ✅ Error handling (PR #36 merged)
+- ⚠️ `ask_openclaw` tool — stable but gives wrong timezone/location
 
 ## What's Blocked
 - **T4 (Inbound)** — Blocked until validation passes
@@ -124,73 +104,12 @@
 
 ---
 
-## Validation Test Log (Complete)
-
-### Test 1 — 2026-02-05 16:54 GMT
-- **Call ID:** CA92ea3d1410327ab19947a9429ceb8ed0
-- **Scenario:** "What time is it?"
-- **Voice:** ✅ Connected, no drops
-- **Tool:** ⚠️ Wrong timezone (4+ hours off)
-- **Issue:** #34
-
-### Test 2 — 2026-02-05 ~16:55 GMT
-- **Scenario:** "Check my calendar for today"
-- **Voice:** ✅ Stable
-- **Tool:** ❌ Hallucinated fake meetings
-- **Issue:** #33
-
-### Test 3 — 2026-02-05 ~16:58 GMT
-- **Scenario:** "What's on my calendar and what's the weather?"
-- **Voice:** ✅ Multi-tool stable
-- **Tool:** ❌ Wrong location for weather
-- **Issue:** #34
-
-### Test 4 — 2026-02-05 (validation)
-- **Scenario:** "Search for X then summarize"
-- **Voice:** ✅ Connected
-- **Tool:** ❌ Application error
-- **Issue:** #35 (P0)
-
-### Tests 5-10 — 2026-02-05 (validation)
-- **Scenarios:** Conversational, long responses, rapid follow-up, interrupted, error recovery, extended
-- **Voice:** ✅ All passed
-- **Tool:** ✅ Worked (these didn't hit broken tools)
-
----
-
 ## Next Steps
 
-1. ✅ **#35 Fix submitted** — PR #36 ready for QA review
-2. **Spawn coder** for #34 (timezone/location context) — after #35 merged
-3. **#33 may require OpenClaw core fix** — coordinate with Remi
-4. **Re-run validation** after fixes
-
----
-
-## PM Review (2026-02-06 06:40 GMT)
-
-### Priority Confirmation
-
-| Issue | Priority | Why | Who Can Fix |
-|-------|----------|-----|-------------|
-| **#35** | **P0** | Crashes destroy trust instantly | **Voice Coder** — error handling in ask_openclaw |
-| **#34** | **P1** | Wrong answers = unusable | **Voice Coder** — pass caller context to tool bridge |
-| **#33** | **P1** | Hallucinated data = dangerous | **OpenClaw Core** — calendar tool needs connection validation |
-
-### Immediate Actions Needed
-
-**1. Coder Spawn for #35 (URGENT)**
-This is blocking everything. A crash during web search means any user hitting that code path gets a broken experience.
-
-**2. Coder Spawn for #34 (Right After #35)**
-Timezone/location is fixable in voice skill layer. Check Twilio call metadata for context.
-
-**3. Escalate #33 to Remi**
-Calendar hallucination is NOT a voice skill bug — it's the OpenClaw calendar tool returning fake data when no calendar is connected. Voice skill can't fix this; OpenClaw core needs to validate integration state.
-
-### Stalled Work Summary
-
-These issues have been OPEN since 2026-02-05 (~13 hours). No coder has been assigned. Need spawns ASAP to unblock validation.
+1. **Spawn coder to rebase PR #37** — conflicts after PR #36 merge
+2. **Merge PR #37** after rebase
+3. **Re-run validation** after #37 merged
+4. **#33 requires OpenClaw core fix** — coordinate with Remi
 
 ---
 
@@ -198,9 +117,9 @@ These issues have been OPEN since 2026-02-05 (~13 hours). No coder has been assi
 
 | Issue | Description | Priority | Status |
 |-------|-------------|----------|--------|
-| **#35** | **Application error during web search** | **P0** | **PR #36 Ready** |
-| **#34** | **Wrong timezone and location context** | **P1** | **OPEN - NEEDS FIX** |
-| **#33** | **Calendar hallucination** | **P1** | **OPEN - NEEDS FIX** |
+| **#35** | Application error during web search | P0 | **✅ FIXED — PR #36 MERGED** |
+| **#34** | Wrong timezone and location context | P1 | **PR #37 needs rebase** |
+| **#33** | Calendar hallucination | P1 | OPEN - Needs OpenClaw core fix |
 | #31 | Reliability fixes | P0 | ✅ Fixed (PR #32) |
 | #27 | Integration testing | P1 | TODO |
 
@@ -208,7 +127,8 @@ These issues have been OPEN since 2026-02-05 (~13 hours). No coder has been assi
 
 | PR | Status | Description |
 |----|--------|-------------|
-| #36 | 🔍 Review | Fix #35: Comprehensive error handling for ask_openclaw |
+| **#37** | **🔴 CONFLICTING** | Fix #34: User context — needs coder to rebase on main |
+| **#36** | **✅ MERGED** | Fix #35: Comprehensive error handling for ask_openclaw |
 | #32 | ✅ Merged | P0 reliability: exponential backoff, 5s timeout, call_id logging |
 | #30 | ✅ Merged | Streaming tool responses |
 | #29 | ✅ Merged | Security: disable inbound by default |
@@ -227,30 +147,20 @@ These issues have been OPEN since 2026-02-05 (~13 hours). No coder has been assi
 
 ## Spawn Requests for Nia
 
-### 1. Coder for #35 (P0 — Immediate)
+### 1. Coder to Rebase PR #37 (IMMEDIATE)
 
 ```
 You are Voice Coder.
 FIRST: Read PROTOCOL.md, STATUS.md, DECISIONS.md in the repo.
-TASK: Fix #35 - Application error during web search tool call.
-- Add comprehensive try/catch around ask_openclaw tool execution
-- Ensure graceful error handling for ALL tool failures
-- Test with web search scenario
-FINALLY: Update STATUS.md and create PR.
+TASK: Rebase PR #37 on main to resolve merge conflicts.
+- git fetch origin
+- git checkout fix/issue-34-user-context
+- git rebase origin/main
+- Resolve any conflicts (PR #36 modified realtime_tool_handler.py)
+- git push --force-with-lease
+FINALLY: Update STATUS.md confirming PR is rebased and mergeable.
 ```
 
-### 2. Coder for #34 (P1 — After #35)
+### 2. Note on #33
 
-```
-You are Voice Coder.
-FIRST: Read PROTOCOL.md, STATUS.md, DECISIONS.md in the repo.
-TASK: Fix #34 - Tools receive wrong timezone/location.
-- Check if Twilio provides caller context (timezone, location)
-- Pass user context from voice session to ask_openclaw bridge
-- Ensure tools receive and use context correctly
-FINALLY: Update STATUS.md and create PR.
-```
-
-### 3. Note on #33
-
-Calendar hallucination (#33) may require OpenClaw core changes, not voice skill fixes. Recommend Nia discuss with Remi whether calendar tool should validate connection state.
+Calendar hallucination (#33) requires OpenClaw core changes. Calendar tool must validate integration state before returning data.
