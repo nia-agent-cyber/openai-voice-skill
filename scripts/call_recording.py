@@ -11,7 +11,7 @@ import json
 import logging
 import os
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Dict, List, Any
 from dataclasses import dataclass, asdict
@@ -27,6 +27,10 @@ DATABASE_PATH = Path(os.getenv("DATABASE_PATH", "call_history.db"))
 ENABLE_RECORDING = os.getenv("ENABLE_RECORDING", "true").lower() == "true"
 ENABLE_TRANSCRIPTION = os.getenv("ENABLE_TRANSCRIPTION", "true").lower() == "true"
 MAX_RECORDING_SIZE_MB = int(os.getenv("MAX_RECORDING_SIZE_MB", "100"))
+
+# Stale call cleanup configuration
+# Calls older than this (in seconds) with status='active' are considered zombie calls
+STALE_CALL_THRESHOLD_SECONDS = int(os.getenv("STALE_CALL_THRESHOLD_SECONDS", "3600"))  # 1 hour default
 
 @dataclass
 class CallRecord:
@@ -449,6 +453,143 @@ class CallRecordingManager:
                 'recording_enabled': ENABLE_RECORDING,
                 'transcription_enabled': ENABLE_TRANSCRIPTION
             }
+    
+    async def cleanup_stale_calls(self, threshold_seconds: int = None) -> Dict[str, Any]:
+        """
+        Clean up zombie/stale calls that have status='active' but are older than threshold.
+        
+        This is a workaround for the fact that webhook-server.py's handle_twilio_webhook()
+        doesn't call end_call_recording() when Twilio fires call completion events.
+        
+        Issue: #38 - Zombie calls with 60,000+ second durations
+        Root cause: Twilio CallStatus webhook doesn't trigger recording termination
+        
+        Args:
+            threshold_seconds: Calls older than this are considered stale (default: 1 hour)
+        
+        Returns:
+            Dict with cleanup results
+        """
+        if threshold_seconds is None:
+            threshold_seconds = STALE_CALL_THRESHOLD_SECONDS
+        
+        cutoff_time = datetime.utcnow() - timedelta(seconds=threshold_seconds)
+        cutoff_iso = cutoff_time.isoformat()
+        
+        logger.info(f"Cleaning up stale calls older than {threshold_seconds}s (cutoff: {cutoff_iso})")
+        
+        cleaned_calls = []
+        errors = []
+        
+        with sqlite3.connect(self.db_path) as conn:
+            # Find zombie calls: status='active' AND started_at < cutoff
+            cursor = conn.execute('''
+                SELECT call_id, started_at, caller_number, callee_number, call_type
+                FROM calls 
+                WHERE status = 'active' AND started_at < ?
+                ORDER BY started_at ASC
+            ''', (cutoff_iso,))
+            
+            stale_calls = cursor.fetchall()
+            
+            for row in stale_calls:
+                call_id, started_at, caller_number, callee_number, call_type = row
+                
+                try:
+                    # Calculate actual duration
+                    started_dt = datetime.fromisoformat(started_at)
+                    ended_at = datetime.utcnow()
+                    duration_seconds = (ended_at - started_dt).total_seconds()
+                    
+                    # Mark as 'timeout' (distinct from 'completed' so we know it was cleaned up)
+                    conn.execute('''
+                        UPDATE calls 
+                        SET ended_at = ?, duration_seconds = ?, status = 'timeout'
+                        WHERE call_id = ?
+                    ''', (ended_at.isoformat(), duration_seconds, call_id))
+                    
+                    cleaned_calls.append({
+                        'call_id': call_id,
+                        'call_type': call_type,
+                        'started_at': started_at,
+                        'duration_seconds': duration_seconds,
+                        'status': 'timeout'
+                    })
+                    
+                    logger.info(f"Cleaned up stale call {call_id} (was active for {duration_seconds:.0f}s)")
+                    
+                    # Notify bridge of call end (for transcript sync)
+                    try:
+                        from session_context import notify_call_ended
+                        phone = caller_number or callee_number or ""
+                        direction = call_type or "inbound"
+                        notify_call_ended(call_id, phone, direction)
+                    except Exception as e:
+                        logger.debug(f"Bridge notification skipped during cleanup: {e}")
+                    
+                except Exception as e:
+                    error_msg = f"Error cleaning call {call_id}: {e}"
+                    logger.error(error_msg)
+                    errors.append(error_msg)
+            
+            conn.commit()
+        
+        result = {
+            'cleaned_count': len(cleaned_calls),
+            'cleaned_calls': cleaned_calls,
+            'threshold_seconds': threshold_seconds,
+            'cutoff_time': cutoff_iso,
+            'errors': errors
+        }
+        
+        logger.info(f"Stale call cleanup complete: {len(cleaned_calls)} calls cleaned, {len(errors)} errors")
+        return result
+    
+    def get_zombie_calls(self, threshold_seconds: int = None) -> List[Dict[str, Any]]:
+        """
+        Get list of zombie calls without cleaning them up.
+        Useful for diagnostics and monitoring.
+        
+        Args:
+            threshold_seconds: Calls older than this are considered stale
+        
+        Returns:
+            List of zombie call info dicts
+        """
+        if threshold_seconds is None:
+            threshold_seconds = STALE_CALL_THRESHOLD_SECONDS
+        
+        cutoff_time = datetime.utcnow() - timedelta(seconds=threshold_seconds)
+        cutoff_iso = cutoff_time.isoformat()
+        
+        zombies = []
+        
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute('''
+                SELECT call_id, call_type, caller_number, callee_number, started_at, 
+                       has_transcript, has_audio
+                FROM calls 
+                WHERE status = 'active' AND started_at < ?
+                ORDER BY started_at ASC
+            ''', (cutoff_iso,))
+            
+            for row in cursor.fetchall():
+                call_id, call_type, caller_number, callee_number, started_at, has_transcript, has_audio = row
+                started_dt = datetime.fromisoformat(started_at)
+                duration = (datetime.utcnow() - started_dt).total_seconds()
+                
+                zombies.append({
+                    'call_id': call_id,
+                    'call_type': call_type,
+                    'caller_number': caller_number,
+                    'callee_number': callee_number,
+                    'started_at': started_at,
+                    'duration_seconds': duration,
+                    'has_transcript': bool(has_transcript),
+                    'has_audio': bool(has_audio)
+                })
+        
+        return zombies
 
 # Global instance
 recording_manager = CallRecordingManager()
