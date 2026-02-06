@@ -1,11 +1,11 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 08:56 GMT by Voice PM
+**Last Updated:** 2026-02-06 09:12 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## Current State: 🟡 RELIABILITY FIXES COMPLETE — Ready for Revalidation
+## Current State: 🟡 AWAITING REVALIDATION — No Coder Work Needed
 
 ### ✅ All Reliability PRs Merged
 
@@ -107,8 +107,17 @@
 
 1. ~~**Spawn coder to rebase PR #37**~~ — ✅ DONE (2026-02-06 08:54 GMT)
 2. ~~**Merge PR #37**~~ — ✅ DONE (2026-02-06 08:56 GMT)
-3. **Re-run validation** — All reliability fixes merged, ready for revalidation
-4. **#33 requires OpenClaw core fix** — coordinate with Remi
+3. **Re-run validation tests** — All reliability fixes merged, need 10 successful test calls per exit criteria
+4. **#33 requires OpenClaw core fix** — Calendar hallucination is NOT voice skill work; coordinate with Remi
+
+### ⚠️ No Coder Work Right Now
+
+Per DECISIONS.md "Reliability Over Features", exit criteria before resuming feature work:
+- ✅ Complete #31 fixes (PR #32 merged)
+- ⏳ 10 successful test calls with tool use (needs validation)
+- ⏳ No timeouts or connection drops in testing (needs validation)
+
+**Waiting on:** Revalidation testing, then Remi for #33 OpenClaw core fix
 
 ---
 
