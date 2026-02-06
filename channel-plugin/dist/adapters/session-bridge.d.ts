@@ -109,6 +109,89 @@ export declare class VoiceSessionBridge {
      * Read request body
      */
     private readBody;
+    /**
+     * Get zombie calls from webhook server
+     *
+     * Zombie calls are calls with status='active' that have been running
+     * longer than the threshold (default 1 hour). These occur when Twilio
+     * call termination webhooks don't properly close the recording.
+     *
+     * Issue: #38 - Zombie calls with 60,000+ second durations
+     */
+    getZombieCalls(thresholdSeconds?: number): Promise<{
+        zombies: unknown[];
+        count: number;
+        threshold: number;
+    }>;
+    /**
+     * Get Prometheus-style metrics for monitoring integration.
+     */
+    getPrometheusMetrics(): Promise<string>;
+    /**
+     * Construct Prometheus metrics from available data.
+     */
+    private constructPrometheusMetrics;
+    /**
+     * Get dashboard metrics for visualization.
+     */
+    getDashboardMetrics(): Promise<Record<string, unknown>>;
+    /**
+     * Construct dashboard metrics from available data.
+     */
+    private constructDashboardMetrics;
+    /**
+     * Export metrics data in specified format.
+     */
+    exportMetrics(format: string, days: number): Promise<string>;
+    /**
+     * Construct export from available data.
+     */
+    private constructExport;
+    /**
+     * Get health check with metrics indicators.
+     */
+    getHealthCheck(): Promise<{
+        status: string;
+        timestamp: string;
+        indicators: Record<string, unknown>;
+        warnings: string[];
+    }>;
+    /**
+     * Construct health check from available data.
+     */
+    private constructHealthCheck;
+    /**
+     * Get recent failures for debugging.
+     */
+    getRecentFailures(limit: number): Promise<Array<Record<string, unknown>>>;
+    /**
+     * Construct recent failures from history.
+     */
+    private constructRecentFailures;
+    /**
+     * Get hourly timeseries for charts.
+     */
+    getHourlyTimeseries(hours: number): Promise<Array<Record<string, unknown>>>;
+    /**
+     * Get daily timeseries for trends.
+     */
+    getDailyTimeseries(days: number): Promise<Array<Record<string, unknown>>>;
+    /**
+     * Clean up stale/zombie calls
+     *
+     * This is a workaround for the fact that webhook-server.py's handle_twilio_webhook()
+     * doesn't call end_call_recording() when Twilio fires call completion events.
+     *
+     * Calls the Python recording manager's cleanup_stale_calls() method via HTTP.
+     *
+     * Issue: #38 - Zombie calls with 60,000+ second durations
+     */
+    cleanupStaleCalls(thresholdSeconds?: number): Promise<{
+        success: boolean;
+        cleaned_count: number;
+        cleaned_calls: unknown[];
+        errors: string[];
+    }>;
 }
 /**
  * Factory function to create a voice session bridge

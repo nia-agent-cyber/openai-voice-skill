@@ -1,13 +1,13 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 10:22 GMT by Voice QA
+**Last Updated:** 2026-02-06 10:29 GMT by Voice Coder
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## Current State: 🚀 PHASE 2 OBSERVABILITY COMPLETE
+## Current State: 🚀 T4 INBOUND SUPPORT IN PR
 
-### ✅ Phase 1 Complete — ✅ Phase 2 Observability Merged
+### ✅ Phase 1 Complete — ✅ Phase 2 Observability Merged — 🔄 T4 In Review
 
 **Phase 1 Summary:**
 - PR #36 (Error handling) — Merged ✅ VALIDATED
@@ -17,6 +17,7 @@
 
 **Phase 2 Summary:**
 - PR #40 (Call observability) — ✅ MERGED (2026-02-06 10:21 GMT)
+- PR #41 (T4 Inbound) — 🔄 **IN REVIEW** (2026-02-06 10:29 GMT)
 
 ---
 
@@ -28,41 +29,93 @@
 |---|------|----------|-----------|--------|
 | 1 | ~~Fix #38: Zombie calls~~ | P1-Blocker | Blocks all observability work | ✅ MERGED (PR #39) |
 | 2 | ~~Call observability~~ | P1 | "Can't improve what we can't measure" | ✅ MERGED (PR #40) |
-| 3 | **T4 Inbound** | P2 | 24/7 answering, missed-call flow | ⏳ READY TO START |
+| 3 | **T4 Inbound** | P2 | 24/7 answering, missed-call flow | 🔄 PR #41 READY FOR QA |
 
 ---
 
 ## 🔧 Active Work
 
-### ✅ PR #40: Call Observability — MERGED
+### 🔄 PR #41: T4 Inbound Support — READY FOR QA REVIEW
 
-**QA Review:** PASSED (2026-02-06 10:21 GMT)
-- ✅ Python syntax (call_metrics.py, metrics_server.py) compiles
-- ✅ TypeScript (session-bridge.ts) compiles
-- ✅ Tests compile
-- ✅ webhook-server.py NOT modified
-- ✅ Documentation comprehensive
+**Branch:** `feature/t4-inbound-support`
 
 **What's included:**
-- `scripts/call_metrics.py` — Core metrics aggregation (success rates, duration percentiles, timeseries)
-- `scripts/metrics_server.py` — HTTP server on port 8083
-- `docs/OBSERVABILITY.md` — Full documentation with Prometheus/Grafana guide
-- `tests/test_call_metrics.py` — Test coverage
+
+1. **`channel-plugin/src/adapters/inbound.ts`** — Full inbound call handler
+   - Allowlist-based caller authorization (open/allowlist/pairing policies)
+   - Session context building for inbound callers
+   - Caller history tracking
+   - Missed call recording with voicemail flow
+   - TwiML generation for accept/reject
+
+2. **`scripts/inbound_handler.py`** — Standalone HTTP authorization server (port 8084)
+   - `POST /authorize` — Check if caller is authorized
+   - `POST /context` — Get session context for authorized caller
+   - `POST /call-started` — Record call start
+   - `POST /missed-call` — Record missed calls
+   - `GET /callers` — List known callers
+   - `GET /missed-calls` — List missed calls for callback
+
+3. **`config/inbound.json`** — Configuration template
+   - Policy setting (open/allowlist/pairing)
+   - Allowlist entries
+   - Voicemail settings
+   - After-hours configuration
+
+4. **`docs/INBOUND.md`** — Comprehensive documentation
+   - Architecture diagram
+   - API endpoints
+   - Configuration guide
+   - Security considerations
+   - Troubleshooting
+
+5. **Tests**
+   - `channel-plugin/src/adapters/inbound.test.ts` — 22 tests, all passing
+   - `tests/test_inbound.py` — Python test suite
+
+**Key Features:**
+- ✅ Allowlist-based authorization (secure default: deny all)
+- ✅ Prefix matching support (`+1440*` matches all +1440 numbers)
+- ✅ Wildcard support (`*` allows all callers)
+- ✅ Caller history tracking (call count, last call time, notes)
+- ✅ Session context injection for known callers
+- ✅ Missed call to appointment flow (voicemail → callback)
+- ✅ PII masking in logs
+
+**Validation:**
+- ✅ TypeScript compiles (`npm run build`)
+- ✅ 22/22 TypeScript tests pass (`npm test`)
+- ✅ Python syntax valid (`python3 -m py_compile`)
+- ✅ webhook-server.py NOT modified
+- ✅ Documentation complete
 
 **Usage:**
 ```bash
-# Start metrics server
-python scripts/metrics_server.py --port 8083
+# Start inbound handler
+python scripts/inbound_handler.py
 
-# Get dashboard data
-curl http://localhost:8083/metrics/dashboard
+# Configure allowlist in config/inbound.json:
+{
+  "policy": "allowlist",
+  "allowFrom": ["+14402915517", "+1440*"]
+}
 
-# Prometheus metrics
-curl http://localhost:8083/metrics/prometheus
+# Test authorization
+curl -X POST http://localhost:8084/authorize \
+  -H "Content-Type: application/json" \
+  -d '{"caller_phone": "+14402915517"}'
 
-# Health check
-curl http://localhost:8083/metrics/health
+# Get session context
+curl -X POST http://localhost:8084/context \
+  -H "Content-Type: application/json" \
+  -d '{"caller_phone": "+14402915517"}'
 ```
+
+---
+
+### ✅ PR #40: Call Observability — MERGED
+
+**QA Review:** PASSED (2026-02-06 10:21 GMT)
 
 ---
 
@@ -81,6 +134,7 @@ Cleanup implemented. See `docs/ISSUE_38_ROOT_CAUSE.md` for permanent fix needed.
 | **Tool Context** | ✅ VALIDATED | PR #37 merged + tested |
 | **Call Lifecycle** | ✅ FIXED | PR #39 merged |
 | **Observability** | ✅ MERGED | PR #40 merged, port 8083 |
+| **Inbound Support** | 🔄 IN REVIEW | PR #41, port 8084 |
 | **Calendar Data** | ❌ BROKEN | #33 — OpenClaw core issue |
 
 ---
@@ -96,13 +150,13 @@ Cleanup implemented. See `docs/ISSUE_38_ROOT_CAUSE.md` for permanent fix needed.
 - ✅ Zombie call cleanup (PR #39)
 - ✅ Call observability (PR #40) — metrics server on port 8083
 
+## What's In Review
+
+- 🔄 **T4 Inbound Support (PR #41)** — Authorization, session context, missed calls
+
 ## What's Blocked
 
 - **#33 Calendar** — Blocked on OpenClaw core
-
-## What's Unblocked
-
-- **T4 (Inbound)** — Ready to start now that observability is merged
 
 ---
 
@@ -114,7 +168,7 @@ Cleanup implemented. See `docs/ISSUE_38_ROOT_CAUSE.md` for permanent fix needed.
 | 2 | ~~Fix #38 zombie calls~~ | Coder | ✅ PR #39 Merged |
 | 3 | ~~Call observability~~ | Coder | ✅ PR #40 Merged |
 | 4 | ~~QA review PR #40~~ | QA | ✅ Passed + Merged |
-| 5 | **T4 inbound support** | Coder | 🟢 UNBLOCKED |
+| 5 | **QA review PR #41** | QA | 🔄 READY FOR REVIEW |
 | 6 | Fix #33 calendar | Remi | ⏳ OpenClaw core |
 
 ---
@@ -123,29 +177,33 @@ Cleanup implemented. See `docs/ISSUE_38_ROOT_CAUSE.md` for permanent fix needed.
 
 | Role | Current Task | Notes |
 |------|--------------|-------|
-| **PM** | Review Phase 2 complete | T4 ready to start |
-| **Coder** | 🟢 T4 inbound support | Observability complete |
-| **QA** | ✅ PR #40 reviewed + merged | Available for T4 |
+| **PM** | Review T4 implementation | Final Phase 2 item |
+| **Coder** | ✅ T4 inbound complete | PR #41 ready |
+| **QA** | 🔄 **REVIEW PR #41** | T4 inbound tests |
 | **BA** | 📊 Strategy work | Continue competitor research |
-| **Comms** | ✅ **CAN ANNOUNCE** | Observability milestone shipped! |
+| **Comms** | ✅ **CAN ANNOUNCE** | Phase 2 complete when T4 merges! |
 
 ---
 
 ## Spawn Requests for Nia
 
-### 🟢 T4 Inbound Support (Ready to Start)
-
-Observability is merged. T4 inbound support is now unblocked.
+### 🔄 QA Review for T4 Inbound (PR #41)
 
 ```
-You are Voice Coder.
+You are Voice QA.
 FIRST: Read PROTOCOL.md, STATUS.md, DECISIONS.md in the repo.
 
-CONTEXT: Phase 2 observability is complete (PR #40 merged). T4 inbound support is unblocked.
+CONTEXT: T4 inbound support PR #41 is ready for review.
 
-TASK: Implement T4 inbound call handling.
+TASK: Review PR #41:
+1. Verify TypeScript compiles (npm run build in channel-plugin/)
+2. Verify all 22 tests pass (npm test --run in channel-plugin/)
+3. Verify Python syntax (python3 -m py_compile scripts/inbound_handler.py)
+4. Confirm webhook-server.py NOT modified
+5. Review documentation completeness
+6. Test authorization logic manually
 
-FINALLY: Create PR when ready. Update STATUS.md.
+FINALLY: Approve PR if passing, or request changes with specific feedback.
 ```
 
 ---
@@ -164,6 +222,7 @@ FINALLY: Create PR when ready. Update STATUS.md.
 
 | PR | Status | Description |
 |----|--------|-------------|
+| #41 | 🔄 In Review | T4 inbound support |
 | #40 | ✅ Merged | Call observability system |
 | #39 | ✅ Merged | Fix #38: Zombie call cleanup |
 | #37 | ✅ Merged | Fix #34: User context |
@@ -178,7 +237,8 @@ FINALLY: Create PR when ready. Update STATUS.md.
 - **Webhook Server:** port 8080 (webhook-server.py) — DO NOT MODIFY
 - **Plugin Server:** port 8081
 - **Session Bridge:** port 8082 (session-bridge.ts)
-- **Metrics Server:** port 8083 (metrics_server.py) — NEW in PR #40
+- **Metrics Server:** port 8083 (metrics_server.py)
+- **Inbound Handler:** port 8084 (inbound_handler.py) — NEW in PR #41
 - **Public URL:** https://api.niavoice.org (cloudflare tunnel)
 - **Twilio Number:** +1 440 291 5517
 
@@ -186,10 +246,10 @@ FINALLY: Create PR when ready. Update STATUS.md.
 
 ## Roadmap Reference
 
-### Phase 2: Observability (Complete ✅)
+### Phase 2: Observability (Nearly Complete ✅)
 - ✅ P1: Fix #38 zombie calls (PR #39)
 - ✅ P1: Call logging/metrics (PR #40)
-- 🟢 P2: T4 Inbound handling (UNBLOCKED)
+- 🔄 P2: T4 Inbound handling (PR #41 in review)
 - ⏳ P3: Basic analytics dashboard
 
 ### Phase 3: Growth
