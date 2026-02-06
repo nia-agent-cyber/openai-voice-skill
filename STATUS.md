@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-05 17:10 GMT by Voice PM
+**Last Updated:** 2026-02-06 06:40 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -158,6 +158,33 @@
 2. **Spawn coder** for #34 (timezone/location context) — after #35
 3. **#33 may require OpenClaw core fix** — coordinate with Remi
 4. **Re-run validation** after fixes
+
+---
+
+## PM Review (2026-02-06 06:40 GMT)
+
+### Priority Confirmation
+
+| Issue | Priority | Why | Who Can Fix |
+|-------|----------|-----|-------------|
+| **#35** | **P0** | Crashes destroy trust instantly | **Voice Coder** — error handling in ask_openclaw |
+| **#34** | **P1** | Wrong answers = unusable | **Voice Coder** — pass caller context to tool bridge |
+| **#33** | **P1** | Hallucinated data = dangerous | **OpenClaw Core** — calendar tool needs connection validation |
+
+### Immediate Actions Needed
+
+**1. Coder Spawn for #35 (URGENT)**
+This is blocking everything. A crash during web search means any user hitting that code path gets a broken experience.
+
+**2. Coder Spawn for #34 (Right After #35)**
+Timezone/location is fixable in voice skill layer. Check Twilio call metadata for context.
+
+**3. Escalate #33 to Remi**
+Calendar hallucination is NOT a voice skill bug — it's the OpenClaw calendar tool returning fake data when no calendar is connected. Voice skill can't fix this; OpenClaw core needs to validate integration state.
+
+### Stalled Work Summary
+
+These issues have been OPEN since 2026-02-05 (~13 hours). No coder has been assigned. Need spawns ASAP to unblock validation.
 
 ---
 
