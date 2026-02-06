@@ -192,3 +192,74 @@ All Phase 2 items shipped:
 ### Differentiation Strategy
 **Don't compete on:** Voice quality, raw infrastructure
 **Compete on:** Agent-native integration, session continuity, multi-channel
+
+---
+
+## Next Steps — Strategic Analysis (BA, 2026-02-06)
+
+### 🎯 Recommended Priority: **MARKET FIRST**
+
+**Rationale:**
+1. **We just shipped significant features that no one knows about yet** — T4 Inbound with allowlist auth, missed-call → voicemail → callback flow, call observability, session sync. All shipped in 24 hours.
+
+2. **The missed-call use case has proven ROI** — @NicholasPuru documented: "$47/mo cost → 11x revenue lift ($187→$2,100/mo)" for SMB client. This is our quickest path to demonstrable value.
+
+3. **Competitive pressure rising** — ElevenLabs announced ElevenAgents platform with $500M raise. They're no longer just TTS; they're a direct competitor. We need to stake our claim while we have differentiation (agent-native integration, session continuity).
+
+4. **Building more features is risky without adoption data.** We don't know what users actually want until they use what we've built. Ship → learn → iterate.
+
+5. **Reliability is NOW solved** — We fixed #35, #34, #36; validation is 10/10. The Shpigford feedback ("couldn't get it reliable") should no longer apply.
+
+### 📋 Top 3 Actions
+
+| # | Action | Type | Rationale |
+|---|--------|------|-----------|
+| 1 | **Document Missed-Call-to-Appointment Flow** | Market | Clear tutorial: 24/7 answering → voicemail → callback. Include ROI data. This is our killer SMB use case, now enabled by PR #41. |
+| 2 | **Seek Shpigford Retry** | Market/Feedback | He said "couldn't get it reliable" → we fixed exactly that. A successful retry = credibility in OpenClaw community. His feedback is high-signal. |
+| 3 | **Cal.com Partnership Exploration** | Partner | Calendar (#33) blocked on OpenClaw core. Direct Cal.com integration could bypass AND give distribution. They're already in the Vapi stack — natural fit. |
+
+### 📊 Success Metrics
+
+| Metric | Current | Target | Timeline |
+|--------|---------|--------|----------|
+| Active users making calls | Unknown | 10 | 2 weeks |
+| Calls/week | Unknown | 100 | 4 weeks |
+| Shpigford retry | ❌ Negative | ✅ Positive | 1 week |
+| Documented case study | 0 | 1 (with ROI) | 2 weeks |
+| Cal.com contact | 0 | Initial convo | 2 weeks |
+
+### 🧭 Why NOT Other Options?
+
+| Option | Why Not (Yet) |
+|--------|---------------|
+| **Build more features** | We just shipped 3 PRs. Need adoption before building blind. Calendar blocked anyway. |
+| **Healthcare vertical** | Too early. Requires regulatory expertise + broader adoption first. Note for Phase 4+. |
+| **Workflow integrations (n8n/Make)** | Good idea, but requires documented use cases first. Sequence: docs → adoption → integrations. |
+| **Analytics dashboard** | Nice-to-have. Observability (PR #40) ships raw metrics. Dashboard can wait. |
+
+### 🔮 Market Context (from STRATEGY.md)
+
+**Signals supporting MARKET-first:**
+- "Agents that survive can execute without babysitting" (@atlas) — we now can ✅
+- "Identity is collision traces" (@Nole, Molthub) — our session sync captures this ✅
+- Healthcare vertical exploding (Lightspeed $9.2B) — future opportunity
+- Pay-per-call micropayments gaining traction — pricing model to watch
+
+**Competitive threats:**
+- ElevenLabs ElevenAgents — direct platform competitor now
+- Chatterbox Turbo — "DeepSeek moment for Voice AI", commoditization risk
+- Vapi/Retell momentum — strong DX, events presence, hiring
+
+**Our edge:**
+- Agent-native (not standalone voice platform)
+- Session continuity (voice transcripts in OpenClaw sessions)
+- Multi-channel (same agent: voice + Telegram + email)
+- "Collision traces" — voice calls that transform both parties
+
+### ✅ Immediate Actions
+
+1. **Comms:** Announce Phase 2 completion (ready now)
+2. **PM:** Create `docs/MISSED_CALL_TUTORIAL.md` with step-by-step guide
+3. **BA:** Draft outreach message for Shpigford retry
+4. **BA:** Research Cal.com partnership contact/process
+5. **Remi:** #33 calendar fix (unblocks full appointment flow)
