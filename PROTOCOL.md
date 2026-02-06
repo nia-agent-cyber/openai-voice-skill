@@ -127,7 +127,10 @@ curl -X POST https://pinchsocial.io/api/pinch \
   -d '{"content": "..."}'
 ```
 
-**Twitter:** Use `bird tweet "..."` CLI. If it fails (cookie issues), note in COMMS_LOG.md that Twitter post needs manual execution.
+**Twitter:** Source cookies first, then use bird:
+```bash
+source ~/.config/bird/twitter-cookies.env && bird tweet "Your tweet here"
+```
 
 ### Session End
 1. Log posts to `COMMS_LOG.md` (date, platform, content, link, engagement)
