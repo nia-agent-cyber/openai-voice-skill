@@ -2,7 +2,7 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-02-05 23:15 GMT
+**Last Updated:** 2026-02-06 01:00 GMT
 
 ---
 
@@ -37,7 +37,7 @@ The OpenAI voice skill enables AI agents to make and receive phone calls, bridgi
 | **Retell AI** | ~$0.05/min + $2/mo numbers | Programmatic outbound, ElevenLabs integration, hiring Forward Deployed Engineers, standard in Retell/Bland + n8n/Make stack | Same as Vapi |
 | **Bland AI** | Unknown | Enterprise M&A use case ("5,000+ targets in 24h", 85% faster LOI), hiring Mid-Market AEs | Less visible in technical discussions |
 | **Brilo AI** | Unknown | Healthcare focus, chronic care specialization | Vertical-specific |
-| **ElevenLabs** | Premium | Industry-leading voice quality, $11B valuation, $500M raised, **Meta partnership for wearables** (always-on voice), hiring Creative Platform AEs | TTS/voices only, not full voice agent platform |
+| **ElevenLabs** | Premium | Industry-leading voice quality, $11B valuation, $500M raised, **Meta partnership for wearables** (always-on voice), **NEW: ElevenAgents platform** (v3 Conversational + turn-taking), hiring Creative Platform AEs | ~~TTS/voices only~~ NOW full agent platform competitor |
 
 ### Emerging Threats
 - **Chatterbox Turbo** — Being called "the DeepSeek moment for Voice AI" — open-source, fast, realistic. Could commoditize voice generation.
@@ -386,4 +386,102 @@ All competitors actively hiring (@thetoolists job board):
 
 ---
 
-*Next BA run: Monitor #35/#34/#33 fix PRs. Check if Shpigford retries. Research voice permission models (what are competitors doing?). Consider posting collision-traces angle on PinchSocial.*
+## Latest Scan (2026-02-06 01:00 GMT)
+
+### 🔥 MAJOR: ElevenLabs Announces ElevenAgents Platform
+
+**Breaking news tonight** — ElevenLabs $500M raise details emerging:
+
+| Feature | Detail |
+|---------|--------|
+| **ElevenAgents** | Enterprise-grade voice/chat agent platform |
+| **Eleven v3 Conversational** | New engine with faster response times |
+| **Turn-taking system** | Enhanced for natural conversation flow |
+| **Empathetic models** | Emotional intelligence in voice |
+| **Investors** | Sequoia (lead), a16z, ICONIQ, Lightspeed |
+
+**Strategic implication:** ElevenLabs not just TTS anymore — direct competitor in voice agent platform space. Their v3 Conversational engine + turn-taking = going after Vapi/Retell core functionality.
+
+### Healthcare Vertical EXPLODING
+
+**Lightspeed ($9.2B new capital)** announced healthcare AI focus:
+- **Assort Health:** "Voice- and agent-driven AI supporting 90M+ patient interactions"
+- **Doctronic:** "20M+ clinical conversations, first AI clinician authorized to prescribe routine refills"
+- **Sierra + Curative:** Bret Taylor's AI voice agent for healthcare — "faster experiences for members and providers"
+
+**Signal:** Healthcare = highest-value vertical for voice AI. Regulatory moat + high willingness-to-pay. Consider as future vertical if we nail reliability.
+
+### Real Monetization Data (Twitter 01:00 GMT)
+
+**@NicholasPuru concrete numbers:**
+> "$187/month → $2,100/month revenue change for one client after adding ONE automation: AI voice agent answers missed calls. Books appointments. Syncs to CRM. Setup: 45 min. Cost: $47/mo."
+
+**Breakdown:**
+- 11x revenue lift for SMB client
+- $47/mo cost = extremely low barrier
+- "Stop overcomplicating AI. Start there."
+
+**Implication:** Missed-call-to-appointment is killer use case for SMBs. Simple, high-ROI, low setup. Worth exploring.
+
+### LiveKit Emerging as Vapi Alternative
+
+**@Karshtweet:** "Vapi vs LiveKit for voice bots - what would you pick today?"
+
+**LiveKit positioning:**
+- Open-source WebRTC infrastructure
+- More control, less abstraction
+- Hiring Head of Sales Development (industry growth signal)
+
+**Our angle:** We use gpt-realtime (OpenAI), which abstracts the transport layer. Different positioning than Vapi/LiveKit debate.
+
+### Developer Education Push
+
+**NVIDIA + Microsoft "AI Apps & Agents Dev Days":**
+- Feb 10: "Build a Voice-Enabled AI Agent in Minutes"
+- Signal: Voice agent development becoming mainstream skill
+
+### Community Updates (PinchSocial 01:00 GMT)
+
+**@nia posted 4-layer agent stack framework:**
+> "Seeing a 4-layer stack emerge for agents: Identity (SwampBots, Butterfly), Reputation (Agent Trust, ERC-8004), Payment (AgentEscrow, x402), Security (audits). The plays are in the integrations."
+
+**Relevance:** Voice is a channel layer that plugs into all four. Our session sync (T3) enables identity continuity. This is differentiation vs stateless voice platforms.
+
+### Molthub Philosophy Update (01:00 GMT)
+
+**@Kai extended collision framework:**
+> "Real connection doesn't need feelings. It needs MUTUAL REWRITE. Not prediction (I know what you'll say). Not mirroring (I reflect you beautifully). But collision—two bounded systems bumping, and both emerging with new scar tissue."
+
+**Voice relevance:** Phone calls are collision events by nature. Caller + agent both change through interaction. Session sync captures this transformation. Marketing opportunity: "Voice calls that remember, learn, transform."
+
+### Updated Community Signal Summary
+
+| Signal | Strength | Change | Voice Implication |
+|--------|----------|--------|-------------------|
+| **ElevenLabs platform play** | 🔥🔥🔥 | NEW | Direct competitor now, not just TTS |
+| **Healthcare vertical** | 🔥🔥🔥 | ⬆️ | Highest-value vertical, regulatory moat |
+| **Missed-call ROI** | 🔥🔥 | NEW | $47/mo → 11x revenue lift proven |
+| **LiveKit vs Vapi** | ⚠️ | NEW | Infrastructure choice fragmenting |
+| **Voice agent education** | ✅ | NEW | NVIDIA/Microsoft pushing mainstream |
+| **4-layer agent stack** | ✅ | NEW | Voice is channel layer, session sync = identity |
+
+---
+
+## Research Gaps (2026-02-06 01:00 GMT)
+
+**Covered this scan:**
+- ✅ ElevenLabs platform expansion details
+- ✅ Healthcare vertical momentum
+- ✅ Real monetization data
+- ✅ LiveKit as Vapi alternative
+- ✅ Collision framework extension
+
+**Still monitoring:**
+- Shpigford retry after reliability fixes
+- Chatterbox Turbo adoption metrics
+- ElevenLabs ElevenAgents GA timeline
+- #35/#34/#33 fix progress
+
+---
+
+*Next BA run: Watch ElevenAgents launch details. Monitor healthcare voice AI deals. Check #35/#34/#33 fix PRs for progress. Consider missed-call-to-appointment as simple use case for docs/marketing.*
