@@ -5,11 +5,14 @@ Realtime Tool Handler - Handle function calls from OpenAI Realtime sessions.
 This module manages WebSocket connections to OpenAI Realtime sessions
 to receive and process function calls, executing them via OpenClaw.
 
+User context (timezone, location) is resolved from the caller's phone number
+and passed to the OpenClaw executor so tools return correct results.
+
 Architecture:
     Voice Call -> OpenAI Realtime -> Function Call Event
                         |
                         v (WebSocket)
-                Tool Handler -> OpenClaw Executor -> Result
+                Tool Handler -> User Context -> OpenClaw Executor -> Result
                         |
                         v (WebSocket)
                 Function Result -> OpenAI Realtime -> Voice Response
@@ -24,7 +27,28 @@ from typing import Dict, Optional, Callable, Any
 import websockets
 from websockets.exceptions import ConnectionClosed
 
-from openclaw_executor import execute_openclaw_request, execute_openclaw_streaming, set_call_id
+from openclaw_executor import (
+    execute_openclaw_request, 
+    execute_openclaw_streaming, 
+    set_call_id,
+    set_user_context
+)
+
+# Import user context resolver for timezone/location lookup
+try:
+    from user_context import get_user_context as resolve_user_context, UserContextResolver
+    USER_CONTEXT_AVAILABLE = True
+except ImportError:
+    USER_CONTEXT_AVAILABLE = False
+    def resolve_user_context(phone): return {}
+
+# Import call context store for retrieving caller phone from shared storage
+try:
+    from call_context_store import get_user_phone as get_stored_user_phone
+    CALL_CONTEXT_STORE_AVAILABLE = True
+except ImportError:
+    CALL_CONTEXT_STORE_AVAILABLE = False
+    def get_stored_user_phone(call_id): return None
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +68,9 @@ class RealtimeToolHandler:
     
     Connects via WebSocket to receive function call events and
     responds with results from the OpenClaw agent.
+    
+    User context (timezone, location) is resolved from the caller's phone
+    number and passed to tools for accurate time/location responses.
     """
     
     def __init__(
@@ -51,7 +78,8 @@ class RealtimeToolHandler:
         session_id: str,
         call_id: str,
         model: str = "gpt-4o-realtime-preview",
-        on_status_change: Optional[Callable[[str, str], None]] = None
+        on_status_change: Optional[Callable[[str, str], None]] = None,
+        caller_phone: Optional[str] = None
     ):
         """
         Initialize handler for a specific session.
@@ -61,11 +89,13 @@ class RealtimeToolHandler:
             call_id: Our internal call ID for tracking
             model: The model being used for this session
             on_status_change: Callback for status updates
+            caller_phone: Caller's phone number for context resolution (E.164 format)
         """
         self.session_id = session_id
         self.call_id = call_id
         self.model = model
         self.on_status_change = on_status_change
+        self.caller_phone = caller_phone
         self.ws = None
         self.running = False
         self.stats = {
@@ -73,6 +103,50 @@ class RealtimeToolHandler:
             "successful_calls": 0,
             "failed_calls": 0
         }
+        
+        # Resolve user context from phone number
+        self.user_context = self._resolve_user_context()
+    
+    def _resolve_user_context(self) -> Dict[str, Any]:
+        """
+        Resolve user context (timezone, location, name) from caller phone.
+        
+        Tries multiple sources for the phone number:
+        1. Directly passed caller_phone parameter
+        2. Call context store (populated by webhook-server)
+        
+        Returns empty dict if phone not available or context unavailable.
+        """
+        # Try to get phone from direct parameter or call context store
+        phone = self.caller_phone
+        
+        if not phone and CALL_CONTEXT_STORE_AVAILABLE:
+            # Try to retrieve from shared call context store
+            phone = get_stored_user_phone(self.call_id)
+            if phone:
+                self.caller_phone = phone  # Cache for later use
+                logger.info(f"[call_id={self.call_id}] Retrieved user phone from context store: {phone}")
+        
+        if not phone:
+            logger.debug(f"[call_id={self.call_id}] No caller phone available - using empty context")
+            return {}
+        
+        if not USER_CONTEXT_AVAILABLE:
+            logger.warning(f"[call_id={self.call_id}] User context module not available")
+            return {"phone": phone}  # Return phone even if we can't resolve timezone
+        
+        try:
+            context = resolve_user_context(phone)
+            if context:
+                logger.info(
+                    f"[call_id={self.call_id}] Resolved user context for {phone}: "
+                    f"timezone={context.get('timezone')}, location={context.get('location')}, "
+                    f"name={context.get('name')}"
+                )
+            return context
+        except Exception as e:
+            logger.error(f"[call_id={self.call_id}] Error resolving user context: {e}")
+            return {"phone": phone}
     
     async def connect(self) -> bool:
         """
@@ -235,6 +309,9 @@ class RealtimeToolHandler:
         
         CRITICAL: This method MUST send a response to the user in all cases.
         An unhandled exception here would leave the voice call hanging.
+        
+        User context (timezone, location) is set before execution so that
+        tools return results appropriate for the caller.
         """
         function_call_id = event.get("call_id")  # OpenAI function call ID
         name = event.get("name", "")
@@ -242,6 +319,10 @@ class RealtimeToolHandler:
         
         # Set call_id for error tracking in executor logs
         set_call_id(self.call_id)
+        
+        # Set user context for this call (timezone, location)
+        # This ensures tools like time/weather use the correct context
+        set_user_context(self.user_context)
         
         self.stats["function_calls"] += 1
         logger.info(f"[call_id={self.call_id}] Function call received: {name} (function_call_id: {function_call_id})")
@@ -507,7 +588,8 @@ active_handlers: Dict[str, RealtimeToolHandler] = {}
 async def start_tool_handler(
     call_id: str,
     session_id: str,
-    model: str = "gpt-4o-realtime-preview"
+    model: str = "gpt-4o-realtime-preview",
+    caller_phone: Optional[str] = None
 ) -> Optional[RealtimeToolHandler]:
     """
     Start a tool handler for a call session.
@@ -516,6 +598,8 @@ async def start_tool_handler(
         call_id: The call ID to track
         session_id: The Realtime session ID
         model: The model being used
+        caller_phone: Caller's phone number (E.164 format) for context resolution.
+                     This is used to determine timezone and location for tool calls.
         
     Returns:
         The handler if started successfully, None otherwise
@@ -528,7 +612,8 @@ async def start_tool_handler(
         session_id=session_id,
         call_id=call_id,
         model=model,
-        on_status_change=lambda cid, status: logger.info(f"Handler {cid}: {status}")
+        on_status_change=lambda cid, status: logger.info(f"Handler {cid}: {status}"),
+        caller_phone=caller_phone
     )
     
     # Start in background

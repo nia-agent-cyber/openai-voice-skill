@@ -4,6 +4,9 @@ OpenClaw Executor - Execute requests through the OpenClaw agent.
 
 This module provides a bridge between the OpenAI Realtime voice session
 and the OpenClaw agent's full tool capabilities.
+
+User context (timezone, location) is injected into requests so that
+time-sensitive and location-aware tools return correct results.
 """
 
 import asyncio
@@ -11,7 +14,7 @@ import json
 import logging
 import os
 import subprocess
-from typing import AsyncGenerator, Optional
+from typing import AsyncGenerator, Optional, Dict, Any
 
 from smart_chunker import SmartChunker
 
@@ -25,6 +28,9 @@ OPENCLAW_MODEL = os.getenv("OPENCLAW_MODEL", "")  # Empty = use default
 # Global call_id for error tracking (set per-request)
 _current_call_id: Optional[str] = None
 
+# Global user context for the current call (set per-call)
+_current_user_context: Optional[Dict[str, Any]] = None
+
 
 def set_call_id(call_id: str):
     """Set the current call_id for error tracking in logs."""
@@ -37,6 +43,56 @@ def get_call_id() -> str:
     return _current_call_id or "unknown"
 
 
+def set_user_context(context: Optional[Dict[str, Any]]):
+    """
+    Set the user context for the current call.
+    
+    This context is injected into requests to OpenClaw so tools
+    can use the correct timezone and location.
+    
+    Args:
+        context: Dictionary with keys like 'timezone', 'location', 'name'
+    """
+    global _current_user_context
+    _current_user_context = context
+    if context:
+        logger.info(f"[call_id={get_call_id()}] User context set: "
+                   f"timezone={context.get('timezone')}, location={context.get('location')}")
+
+
+def get_user_context() -> Optional[Dict[str, Any]]:
+    """Get the current user context or None if not set."""
+    return _current_user_context
+
+
+def _format_context_prefix(context: Optional[Dict[str, Any]]) -> str:
+    """
+    Format user context as a prefix for the request message.
+    
+    This injects timezone and location info so the agent and tools
+    can use the correct context for time/location-sensitive operations.
+    """
+    if not context:
+        return ""
+    
+    parts = []
+    
+    if context.get("name") and context["name"] != "Unknown Caller":
+        parts.append(f"User: {context['name']}")
+    
+    if context.get("timezone"):
+        parts.append(f"Timezone: {context['timezone']}")
+    
+    if context.get("location"):
+        parts.append(f"Location: {context['location']}")
+    
+    if not parts:
+        return ""
+    
+    # Format as a clear context block that the agent will understand
+    return f"[CALLER CONTEXT: {', '.join(parts)}]\n\n"
+
+
 class OpenClawExecutor:
     """Execute requests through the OpenClaw agent."""
     
@@ -44,15 +100,20 @@ class OpenClawExecutor:
         self.timeout = timeout
         self.model = OPENCLAW_MODEL
     
-    async def execute(self, request: str) -> str:
+    async def execute(self, request: str, user_context: Optional[Dict[str, Any]] = None) -> str:
         """
         Execute a request through OpenClaw and return the result.
         
         Uses CLI for simplicity. The request is passed as a one-shot
         message to the OpenClaw agent which has full tool access.
         
+        User context (timezone, location) is injected into the request
+        so that tools return results appropriate for the caller.
+        
         Args:
             request: Natural language request to execute
+            user_context: Optional dict with timezone, location, name for the caller.
+                         If None, uses the global context set via set_user_context().
             
         Returns:
             String result suitable for speaking back to the caller
@@ -63,13 +124,22 @@ class OpenClawExecutor:
             logger.warning(f"[call_id={call_id}] Empty request received")
             return "I didn't receive a valid request. Could you repeat that?"
         
-        logger.info(f"[call_id={call_id}] Executing request (timeout={self.timeout}s): {request[:100]}...")
+        # Use provided context or fall back to global context
+        context = user_context or get_user_context()
+        
+        # Inject context into the request
+        context_prefix = _format_context_prefix(context)
+        enhanced_request = context_prefix + request
+        
+        logger.info(f"[call_id={call_id}] Executing request (timeout={self.timeout}s, "
+                   f"context={bool(context)}): {request[:100]}...")
         
         try:
             # Build command - use 'agent' command with a dedicated voice session
+            # Use enhanced_request which includes user context (timezone, location)
             cmd = [
                 "openclaw", "agent",
-                "--message", request,
+                "--message", enhanced_request,
                 "--session-id", "agent:main:main",  # Dedicated session for voice calls
                 "--local"
             ]
@@ -117,7 +187,8 @@ class OpenClawExecutor:
     async def execute_streaming(
         self,
         request: str,
-        chunk_size: int = 500
+        chunk_size: int = 500,
+        user_context: Optional[Dict[str, Any]] = None
     ) -> AsyncGenerator[str, None]:
         """
         Execute a request through OpenClaw, yielding chunks as they're generated.
@@ -125,9 +196,14 @@ class OpenClawExecutor:
         Runs `openclaw agent` as a subprocess and streams stdout line-by-line,
         using SmartChunker to buffer and yield chunks at natural boundaries.
         
+        User context (timezone, location) is injected into the request
+        so that tools return results appropriate for the caller.
+        
         Args:
             request: Natural language request to execute
             chunk_size: Target chunk size in characters (~500 for TTS)
+            user_context: Optional dict with timezone, location, name for the caller.
+                         If None, uses the global context set via set_user_context().
             
         Yields:
             Text chunks as they become available
@@ -139,7 +215,15 @@ class OpenClawExecutor:
             yield "I didn't receive a valid request. Could you repeat that?"
             return
         
-        logger.info(f"[call_id={call_id}] Streaming request (timeout={self.timeout}s): {request[:100]}...")
+        # Use provided context or fall back to global context
+        context = user_context or get_user_context()
+        
+        # Inject context into the request
+        context_prefix = _format_context_prefix(context)
+        enhanced_request = context_prefix + request
+        
+        logger.info(f"[call_id={call_id}] Streaming request (timeout={self.timeout}s, "
+                   f"context={bool(context)}): {request[:100]}...")
         
         process = None
         chunker = SmartChunker(target_size=chunk_size, min_size=100, max_size=1000)
@@ -147,10 +231,10 @@ class OpenClawExecutor:
         start_time = asyncio.get_event_loop().time()
         
         try:
-            # Build command
+            # Build command with enhanced request (includes user context)
             cmd = [
                 "openclaw", "agent",
-                "--message", request,
+                "--message", enhanced_request,
                 "--session-id", "agent:main:main",
                 "--local"
             ]
@@ -309,27 +393,49 @@ class OpenClawExecutor:
 executor = OpenClawExecutor()
 
 
-async def execute_openclaw_request(request: str) -> str:
+async def execute_openclaw_request(request: str, user_context: Optional[Dict[str, Any]] = None) -> str:
     """
     Convenience function for executing OpenClaw requests.
     
+    User context (timezone, location) is used in this order:
+    1. Explicit user_context parameter (if provided)
+    2. Global context set via set_user_context()
+    
     Usage:
-        from openclaw_executor import execute_openclaw_request
-        result = await execute_openclaw_request("Check my calendar for today")
+        from openclaw_executor import execute_openclaw_request, set_user_context
+        
+        # Option 1: Set global context for the call
+        set_user_context({"timezone": "Africa/Kigali", "location": "Rwanda"})
+        result = await execute_openclaw_request("What time is it?")
+        
+        # Option 2: Pass context directly
+        result = await execute_openclaw_request(
+            "What time is it?",
+            user_context={"timezone": "America/New_York"}
+        )
     """
-    return await executor.execute(request)
+    return await executor.execute(request, user_context=user_context)
 
 
-async def execute_openclaw_streaming(request: str) -> AsyncGenerator[str, None]:
+async def execute_openclaw_streaming(
+    request: str, 
+    user_context: Optional[Dict[str, Any]] = None
+) -> AsyncGenerator[str, None]:
     """
     Convenience function for streaming OpenClaw requests.
     
+    User context (timezone, location) is used in this order:
+    1. Explicit user_context parameter (if provided)
+    2. Global context set via set_user_context()
+    
     Usage:
-        from openclaw_executor import execute_openclaw_streaming
+        from openclaw_executor import execute_openclaw_streaming, set_user_context
+        
+        set_user_context({"timezone": "Africa/Kigali", "location": "Rwanda"})
         async for chunk in execute_openclaw_streaming("Tell me about today"):
             send_to_tts(chunk)
     """
-    async for chunk in executor.execute_streaming(request):
+    async for chunk in executor.execute_streaming(request, user_context=user_context):
         yield chunk
 
 
