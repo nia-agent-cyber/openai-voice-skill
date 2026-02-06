@@ -64,6 +64,15 @@ except ImportError as e:
     def get_active_handlers():
         return {}
 
+# Import call context store for user timezone/location (#34)
+try:
+    from call_context_store import store_call_context, clear_call_context
+    CALL_CONTEXT_STORE_AVAILABLE = True
+except ImportError:
+    CALL_CONTEXT_STORE_AVAILABLE = False
+    def store_call_context(*args, **kwargs): pass
+    def clear_call_context(*args, **kwargs): pass
+
 # Import security utilities
 from security_utils import (
     validator, encryptor, error_sanitizer, api_auth,
@@ -435,6 +444,15 @@ async def initiate_outbound_call(request: OutboundCallRequest, background_tasks:
             {"initial_message": request.message, "twilio_call_sid": call.sid}
         )
         
+        # Store call context for tool handler (#34 - timezone/location fix)
+        if CALL_CONTEXT_STORE_AVAILABLE:
+            store_call_context(
+                call.sid,
+                caller_phone=from_number,
+                callee_phone=request.to,
+                call_type="outbound"
+            )
+        
         # Set up OpenAI Realtime session in background
         background_tasks.add_task(setup_outbound_realtime_session, call.sid, request.message)
         
@@ -566,6 +584,16 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
             {"sip_headers": sip_headers}
         )
         
+        # Store call context for tool handler (#34 - timezone/location fix)
+        # For inbound calls, the user is the caller (from_header)
+        if CALL_CONTEXT_STORE_AVAILABLE:
+            store_call_context(
+                call_id,
+                caller_phone=caller_number,  # Extracted phone number
+                callee_phone=to_header,
+                call_type="inbound"
+            )
+        
         # Link OpenAI call ID to matched outbound call
         if matched_call_id and enhanced_instructions:
             active_calls[matched_call_id]["openai_call_id"] = call_id
@@ -588,6 +616,10 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
         # Stop tool handler for this call
         if TOOL_HANDLER_AVAILABLE:
             background_tasks.add_task(stop_tool_handler, call_id)
+        
+        # Clear call context store (#34)
+        if CALL_CONTEXT_STORE_AVAILABLE:
+            clear_call_context(call_id)
         
         # Finalize OpenClaw session context
         if call_id in active_calls:
@@ -698,12 +730,14 @@ async def accept_call(call_id: str, caller: str, enhanced_instructions: str = No
                             pass  # Use call_id as session_id
                         
                         # Start handler in background
+                        # Pass caller for user context (timezone/location) - #34 fix
                         asyncio.create_task(start_tool_handler(
                             call_id=call_id,
                             session_id=session_id,
-                            model=AGENT_CONFIG["model"]
+                            model=AGENT_CONFIG["model"],
+                            caller_phone=caller  # For timezone/location resolution
                         ))
-                        logger.info(f"Tool handler started for call {call_id}")
+                        logger.info(f"Tool handler started for call {call_id} (caller: {mask_phone_number(caller)})")
                     except Exception as e:
                         logger.warning(f"Failed to start tool handler: {e}")
                 

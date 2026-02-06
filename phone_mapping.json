@@ -1,13 +1,17 @@
 {
-  "_comment": "Phone number to OpenClaw user mapping for context injection",
+  "_comment": "Phone number to OpenClaw user mapping for context injection. Include timezone (IANA format) and location for accurate tool responses.",
   "+250794002033": {
     "name": "Remi",
     "relationship": "primary_user",
-    "session_id": "main"
+    "session_id": "main",
+    "timezone": "Africa/Kigali",
+    "location": "Kigali, Rwanda"
   },
   "+1234567890": {
     "name": "Test User", 
     "relationship": "team_member",
-    "session_id": "team"
+    "session_id": "team",
+    "timezone": "America/New_York",
+    "location": "New York, USA"
   }
 }
