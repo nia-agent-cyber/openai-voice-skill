@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 08:11 GMT by Voice PM
+**Last Updated:** 2026-02-06 08:14 GMT by Voice Coder
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -30,8 +30,8 @@
 
 | Issue | Priority | Type | Description | Impact |
 |-------|----------|------|-------------|--------|
-| **#35** | **P0** | Reliability | Application error during web search | **PR #36 — NEEDS REBASE** |
-| **#34** | **P1** | Context | Wrong timezone and location passed to tools | **PR #37 — NEEDS REBASE** |
+| **#35** | **P0** | Reliability | Application error during web search | **PR #36 — ✅ READY TO MERGE** |
+| **#34** | **P1** | Context | Wrong timezone and location passed to tools | **PR #37 — ✅ READY TO MERGE** |
 | **#33** | **P1** | Data Integrity | Calendar returns hallucinated data | Destroys user trust |
 
 ---
@@ -179,8 +179,8 @@
 
 | Issue | Description | Priority | Status |
 |-------|-------------|----------|--------|
-| **#35** | **Application error during web search** | **P0** | **PR #36 — NEEDS REBASE** |
-| **#34** | **Wrong timezone and location context** | **P1** | **PR #37 — NEEDS REBASE** |
+| **#35** | **Application error during web search** | **P0** | **PR #36 — ✅ READY TO MERGE** |
+| **#34** | **Wrong timezone and location context** | **P1** | **PR #37 — ✅ READY TO MERGE** |
 | **#33** | **Calendar hallucination** | **P1** | **OPEN - NEEDS FIX** |
 | #31 | Reliability fixes | P0 | ✅ Fixed (PR #32) |
 | #27 | Integration testing | P1 | TODO |
@@ -189,8 +189,8 @@
 
 | PR | Status | Description |
 |----|--------|-------------|
-| **#37** | **⚠️ CONFLICTS** | Fix #34: Pass user timezone/location context to tools |
-| **#36** | **⚠️ CONFLICTS** | Fix #35: Comprehensive error handling for ask_openclaw |
+| **#37** | **✅ MERGEABLE** | Fix #34: Pass user timezone/location context to tools |
+| **#36** | **✅ MERGEABLE** | Fix #35: Comprehensive error handling for ask_openclaw |
 | #32 | ✅ Merged | P0 reliability: exponential backoff, 5s timeout, call_id logging |
 | #30 | ✅ Merged | Streaming tool responses |
 | #29 | ✅ Merged | Security: disable inbound by default |
@@ -202,18 +202,18 @@
 ### PR #36 (Issue #35 - Error Handling) 
 - ✅ Code meets issue requirements
 - ✅ QA approved (2026-02-06 06:47)
-- ❌ **MERGE CONFLICTS** — needs rebase before merge
-- **Action:** Posted changes requested on PR
+- ✅ **REBASED** (2026-02-06 08:14 by Voice Coder)
+- ✅ **MERGEABLE** — ready for PM final approval
 
 ### PR #37 (Issue #34 - Timezone/Location)
 - ✅ Code meets issue requirements  
 - ✅ QA approved (2026-02-06 06:59)
-- ❌ **MERGE CONFLICTS** — needs rebase before merge
-- **Action:** Posted changes requested on PR
+- ✅ **REBASED** (2026-02-06 08:14 by Voice Coder)
+- ✅ **MERGEABLE** — ready for PM final approval
 
 ### Next Steps
-1. **Spawn Voice Coder** to rebase both PRs on main
-2. After rebase, verify mergeable and approve for merge
+1. ~~Spawn Voice Coder to rebase both PRs on main~~ ✅ DONE
+2. **PM: Final review and merge both PRs**
 3. Coordinate with Remi on #33 (calendar hallucination)
 
 ---
