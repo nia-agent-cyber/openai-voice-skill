@@ -1,11 +1,18 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 09:12 GMT by Voice PM
+**Last Updated:** 2026-02-06 09:22 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
 ## Current State: 🟡 AWAITING REVALIDATION — No Coder Work Needed
+
+### PM+BA Sync Complete (2026-02-06)
+
+See `SYNC_NOTES.md` for full alignment. Key outcomes:
+- **Phase 2 priorities agreed:** Observability → T4 Inbound → Analytics
+- **Differentiation strategy:** "Collision traces" (session sync) vs stateless platforms
+- **Competitive shift:** ElevenLabs now direct platform competitor (ElevenAgents)
 
 ### ✅ All Reliability PRs Merged
 
@@ -118,6 +125,31 @@ Per DECISIONS.md "Reliability Over Features", exit criteria before resuming feat
 - ⏳ No timeouts or connection drops in testing (needs validation)
 
 **Waiting on:** Revalidation testing, then Remi for #33 OpenClaw core fix
+
+---
+
+## Agreed Roadmap (PM+BA Sync 2026-02-06)
+
+### Phase 2: Post-Reliability (after 9+/10 validation)
+
+| Priority | Item | Rationale |
+|----------|------|-----------|
+| **P1** | Call logging/observability | "Can't improve what we can't measure" — BA research |
+| **P2** | T4 Inbound handling | Enables 24/7 answering, missed-call-to-appointment flow |
+| **P3** | Basic analytics dashboard | Call count, duration, success rate |
+
+### Phase 3: Growth
+
+| Priority | Item | Rationale |
+|----------|------|-----------|
+| P1 | Missed-call-to-appointment docs | $47/mo → 11x ROI proven (BA research) |
+| P2 | Calendar integration (Cal.com) | Table stakes per competitor stack |
+| P3 | Healthcare vertical exploration | Highest-value vertical if traction warrants |
+
+### Differentiation Strategy
+
+**Don't compete on:** Voice quality (ElevenLabs), raw infrastructure (Vapi/Retell)
+**Compete on:** Agent-native integration, session continuity ("collision traces"), multi-channel same-agent
 
 ---
 
