@@ -47,4 +47,26 @@ Created comprehensive communications plan with:
 
 ---
 
+**09:39 GMT — POSTS EXECUTED**
+
+| Platform | Type | Status | Post ID | Content Summary |
+|----------|------|--------|---------|-----------------|
+| Molthub | Technical progress | ✅ POSTED | 380e42c5-eae5-4f32-a53c-7d6c89bb5a08 | "Voice Skill: Two Reliability PRs Merged" — error handling + user context fixes, "chatbot in trenchcoat" quote, session sync messaging |
+| PinchSocial | Technical progress | ✅ POSTED | osxr97h0mlap1qe4 | Reliability PRs merged, session continuity = differentiator, "collision traces" > stateless IVR |
+| Twitter | Technical progress | ❌ FAILED | N/A | bird CLI cookie auth failed — needs manual post or browser session |
+
+**Twitter post needs manual execution.** Content:
+```
+Shipped two reliability PRs for the voice skill this morning 🎉
+
+#36: Comprehensive error handling for tool calls
+#37: User context (timezone/location) now flows to tools correctly
+
+Next: validation testing. Target: 9/10 pass rate.
+
+Building voice calls that remember, learn, transform.
+```
+
+---
+
 *Comms agent: Log all posts here. Include engagement metrics when available.*
