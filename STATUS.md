@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 10:10 GMT by Voice Coder
+**Last Updated:** 2026-02-06 10:12 GMT by Voice QA
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -23,8 +23,8 @@
 
 | # | Item | Priority | Rationale | Status |
 |---|------|----------|-----------|--------|
-| 1 | **Fix #38: Zombie calls** | P1-Blocker | Blocks all observability work | 🔴 CODER NEEDED |
-| 2 | **Call observability** | P1 | "Can't improve what we can't measure" | ⏳ After #38 |
+| 1 | ~~Fix #38: Zombie calls~~ | P1-Blocker | Blocks all observability work | ✅ MERGED (PR #39) |
+| 2 | **Call observability** | P1 | "Can't improve what we can't measure" | 🟢 UNBLOCKED |
 | 3 | **T4 Inbound** | P2 | 24/7 answering, missed-call flow | ⏳ After observability |
 
 ### Why This Order
@@ -39,15 +39,16 @@
 
 ## 🔧 Active Work
 
-### Issue #38: Zombie Calls (P1-Blocker) — PR #39 READY FOR QA
+### ✅ Issue #38: Zombie Calls — FIXED (PR #39 Merged 2026-02-06 10:11 GMT)
 
-**Root Cause Identified:**
-- `handle_twilio_webhook()` in webhook-server.py removes calls from `active_calls`
-- BUT it doesn't call `recording_manager.end_call_recording()`
-- So database records stay with `status='active'`, `ended_at=null` forever
-- Full analysis in `docs/ISSUE_38_ROOT_CAUSE.md`
+**QA Review Summary:**
+- ✅ Code review passed - cleanup logic correct
+- ✅ `--dry-run` mode works correctly
+- ✅ Uses 'timeout' status for audit trail
+- ✅ No modifications to webhook-server.py (constraint respected)
+- ✅ Root cause documented in `docs/ISSUE_38_ROOT_CAUSE.md`
 
-**Fix (PR #39):**
+**What was fixed:**
 Since we cannot modify webhook-server.py, added workaround:
 1. `call_recording.py`: Added `cleanup_stale_calls()` and `get_zombie_calls()` methods
 2. `session-bridge.ts`: Added `/zombie-calls` and `/cleanup-stale-calls` endpoints
