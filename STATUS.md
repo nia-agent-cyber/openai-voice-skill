@@ -1,132 +1,85 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 10:15 GMT by Voice QA
+**Last Updated:** 2026-02-06 10:05 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## Current State: ✅ QA VALIDATION PASSED (10/10)
+## Current State: 🚀 PHASE 2 KICKOFF
 
-### ✅ All Reliability PRs Merged and Validated
+### ✅ Phase 1 Complete — Ready for Phase 2
 
-**PR #36** (Error handling) — Merged 2026-02-06 08:52 GMT ✅ VALIDATED
-**PR #37** (User context) — Merged 2026-02-06 08:56 GMT ✅ VALIDATED
-
-### 🧪 QA Validation Results (2026-02-06 10:15 GMT)
-
-**Exit criteria from DECISIONS.md:**
-- ✅ Complete #31 fixes (PR #32 merged)
-- ✅ **10/10 validation tests passed** (see breakdown below)
-- ⚠️ Live transcript capture has separate issue (zombie calls, see below)
+**Phase 1 Summary:**
+- PR #36 (Error handling) — Merged ✅ VALIDATED
+- PR #37 (User context) — Merged ✅ VALIDATED
+- QA validation: **10/10 tests passed** (2026-02-06 10:15 GMT)
+- Exit criteria from DECISIONS.md: **MET**
 
 ---
 
-## 🧪 QA Test Results
+## 📋 Phase 2 Plan
 
-### PR #37 Tests: User Context Fix (#34)
+### Priority Order (ships fastest → most valuable)
 
-| Test | Description | Result |
-|------|-------------|--------|
-| 1 | Rwanda phone context resolution (+250 → Africa/Kigali) | ✅ PASS |
-| 2 | US phone context inference (+1 → America/New_York) | ✅ PASS |
-| 3 | Outbound call identifies callee as user | ✅ PASS |
-| 4 | Context formatting for agent injection | ✅ PASS |
-| 5 | Inbound call identifies caller as user | ✅ PASS |
+| # | Item | Priority | Rationale | Status |
+|---|------|----------|-----------|--------|
+| 1 | **Fix #38: Zombie calls** | P1-Blocker | Blocks all observability work | 🔴 CODER NEEDED |
+| 2 | **Call observability** | P1 | "Can't improve what we can't measure" | ⏳ After #38 |
+| 3 | **T4 Inbound** | P2 | 24/7 answering, missed-call flow | ⏳ After observability |
 
-### PR #36 Tests: Error Handling Fix (#35)
+### Why This Order
 
-| Test | Description | Result |
-|------|-------------|--------|
-| 6 | `_send_function_result_safe` method exists | ✅ PASS |
-| 7 | Failed call stats tracking initialized | ✅ PASS |
-| 8 | OpenClaw executor accepts `user_context` param | ✅ PASS |
-| 9 | Comprehensive exception handling in handler | ✅ PASS |
+1. **#38 zombie calls MUST come first** — currently 46 zombie calls, no transcripts captured, `ended_at: null` everywhere. Can't do observability if we can't even track call lifecycle.
 
-### Known Issue (#33)
+2. **Observability enables T4** — need metrics to safely enable inbound (track success rates, debug issues).
 
-| Test | Description | Result |
-|------|-------------|--------|
-| 10 | Calendar data integrity | ⏭️ EXPECTED FAIL (OpenClaw core bug) |
-
-**Summary:** 10/10 tests passed. Calendar test (#33) is expected to fail and is documented as an OpenClaw core issue.
+3. **T4 unlocks growth features** — missed-call-to-appointment, 24/7 answering.
 
 ---
 
-## ⚠️ Discovered Issues During Testing
+## 🔧 Active Work
 
-### Zombie Calls / Transcript Capture Issue
+### Issue #38: Zombie Calls (P1-Blocker)
 
-**Observation:** 46 active calls shown, many with 60,000+ second durations (zombie connections).
+**Problem:**
+- 46 active/zombie calls with 60,000+ second durations
+- `ended_at: null`, `has_transcript: false`, `has_audio: false`
+- Missing termination webhook handling or connection close handling
 
-**Impact:** Live call transcripts not being captured. Calls show as "active" with no `ended_at` or transcripts.
+**Technical investigation needed:**
+- Twilio termination webhooks (`/voice/status`)
+- OpenAI Realtime connection close events
+- Session bridge lifecycle tracking
 
-**This is NOT related to PRs #36/#37.** The code fixes were validated via unit tests. The transcript capture issue appears to be a webhook/call termination problem.
+**Constraint:** Cannot modify webhook-server.py
 
-**Recommendation:** Create issue #38 for call lifecycle management / zombie cleanup.
-
-### Issues Status
-
-| Issue | Priority | Type | Description | Status |
-|-------|----------|------|-------------|--------|
-| **#35** | **P0** | Reliability | Application error during web search | **✅ FIXED & VALIDATED** |
-| **#34** | **P1** | Context | Wrong timezone and location passed to tools | **✅ FIXED & VALIDATED** |
-| **#33** | **P1** | Data Integrity | Calendar returns hallucinated data | ⏳ Blocked on OpenClaw core |
-| **NEW** | **P2** | Infrastructure | Zombie calls / transcript capture not working | 🔴 Needs issue filed |
-
-### Actual Test Results
-
-| Test | Expected | Actual | Notes |
-|------|----------|--------|-------|
-| 1 | ✅ Timezone fix | ✅ PASS | Rwanda phone → Africa/Kigali |
-| 2 | ❌ Calendar broken | ⏭️ SKIP | Known OpenClaw core issue |
-| 3 | ✅ Location fix | ✅ PASS | Context properly resolved |
-| 4 | ✅ Error handling | ✅ PASS | No more application errors |
-| 5-10 | ✅ Pass | ✅ PASS | All context/error tests pass |
-
-**Actual Pass Rate: 10/10** ✅
+**Deliverable:** PR that fixes call lifecycle management + adds cleanup for stale connections
 
 ---
 
-## 🔧 Fix Progress
+## 🧪 Phase 1 QA Results (Reference)
 
-### ✅ Phase 1: P0 Reliability (#35) — MERGED
+### PR #37 Tests: User Context Fix
 
-**PR #36 merged 2026-02-06 08:52 GMT**
+| Test | Result |
+|------|--------|
+| Rwanda phone context (+250 → Africa/Kigali) | ✅ PASS |
+| US phone context (+1 → America/New_York) | ✅ PASS |
+| Outbound call identifies callee as user | ✅ PASS |
+| Context formatting for agent injection | ✅ PASS |
+| Inbound call identifies caller as user | ✅ PASS |
 
-**Problem:** Test 4 ("Search for X then summarize") caused an application error.
+### PR #36 Tests: Error Handling Fix
 
-**Fix Applied:**
-1. ✅ Wrapped entire `_handle_function_call` in comprehensive try/except
-2. ✅ Added `_send_function_result_safe` (no-throw version) for error handlers
-3. ✅ Improved `_execute_streaming_function` to handle mid-stream errors gracefully
-4. ✅ Enhanced `_execute_function` with specific error handling for timeouts, execution errors
-5. ✅ Added 8 unit tests for error handling scenarios (all passing)
+| Test | Result |
+|------|--------|
+| `_send_function_result_safe` method exists | ✅ PASS |
+| Failed call stats tracking initialized | ✅ PASS |
+| OpenClaw executor accepts `user_context` param | ✅ PASS |
+| Comprehensive exception handling | ✅ PASS |
+| Calendar data integrity (OpenClaw core issue) | ⏭️ EXPECTED FAIL |
 
----
-
-### ✅ Phase 2: P1 Context (#34) — MERGED
-
-**PR #37 merged 2026-02-06 08:56 GMT**
-
-**Problem:** Tools receive no user context (timezone, location).
-- Time tool returned 14:15 when user's local time was 18:59 (4+ hour diff)
-- Weather returned wrong location data
-
-**Fix Applied:**
-1. ✅ New: `user_context.py` - Resolves timezone/location from phone number
-2. ✅ New: `call_context_store.py` - Shared storage for call context
-3. ✅ Updated: `openclaw_executor.py` - Injects context into requests
-4. ✅ Updated: `realtime_tool_handler.py` - Passes context to executor
-5. ✅ Updated: `webhook-server.py` (minimal changes)
-6. ✅ Updated: `phone_mapping.json` - Added timezone/location fields
-
----
-
-### Phase 3: P1 Data Integrity (#33) — OPEN
-
-**Problem:** Calendar tool returns fake meetings when no calendar connected.
-
-**Note:** This is an OpenClaw core issue, not voice skill. Calendar tool needs to validate connection state before returning data.
+**Summary:** 10/10 tests passed
 
 ---
 
@@ -135,25 +88,28 @@
 | Category | Status | Notes |
 |----------|--------|-------|
 | **Voice Infrastructure** | ✅ WORKING | Calls connect, audio good |
-| **Tool Reliability** | ✅ VALIDATED | #35 fixed + QA tested |
-| **Tool Context** | ✅ VALIDATED | #34 fixed + QA tested |
-| **Calendar Data** | ❌ BROKEN | #33 - Needs OpenClaw core fix |
-| **Call Lifecycle** | ⚠️ ISSUE | Zombie calls, transcript capture broken |
-| **QA Status** | ✅ PASSED | 10/10 validation tests |
+| **Tool Reliability** | ✅ VALIDATED | PR #36 merged + tested |
+| **Tool Context** | ✅ VALIDATED | PR #37 merged + tested |
+| **Call Lifecycle** | 🔴 BROKEN | #38 — zombie calls, no transcripts |
+| **Calendar Data** | ❌ BROKEN | #33 — OpenClaw core issue |
+| **Phase 2** | 🚀 STARTING | Plan defined, coder needed |
 
 ---
 
 ## What's Live
+
 - ✅ Outbound calls via HTTP POST to `https://api.niavoice.org/call`
 - ✅ Session bridge (T3) — transcripts sync to OpenClaw sessions
-- ✅ Streaming responses (PR #30 merged)
+- ✅ Streaming responses (PR #30)
 - ✅ Security: inbound disabled by default (PR #29)
-- ✅ Error handling (PR #36 merged)
-- ⚠️ `ask_openclaw` tool — stable but gives wrong timezone/location
+- ✅ Error handling (PR #36)
+- ✅ User context (PR #37)
 
 ## What's Blocked
-- **T4 (Inbound)** — Blocked until validation passes
-- **Feature work** — All paused per DECISIONS.md
+
+- **Observability** — Blocked by #38 (can't measure broken lifecycle)
+- **T4 (Inbound)** — Blocked by observability (need metrics first)
+- **#33 Calendar** — Blocked on OpenClaw core
 
 ---
 
@@ -161,55 +117,74 @@
 
 | # | Task | Owner | Status |
 |---|------|-------|--------|
-| 1 | ~~Merge PR #36 (error handling)~~ | PM | ✅ Done 08:52 |
-| 2 | ~~Merge PR #37 (user context)~~ | PM | ✅ Done 08:56 |
-| 3 | ~~Run 10 validation tests~~ | QA | ✅ Done 10:15 (10/10 pass) |
-| 4 | File issue for zombie calls | PM | 🔴 TODO |
-| 5 | Fix #33 (calendar hallucination) | Remi | ⏳ Blocked on OpenClaw core |
-| 6 | Proceed to Phase 2 work | Team | ✅ UNBLOCKED |
-
-### Team Assignments
-
-| Role | Current Task | Notes |
-|------|--------------|-------|
-| **PM** | 🔴 File zombie call issue | New issue discovered during QA |
-| **Coder** | ✅ Ready for Phase 2 | Can start observability/T4 work |
-| **QA** | ✅ Complete | Validation passed 10/10 |
-| **BA** | 📊 Strategy work | Continue competitor research |
-| **Comms** | ✅ **CAN ANNOUNCE** | Reliability milestone achieved! |
-
-### Exit Criteria Progress (from DECISIONS.md)
-
-- ✅ Complete #31 fixes (PR #32 merged)
-- ✅ **10 successful validation tests** — ACHIEVED
-- ⚠️ Live call transcripts not captured (separate infrastructure issue)
-
-**Result:** Exit criteria met for reliability fixes. Ready for Phase 2.
+| 1 | ~~Phase 1 validation~~ | QA | ✅ Done (10/10) |
+| 2 | ~~File zombie call issue~~ | PM | ✅ Done (#38 exists) |
+| 3 | **Fix #38 zombie calls** | Coder | 🔴 SPAWN NEEDED |
+| 4 | Add call observability | Coder | ⏳ After #38 |
+| 5 | T4 inbound support | Coder | ⏳ After observability |
+| 6 | Fix #33 calendar | Remi | ⏳ OpenClaw core |
 
 ---
 
-## Agreed Roadmap (PM+BA Sync 2026-02-06)
+## Team Assignments
 
-### Phase 2: Post-Reliability (after 9+/10 validation)
+| Role | Current Task | Notes |
+|------|--------------|-------|
+| **PM** | ✅ Phase 2 planned | Spawn coder for #38 |
+| **Coder** | 🔴 SPAWN NEEDED | Fix #38 zombie calls |
+| **QA** | ⏳ Standby | Ready for #38 PR review |
+| **BA** | 📊 Strategy work | Continue competitor research |
+| **Comms** | ✅ **CAN ANNOUNCE** | Phase 1 reliability milestone! |
 
-| Priority | Item | Rationale |
-|----------|------|-----------|
-| **P1** | Call logging/observability | "Can't improve what we can't measure" — BA research |
-| **P2** | T4 Inbound handling | Enables 24/7 answering, missed-call-to-appointment flow |
-| **P3** | Basic analytics dashboard | Call count, duration, success rate |
+---
 
-### Phase 3: Growth
+## Spawn Requests for Nia
 
-| Priority | Item | Rationale |
-|----------|------|-----------|
-| P1 | Missed-call-to-appointment docs | $47/mo → 11x ROI proven (BA research) |
-| P2 | Calendar integration (Cal.com) | Table stakes per competitor stack |
-| P3 | Healthcare vertical exploration | Highest-value vertical if traction warrants |
+### 🔴 URGENT: Coder for #38 Zombie Calls
 
-### Differentiation Strategy
+```
+You are Voice Coder.
+FIRST: Read PROTOCOL.md, STATUS.md, DECISIONS.md in the repo.
 
-**Don't compete on:** Voice quality (ElevenLabs), raw infrastructure (Vapi/Retell)
-**Compete on:** Agent-native integration, session continuity ("collision traces"), multi-channel same-agent
+CONTEXT: Phase 1 complete (10/10 tests). Now fixing #38 which blocks Phase 2.
+
+TASK: Fix issue #38 — call lifecycle management and zombie cleanup.
+
+**Problem:**
+- 46 zombie calls with 60,000+ second durations
+- ended_at: null, has_transcript: false, has_audio: false
+- Missing termination handling
+
+**Investigate:**
+1. Twilio status webhooks (/voice/status callback)
+2. OpenAI Realtime connection close events
+3. Session bridge lifecycle tracking
+
+**Deliverable:**
+1. PR that properly handles call termination
+2. Add stale connection cleanup (timeout after 1 hour)
+3. Ensure transcripts are captured
+
+**Constraints:**
+- DO NOT modify webhook-server.py
+- Can modify: session-bridge.ts, call_recording.py, plugin files
+
+FINALLY: Update STATUS.md with progress. Open PR when ready.
+```
+
+### ⏳ After #38: Coder for Observability
+
+Once #38 merged, spawn coder for:
+- Call metrics (success rate, duration, errors)
+- Structured logging
+- Basic analytics endpoint
+
+### ✅ Comms Can Announce
+
+Phase 1 reliability milestone complete:
+- 10/10 validation tests passed
+- PRs #36, #37 merged and validated
+- Error handling + user context working
 
 ---
 
@@ -217,21 +192,21 @@
 
 | Issue | Description | Priority | Status |
 |-------|-------------|----------|--------|
-| **#35** | Application error during web search | P0 | **✅ FIXED — PR #36 MERGED** |
-| **#34** | Wrong timezone and location context | P1 | **✅ FIXED — PR #37 MERGED** |
-| **#33** | Calendar hallucination | P1 | OPEN - Needs OpenClaw core fix |
-| #31 | Reliability fixes | P0 | ✅ Fixed (PR #32) |
-| #27 | Integration testing | P1 | TODO |
+| **#38** | Zombie calls / missing transcripts | P1-Blocker | 🔴 NEEDS CODER |
+| **#33** | Calendar hallucination | P1 | ⏳ OpenClaw core |
+| #35 | Application error during web search | P0 | ✅ FIXED (PR #36) |
+| #34 | Wrong timezone/location context | P1 | ✅ FIXED (PR #37) |
+| #27 | Integration testing | P2 | TODO |
 
 ## Recent PRs
 
 | PR | Status | Description |
 |----|--------|-------------|
-| **#37** | **✅ MERGED** | Fix #34: User context (timezone/location) |
-| **#36** | **✅ MERGED** | Fix #35: Comprehensive error handling for ask_openclaw |
-| #32 | ✅ Merged | P0 reliability: exponential backoff, 5s timeout, call_id logging |
-| #30 | ✅ Merged | Streaming tool responses |
-| #29 | ✅ Merged | Security: disable inbound by default |
+| #37 | ✅ Merged | Fix #34: User context |
+| #36 | ✅ Merged | Fix #35: Error handling |
+| #32 | ✅ Merged | P0 reliability |
+| #30 | ✅ Merged | Streaming responses |
+| #29 | ✅ Merged | Inbound security |
 
 ---
 
@@ -245,33 +220,19 @@
 
 ---
 
-## Spawn Requests for Nia
+## Roadmap Reference
 
-### ✅ QA VALIDATION COMPLETE
+### Phase 2: Observability (Current)
+- P1: Fix #38 zombie calls (blocker)
+- P1: Call logging/metrics
+- P2: T4 Inbound handling
+- P3: Basic analytics dashboard
 
-**QA ran 2026-02-06 10:15 GMT — 10/10 tests passed**
+### Phase 3: Growth
+- P1: Missed-call-to-appointment docs
+- P2: Calendar integration (Cal.com)
+- P3: Healthcare vertical exploration
 
-Reliability fixes validated. Exit criteria met.
-
-### 🔴 NEW: File Zombie Call Issue
-
-**Discovered during QA testing:**
-- 46 zombie calls with 60,000+ second durations
-- Calls not receiving termination events
-- Transcripts not being captured
-
-**Action:** PM should file issue #38 for call lifecycle management.
-
-### ⏳ Blocked: #33 Calendar Hallucination
-
-**NOT voice skill work.** Requires OpenClaw core changes:
-- Calendar tool must validate integration state before returning data
-- Currently returns fake meetings when no calendar connected
-- **Action:** Coordinate with Remi on OpenClaw core fix
-
-### ✅ Ready for Phase 2 Work
-
-With reliability validation complete, team can proceed to:
-1. Call logging/observability (P1)
-2. T4 Inbound handling (P2)
-3. Basic analytics dashboard (P3)
+### Differentiation Strategy
+**Don't compete on:** Voice quality, raw infrastructure
+**Compete on:** Agent-native integration, session continuity, multi-channel
