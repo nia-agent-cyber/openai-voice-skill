@@ -1,0 +1,10 @@
+{
+  "policy": "allowlist",
+  "allowFrom": [],
+  "voicemailEnabled": true,
+  "afterHoursMessage": "I'm not available right now. Please leave a message after the tone.",
+  "afterHoursStart": "22:00",
+  "afterHoursEnd": "08:00",
+  "afterHoursTimezone": "America/New_York",
+  "notes": "Add phone numbers to allowFrom in E.164 format (e.g., +14402915517). Use '*' to allow all callers. Use prefix matching with trailing * (e.g., +1440* matches all +1440 numbers)."
+}
