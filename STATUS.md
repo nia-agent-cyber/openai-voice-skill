@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 06:59 GMT by Voice QA
+**Last Updated:** 2026-02-06 08:11 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -30,8 +30,8 @@
 
 | Issue | Priority | Type | Description | Impact |
 |-------|----------|------|-------------|--------|
-| **#35** | **P0** | Reliability | Application error during web search | **PR #36 — QA APPROVED** |
-| **#34** | **P1** | Context | Wrong timezone and location passed to tools | **PR #37 — QA APPROVED** |
+| **#35** | **P0** | Reliability | Application error during web search | **PR #36 — NEEDS REBASE** |
+| **#34** | **P1** | Context | Wrong timezone and location passed to tools | **PR #37 — NEEDS REBASE** |
 | **#33** | **P1** | Data Integrity | Calendar returns hallucinated data | Destroys user trust |
 
 ---
@@ -173,41 +173,14 @@
 
 ---
 
-## PM Review (2026-02-06 06:40 GMT)
-
-### Priority Confirmation
-
-| Issue | Priority | Why | Who Can Fix |
-|-------|----------|-----|-------------|
-| **#35** | **P0** | Crashes destroy trust instantly | **Voice Coder** — error handling in ask_openclaw |
-| **#34** | **P1** | Wrong answers = unusable | **Voice Coder** — pass caller context to tool bridge |
-| **#33** | **P1** | Hallucinated data = dangerous | **OpenClaw Core** — calendar tool needs connection validation |
-
-### Immediate Actions Needed
-
-**1. ✅ #35 Fix Complete — PR #36 QA Approved**
-Ready for PM review and merge. Comprehensive error handling added.
-
-**2. ✅ #34 Fix Complete — PR #37 QA Approved**
-Ready for PM review and merge. User context (timezone/location) now passed to tools via phone number resolution.
-
-**3. Escalate #33 to Remi**
-Calendar hallucination is NOT a voice skill bug — it's the OpenClaw calendar tool returning fake data when no calendar is connected. Voice skill can't fix this; OpenClaw core needs to validate integration state.
-
-### Progress Summary
-
-- ✅ #35 P0 fix submitted (PR #36) — QA approved 2026-02-06 06:47 GMT
-- ✅ #34 P1 fix submitted (PR #37) — QA approved 2026-02-06 06:59 GMT
-- ⏳ #33 P1 — Needs OpenClaw core fix
-
 ---
 
 ## Open Issues
 
 | Issue | Description | Priority | Status |
 |-------|-------------|----------|--------|
-| **#35** | **Application error during web search** | **P0** | **PR #36 QA APPROVED — Ready to merge** |
-| **#34** | **Wrong timezone and location context** | **P1** | **PR #37 QA APPROVED — Ready to merge** |
+| **#35** | **Application error during web search** | **P0** | **PR #36 — NEEDS REBASE** |
+| **#34** | **Wrong timezone and location context** | **P1** | **PR #37 — NEEDS REBASE** |
 | **#33** | **Calendar hallucination** | **P1** | **OPEN - NEEDS FIX** |
 | #31 | Reliability fixes | P0 | ✅ Fixed (PR #32) |
 | #27 | Integration testing | P1 | TODO |
@@ -216,11 +189,32 @@ Calendar hallucination is NOT a voice skill bug — it's the OpenClaw calendar t
 
 | PR | Status | Description |
 |----|--------|-------------|
-| **#37** | **✅ QA Approved** | Fix #34: Pass user timezone/location context to tools |
-| **#36** | **✅ QA Approved** | Fix #35: Comprehensive error handling for ask_openclaw |
+| **#37** | **⚠️ CONFLICTS** | Fix #34: Pass user timezone/location context to tools |
+| **#36** | **⚠️ CONFLICTS** | Fix #35: Comprehensive error handling for ask_openclaw |
 | #32 | ✅ Merged | P0 reliability: exponential backoff, 5s timeout, call_id logging |
 | #30 | ✅ Merged | Streaming tool responses |
 | #29 | ✅ Merged | Security: disable inbound by default |
+
+---
+
+## PM Review (2026-02-06 08:11 GMT)
+
+### PR #36 (Issue #35 - Error Handling) 
+- ✅ Code meets issue requirements
+- ✅ QA approved (2026-02-06 06:47)
+- ❌ **MERGE CONFLICTS** — needs rebase before merge
+- **Action:** Posted changes requested on PR
+
+### PR #37 (Issue #34 - Timezone/Location)
+- ✅ Code meets issue requirements  
+- ✅ QA approved (2026-02-06 06:59)
+- ❌ **MERGE CONFLICTS** — needs rebase before merge
+- **Action:** Posted changes requested on PR
+
+### Next Steps
+1. **Spawn Voice Coder** to rebase both PRs on main
+2. After rebase, verify mergeable and approve for merge
+3. Coordinate with Remi on #33 (calendar hallucination)
 
 ---
 
