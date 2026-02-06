@@ -232,6 +232,9 @@ class RealtimeToolHandler:
         
         Executes the function via OpenClaw with streaming support.
         Chunks are sent progressively so the user hears responses quickly.
+        
+        CRITICAL: This method MUST send a response to the user in all cases.
+        An unhandled exception here would leave the voice call hanging.
         """
         function_call_id = event.get("call_id")  # OpenAI function call ID
         name = event.get("name", "")
@@ -243,39 +246,55 @@ class RealtimeToolHandler:
         self.stats["function_calls"] += 1
         logger.info(f"[call_id={self.call_id}] Function call received: {name} (function_call_id: {function_call_id})")
         
+        # Wrap ENTIRE function call handling in try/except to guarantee we always respond
         try:
-            arguments = json.loads(arguments_str)
-        except json.JSONDecodeError:
-            logger.warning(f"[call_id={self.call_id}] Invalid JSON arguments: {arguments_str[:100]}")
-            arguments = {}
-        
-        # Try streaming execution for ask_openclaw
-        if name == "ask_openclaw":
-            request = arguments.get("request", "")
-            if not request:
-                logger.warning(f"[call_id={self.call_id}] ask_openclaw called with empty request")
-                await self._send_function_result(
-                    function_call_id, 
-                    "I didn't receive a specific request. What would you like me to do?"
-                )
-                return
-            
             try:
-                await self._execute_streaming_function(function_call_id, request)
-                return
-            except Exception as e:
-                logger.warning(f"[call_id={self.call_id}] Streaming execution failed, falling back to non-streaming: {type(e).__name__}: {e}")
-                # Fall through to non-streaming execution
-        
-        # Non-streaming fallback
-        result = await self._execute_function(name, arguments)
-        await self._send_function_result(function_call_id, result)
+                arguments = json.loads(arguments_str)
+            except json.JSONDecodeError:
+                logger.warning(f"[call_id={self.call_id}] Invalid JSON arguments: {arguments_str[:100]}")
+                arguments = {}
+            
+            # Try streaming execution for ask_openclaw
+            if name == "ask_openclaw":
+                request = arguments.get("request", "")
+                if not request:
+                    logger.warning(f"[call_id={self.call_id}] ask_openclaw called with empty request")
+                    await self._send_function_result_safe(
+                        function_call_id, 
+                        "I didn't receive a specific request. What would you like me to do?"
+                    )
+                    return
+                
+                try:
+                    await self._execute_streaming_function(function_call_id, request)
+                    return
+                except Exception as e:
+                    logger.warning(f"[call_id={self.call_id}] Streaming execution failed, falling back to non-streaming: {type(e).__name__}: {e}")
+                    # Fall through to non-streaming execution
+            
+            # Non-streaming fallback
+            result = await self._execute_function(name, arguments)
+            await self._send_function_result_safe(function_call_id, result)
+            
+        except Exception as e:
+            # Last resort: catch ANY exception and send a graceful error response
+            logger.error(f"[call_id={self.call_id}] Critical error in function call handler: {type(e).__name__}: {e}")
+            self.stats["failed_calls"] += 1
+            
+            # Try to send an error response - if this also fails, log it but don't re-raise
+            await self._send_function_result_safe(
+                function_call_id,
+                "I'm sorry, I ran into an unexpected error. Please try again."
+            )
     
     async def _execute_function(self, name: str, arguments: Dict[str, Any]) -> str:
         """
         Execute a function and return the result (non-streaming fallback).
         
         Currently only supports ask_openclaw, but can be extended.
+        
+        This method ALWAYS returns a string (never raises). Errors are caught
+        and converted to user-friendly error messages.
         """
         try:
             if name == "ask_openclaw":
@@ -284,10 +303,28 @@ class RealtimeToolHandler:
                     return "I didn't receive a specific request. What would you like me to do?"
                 
                 logger.info(f"[call_id={self.call_id}] Executing OpenClaw request (non-streaming): {request[:80]}...")
-                result = await execute_openclaw_request(request)
                 
-                self.stats["successful_calls"] += 1
-                return result
+                try:
+                    result = await execute_openclaw_request(request)
+                    
+                    # Validate result
+                    if not result or not isinstance(result, str):
+                        logger.warning(f"[call_id={self.call_id}] Empty or invalid result from executor")
+                        self.stats["failed_calls"] += 1
+                        return "I processed your request but didn't get a response. Please try again."
+                    
+                    self.stats["successful_calls"] += 1
+                    return result
+                    
+                except asyncio.TimeoutError:
+                    logger.error(f"[call_id={self.call_id}] OpenClaw request timed out")
+                    self.stats["failed_calls"] += 1
+                    return "That request took too long. Could you try asking in a simpler way?"
+                    
+                except Exception as exec_error:
+                    logger.error(f"[call_id={self.call_id}] OpenClaw execution error: {type(exec_error).__name__}: {exec_error}")
+                    self.stats["failed_calls"] += 1
+                    return "I ran into a problem processing that request. Let me know if you'd like to try again."
             
             else:
                 logger.warning(f"[call_id={self.call_id}] Unknown function: {name}")
@@ -295,9 +332,10 @@ class RealtimeToolHandler:
                 return f"I don't know how to handle the '{name}' function."
                 
         except Exception as e:
-            logger.error(f"[call_id={self.call_id}] Function execution error: {type(e).__name__}: {e}")
+            # Catch-all for any unexpected errors
+            logger.error(f"[call_id={self.call_id}] Unexpected function execution error: {type(e).__name__}: {e}")
             self.stats["failed_calls"] += 1
-            return "I ran into an error processing that request. Please try again."
+            return "I'm sorry, something unexpected went wrong. Please try again."
     
     async def _execute_streaming_function(self, function_call_id: str, request: str):
         """
@@ -310,35 +348,63 @@ class RealtimeToolHandler:
         Args:
             function_call_id: The OpenAI function call ID for the response
             request: The user's request to process
+            
+        Raises:
+            Exception: Propagated on critical failure (caller should fall back to non-streaming)
         """
         logger.info(f"[call_id={self.call_id}] Executing streaming request: {request[:80]}...")
         
         chunk_count = 0
+        first_chunk_sent = False
         
-        async for chunk in execute_openclaw_streaming(request):
-            if not chunk or not chunk.strip():
-                continue
+        try:
+            async for chunk in execute_openclaw_streaming(request):
+                if not chunk or not chunk.strip():
+                    continue
+                
+                chunk = chunk.strip()
+                chunk_count += 1
+                
+                logger.debug(f"[call_id={self.call_id}] Streaming chunk {chunk_count}: {len(chunk)} chars")
+                
+                try:
+                    if chunk_count == 1:
+                        # First chunk: send as function_call_output (completes the function call)
+                        await self._send_function_result(function_call_id, chunk)
+                        first_chunk_sent = True
+                    else:
+                        # Subsequent chunks: send as follow-up content
+                        await self._send_followup_chunk(chunk)
+                except Exception as send_error:
+                    # Log send error but continue streaming - connection may recover
+                    logger.warning(f"[call_id={self.call_id}] Failed to send chunk {chunk_count}: {type(send_error).__name__}: {send_error}")
+                    # If we couldn't send the first chunk, re-raise to trigger fallback
+                    if chunk_count == 1 and not first_chunk_sent:
+                        raise
             
-            chunk = chunk.strip()
-            chunk_count += 1
-            
-            logger.debug(f"[call_id={self.call_id}] Streaming chunk {chunk_count}: {len(chunk)} chars")
-            
-            if chunk_count == 1:
-                # First chunk: send as function_call_output (completes the function call)
-                await self._send_function_result(function_call_id, chunk)
+            if chunk_count == 0:
+                # No chunks yielded - send a default response
+                logger.warning(f"[call_id={self.call_id}] Streaming yielded no chunks")
+                await self._send_function_result(function_call_id, "Done.")
+                self.stats["failed_calls"] += 1
             else:
-                # Subsequent chunks: send as follow-up content
-                await self._send_followup_chunk(chunk)
-        
-        if chunk_count == 0:
-            # No chunks yielded - send a default response
-            logger.warning(f"[call_id={self.call_id}] Streaming yielded no chunks")
-            await self._send_function_result(function_call_id, "Done.")
-            self.stats["failed_calls"] += 1
-        else:
-            logger.info(f"[call_id={self.call_id}] Streaming complete: {chunk_count} chunks sent")
-            self.stats["successful_calls"] += 1
+                logger.info(f"[call_id={self.call_id}] Streaming complete: {chunk_count} chunks sent")
+                self.stats["successful_calls"] += 1
+                
+        except Exception as e:
+            logger.error(f"[call_id={self.call_id}] Streaming execution error: {type(e).__name__}: {e}")
+            
+            # If we already sent the first chunk, the function call is "complete" from Realtime's perspective
+            # Send a graceful error message as follow-up
+            if first_chunk_sent:
+                try:
+                    await self._send_followup_chunk("I'm sorry, I encountered an error while processing. Let me try again if you ask.")
+                except Exception:
+                    pass  # Best effort
+                self.stats["failed_calls"] += 1
+            else:
+                # No chunks sent yet - re-raise to trigger fallback to non-streaming
+                raise
     
     async def _send_followup_chunk(self, chunk: str):
         """
@@ -379,7 +445,11 @@ class RealtimeToolHandler:
             raise
     
     async def _send_function_result(self, function_call_id: str, result: str):
-        """Send function result back to the Realtime session."""
+        """
+        Send function result back to the Realtime session.
+        
+        Raises exception on failure - use _send_function_result_safe for guaranteed no-throw.
+        """
         # websockets 16.0+ uses 'state' instead of 'closed'
         import websockets
         if not self.ws or self.ws.state != websockets.State.OPEN:
@@ -406,6 +476,20 @@ class RealtimeToolHandler:
             
         except Exception as e:
             logger.error(f"[call_id={self.call_id}] Failed to send function result: {type(e).__name__}: {e}")
+            raise
+    
+    async def _send_function_result_safe(self, function_call_id: str, result: str):
+        """
+        Send function result back to the Realtime session (no-throw version).
+        
+        This method catches all exceptions and logs them, guaranteeing it won't
+        raise. Use this in error handlers to avoid cascading failures.
+        """
+        try:
+            await self._send_function_result(function_call_id, result)
+        except Exception as e:
+            # Log but don't raise - this is a last-resort send attempt
+            logger.error(f"[call_id={self.call_id}] Failed to send function result (safe): {type(e).__name__}: {e}")
     
     def _notify_status(self, status: str):
         """Notify status change callback if configured."""
