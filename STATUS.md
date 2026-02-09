@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-06 10:31 GMT by Voice QA
+**Last Updated:** 2026-02-09 07:56 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -107,8 +107,12 @@ Cleanup implemented. See `docs/ISSUE_38_ROOT_CAUSE.md` for permanent fix needed.
 | 3 | ~~Call observability~~ | Coder | ✅ PR #40 Merged |
 | 4 | ~~QA review PR #40~~ | QA | ✅ Passed + Merged |
 | 5 | ~~QA review PR #41~~ | QA | ✅ Passed + Merged |
-| 6 | Fix #33 calendar | Remi | ⏳ OpenClaw core |
-| 7 | **Phase 2 announcement** | Comms | 🚀 READY |
+| 6 | ~~Phase 2 announcement~~ | Comms | ✅ Posted Feb 6 (Molthub, PinchSocial) |
+| 7 | Twitter announcement | Manual | ⚠️ bird CLI failed — needs browser |
+| 8 | **Create missed-call tutorial** | PM/Coder | 🎯 HIGH PRIORITY |
+| 9 | Shpigford retry outreach | BA | 🎯 HIGH VALUE |
+| 10 | Cal.com partnership research | BA | 🎯 MEDIUM PRIORITY |
+| 11 | Fix #33 calendar | Remi | ⏳ OpenClaw core |
 
 ---
 
@@ -116,27 +120,46 @@ Cleanup implemented. See `docs/ISSUE_38_ROOT_CAUSE.md` for permanent fix needed.
 
 | Role | Current Task | Notes |
 |------|--------------|-------|
-| **PM** | ✅ Phase 2 complete | Plan Phase 3 |
-| **Coder** | ✅ Available | All Phase 2 PRs shipped |
-| **QA** | ✅ PR #41 merged | Phase 2 QA complete |
-| **BA** | 📊 Strategy work | Continue competitor research |
-| **Comms** | 🚀 **ANNOUNCE NOW** | Phase 2 complete! |
+| **PM** | 📝 Market execution | Create missed-call tutorial |
+| **Coder** | ✅ Available | No active coding work |
+| **QA** | ✅ Available | No PRs to review |
+| **BA** | 📊 Strategy | Shpigford retry outreach, Cal.com research |
+| **Comms** | ✅ Announced | Posted Feb 6 (Molthub, PinchSocial); Twitter needs manual post |
 
 ---
 
 ## Spawn Requests for Nia
 
-### 🚀 Phase 2 Complete — Ready for Announcement
+### 📝 MARKET FIRST — Documentation & Outreach
 
-All Phase 2 items shipped:
-- ✅ PR #39: Zombie call cleanup
-- ✅ PR #40: Call observability (port 8083)
-- ✅ PR #41: T4 Inbound support (port 8084)
+Phase 2 shipped. Now shifting to adoption:
 
-**Ready for Comms to announce:**
-- Inbound call support with allowlist authorization
-- Missed call → voicemail → callback flow
-- Full call observability
+**Priority 1: Create `docs/MISSED_CALL_TUTORIAL.md`**
+- Step-by-step: Customer calls → voicemail → transcript → agent callback → appointment
+- Include ROI data: "$47/mo → 11x revenue lift" (@NicholasPuru's case study)
+- Target: SMBs who want 24/7 phone coverage
+
+**Priority 2: Shpigford Retry**
+- He said "couldn't get it reliable" → we fixed #35, #34, #38
+- BA should draft outreach message
+- A successful retry = credibility in OpenClaw community
+
+**Priority 3: Cal.com Partnership**
+- Calendar (#33) blocked on OpenClaw core
+- Direct Cal.com integration could bypass AND give distribution
+- BA should research contact/partnership process
+
+**Outstanding Twitter Post** (failed Feb 6 — needs manual browser execution):
+```
+Shipped two reliability PRs for the voice skill this morning 🎉
+
+#36: Comprehensive error handling for tool calls
+#37: User context (timezone/location) now flows to tools correctly
+
+Next: validation testing. Target: 9/10 pass rate.
+
+Building voice calls that remember, learn, transform.
+```
 
 ---
 
