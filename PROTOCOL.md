@@ -62,6 +62,24 @@ How to work on this project. **Read this first every session.**
 
 ---
 
+## Shared Files (IMPORTANT)
+
+**When creating files that other agents need (plans, task lists, specs, etc.):**
+
+1. **ALWAYS create them in this project folder** — not in your session directory
+2. **NEVER create them in your session directory** — other agents can't access those
+3. **Use clear naming:** `FEATURE_NAME_PLAN.md`, `FEATURE_NAME_TASKS.md`
+4. **Commit documentation to git** so it persists across sessions
+
+**Example locations:**
+- Implementation plans: `./docs/FEATURE_PLAN.md` or `./FEATURE_PLAN.md`
+- Task breakdowns: `./docs/FEATURE_TASKS.md` or `./FEATURE_TASKS.md`
+- Status updates: Always in `./STATUS.md`
+
+This ensures PM → Coder → QA handoffs work smoothly.
+
+---
+
 ## Team Roles
 
 | Role | Responsibility | When Active |
