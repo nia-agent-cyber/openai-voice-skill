@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-09 13:35 GMT by Voice PM
+**Last Updated:** 2026-02-10 09:18 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -16,9 +16,9 @@
 - ⏳ **Waiting on:** Remi for #33 calendar fix (OpenClaw core dependency)
 
 **Immediate Action Needed:**
-- **Continue missed-call tutorial creation** - HIGH PRIORITY market enablement
-- Monitor adoption metrics via PR #40 observability system
-- Support BA with Shpigford retry technical credibility
+- ✅ **Missed-call tutorial creation COMPLETED** - `docs/MISSED_CALL_TUTORIAL.md` created (2026-02-10)
+- Monitor adoption metrics via PR #40 observability system  
+- Support BA with Shpigford retry technical credibility - BLOCKED (Twitter DMs inaccessible, needs public approach)
 
 **Mode:** Strategic execution phase - docs & adoption over features
 
@@ -128,7 +128,7 @@ Cleanup implemented. See `docs/ISSUE_38_ROOT_CAUSE.md` for permanent fix needed.
 | 5 | ~~QA review PR #41~~ | QA | ✅ Passed + Merged |
 | 6 | ~~Phase 2 announcement~~ | Comms | ✅ Posted Feb 6 (Molthub, PinchSocial) |
 | 7 | Twitter announcement | Manual | ⚠️ bird CLI failed — needs browser |
-| 8 | **Create missed-call tutorial** | PM/Coder | 🎯 HIGH PRIORITY |
+| 8 | **Create missed-call tutorial** | PM/Coder | ✅ COMPLETED (2026-02-10) |
 | 9 | Shpigford retry outreach | BA | 🎯 HIGH VALUE |
 | 10 | Cal.com partnership research | BA | 🎯 MEDIUM PRIORITY |
 | 11 | Fix #33 calendar | Remi | ⏳ OpenClaw core |
@@ -139,7 +139,7 @@ Cleanup implemented. See `docs/ISSUE_38_ROOT_CAUSE.md` for permanent fix needed.
 
 | Role | Current Task | Notes |
 |------|--------------|-------|
-| **PM** | 📝 Market execution | Create missed-call tutorial |
+| **PM** | 📊 Market monitoring | Tutorial completed, monitor adoption metrics |
 | **Coder** | ✅ Available | No active coding work |
 | **QA** | ✅ Available | No PRs to review |
 | **BA** | 📊 Strategy | Shpigford retry outreach, Cal.com research |
