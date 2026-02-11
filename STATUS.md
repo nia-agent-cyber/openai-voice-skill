@@ -1,45 +1,52 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-11 08:53 GMT by Voice PM  
+**Last Updated:** 2026-02-11 09:02 GMT by Voice Coder  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## 🎯 SESSION ACCOMPLISHMENTS (2026-02-11 08:53 GMT)
+## 🎯 SESSION ACCOMPLISHMENTS (2026-02-11 09:02 GMT)
 
-**✅ PM REVIEW COMPLETED:**
-- Verified metrics system is operational (database initialized, health passing)
-- Confirmed verbal ack pattern **already implemented** in `config/agent.json`
-- Identified latency tracking as next coder work item
+**✅ CODER: P1 LATENCY TRACKING IMPLEMENTED (PR #42)**
+- Added `speech_end_to_first_audio_ms` metric — Core UX measurement
+- Added `tool_call_duration_ms` metric — Tool execution timing
+- Added `session_duration_ms` metric — Total call length
+- New HTTP endpoints for recording and querying latency data
+- Dashboard and Prometheus exports now include latency metrics
+- Comprehensive tests added
+
+**📊 CURRENT STATUS:** PR #42 ready for QA review
 
 **🎯 IMMEDIATE NEXT PRIORITIES:**
-1. **P1: Latency tracking implementation** — NEEDS CODER (see details below)
+1. ~~**P1: Latency tracking implementation**~~ — ✅ DONE (PR #42)
 2. ~~**P1: System prompt update**~~ — ✅ ALREADY DONE (config/agent.json has verbal ack pattern)
-3. **Continue adoption monitoring** — Metrics system functional
-
-**📊 CURRENT STATUS:** Ready for coder work on latency tracking
+3. **QA review of PR #42** — NEEDS QA
+4. **Continue adoption monitoring** — Metrics system functional
 
 ---
 
-## 🔧 CODER WORK NEEDED: Latency Tracking (P1)
+## ✅ COMPLETED: Latency Tracking (P1) — PR #42
 
-**Task:** Add speech-end-to-audio-start timing metrics to metrics_server.py
+**Status:** Implemented by Voice Coder (2026-02-11 09:02 GMT)
 
-**Why:** VisionClaw competitive analysis revealed this is THE key metric for voice UX. They track it; we don't. Low effort, high impact.
+**What was added:**
+1. ✅ `speech_end_to_first_audio_ms` metric — Core UX measurement
+2. ✅ `tool_call_duration_ms` metric — Time in tool execution  
+3. ✅ `session_duration_ms` metric — Total call length
 
-**Scope:**
-1. Add `speech_end_to_first_audio_ms` metric — Core UX measurement
-2. Add `tool_call_duration_ms` metric — Time in tool execution
-3. Add `session_duration_ms` metric — Total call length
+**New Endpoints:**
+- `POST /metrics/latency` — Record latency events
+- `GET /metrics/latency?hours=24` — Get latency statistics
+- `GET /metrics/latency/events` — List/filter latency events
 
-**Files to modify:**
-- `scripts/metrics_server.py` — Add new metrics endpoints
-- `scripts/call_metrics.py` — Add schema/storage for new metrics
-- (May need to instrument webhook-server.py for timing — check if possible via events)
+**Files modified:**
+- `scripts/call_metrics.py` — Added LatencyEventType, LatencyStats, recording/querying methods
+- `scripts/metrics_server.py` — Added HTTP endpoints for latency tracking
+- `tests/test_call_metrics.py` — Added comprehensive latency tests
 
-**Reference:** See `docs/COMPETITIVE_ANALYSIS_VISIONCLAW.md` for VisionClaw's implementation pattern.
+**Constraint followed:** ✅ Did NOT modify webhook-server.py
 
-**⚠️ CONSTRAINT:** DO NOT modify webhook-server.py logic — check if timing events already exist first.
+**Next:** QA review PR #42, then merge
 
 ---
 
@@ -257,9 +264,10 @@ Cleanup implemented. See `docs/ISSUE_38_ROOT_CAUSE.md` for permanent fix needed.
 | 10 | Cal.com partnership research | BA | 📋 PENDING |
 | 11 | ~~Verify metrics data collection~~ | PM/Coder | ✅ COMPLETED — Database initialized, system operational |
 | 12 | Fix #33 calendar | Remi | ⏳ OpenClaw core |
-| 13 | **Add latency tracking to metrics** | Coder | 🎯 **NEXT — SPAWN CODER** (P1: speech end → audio start timing) |
+| 13 | ~~Add latency tracking to metrics~~ | Coder | ✅ **DONE — PR #42** (speech end → audio, tool call, session duration) |
 | 14 | ~~Verbal ack pattern in system prompt~~ | PM | ✅ ALREADY DONE (config/agent.json already has it!) |
-| 15 | Research tool cancellation on barge-in | Coder | 📋 P2 (Medium effort, from VisionClaw analysis) |
+| 15 | **QA review PR #42** | QA | 🎯 **NEXT — SPAWN QA** |
+| 16 | Research tool cancellation on barge-in | Coder | 📋 P2 (Medium effort, from VisionClaw analysis) |
 
 ---
 
@@ -267,9 +275,9 @@ Cleanup implemented. See `docs/ISSUE_38_ROOT_CAUSE.md` for permanent fix needed.
 
 | Role | Current Task | Notes |
 |------|--------------|-------|
-| **PM** | ✅ **STATUS VERIFIED** | Verbal ack already done; coder needed for latency tracking |
-| **Coder** | 🎯 **SPAWN NEEDED** | Task: Add latency tracking to metrics (see spec above) |
-| **QA** | ⏳ **READY** | Will validate coder deliverables |
+| **PM** | ✅ **STATUS VERIFIED** | Verbal ack done; latency tracking done |
+| **Coder** | ✅ **DONE** | PR #42: Latency tracking implemented |
+| **QA** | 🎯 **SPAWN NEEDED** | Task: Review PR #42 latency tracking |
 | **BA** | 📋 Cal.com research | Partnership exploration continues |
 | **Comms** | 📅 **Executing posts** | Feb 11 plan ready - tutorial launch, vision, Cal.com |
 

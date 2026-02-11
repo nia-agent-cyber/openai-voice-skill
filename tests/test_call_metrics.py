@@ -32,6 +32,9 @@ from call_metrics import (
     CallStatus,
     FailureReason,
     StructuredFormatter,
+    LatencyEventType,
+    LatencyStats,
+    LatencyEvent,
 )
 
 
@@ -399,6 +402,136 @@ class TestStructuredLogging:
         
         assert data["call_id"] == "test-123"
         assert data["status"] == "completed"
+
+
+class TestLatencyTracking:
+    """Test latency tracking functionality."""
+    
+    def test_record_latency_event(self, metrics_manager):
+        """Test recording a latency event."""
+        success = metrics_manager.record_latency_event(
+            call_id="call-001",
+            event_type=LatencyEventType.SPEECH_END_TO_FIRST_AUDIO.value,
+            duration_ms=450.5
+        )
+        assert success is True
+    
+    def test_record_latency_with_metadata(self, metrics_manager):
+        """Test recording a latency event with metadata."""
+        success = metrics_manager.record_latency_event(
+            call_id="call-001",
+            event_type=LatencyEventType.TOOL_CALL_DURATION.value,
+            duration_ms=1200.0,
+            metadata={"tool_name": "ask_openclaw", "tool_call_id": "tc_123"}
+        )
+        assert success is True
+    
+    def test_get_latency_stats_empty(self, metrics_manager):
+        """Test getting latency stats with no events."""
+        stats = metrics_manager.get_latency_stats()
+        assert isinstance(stats, LatencyStats)
+        assert stats.speech_to_audio_count == 0
+        assert stats.tool_call_count == 0
+        assert stats.session_count == 0
+    
+    def test_get_latency_stats_with_events(self, metrics_manager):
+        """Test getting latency stats after recording events."""
+        # Record some speech_end_to_first_audio events
+        for duration in [400, 450, 500, 550, 600]:
+            metrics_manager.record_latency_event(
+                call_id=f"call-test-{duration}",
+                event_type=LatencyEventType.SPEECH_END_TO_FIRST_AUDIO.value,
+                duration_ms=duration
+            )
+        
+        stats = metrics_manager.get_latency_stats()
+        
+        assert stats.speech_to_audio_count == 5
+        assert stats.speech_to_audio_avg_ms == 500.0  # (400+450+500+550+600)/5
+        assert stats.speech_to_audio_min_ms == 400.0
+        assert stats.speech_to_audio_max_ms == 600.0
+        assert stats.speech_to_audio_p50_ms == 500.0
+    
+    def test_get_latency_events(self, metrics_manager):
+        """Test retrieving latency events."""
+        # Record an event
+        metrics_manager.record_latency_event(
+            call_id="call-test-events",
+            event_type=LatencyEventType.SESSION_DURATION.value,
+            duration_ms=60000.0
+        )
+        
+        events = metrics_manager.get_latency_events(call_id="call-test-events")
+        
+        assert len(events) == 1
+        assert events[0].call_id == "call-test-events"
+        assert events[0].event_type == LatencyEventType.SESSION_DURATION.value
+        assert events[0].duration_ms == 60000.0
+    
+    def test_get_latency_events_filter_by_type(self, metrics_manager):
+        """Test filtering latency events by event type."""
+        # Record different event types
+        metrics_manager.record_latency_event(
+            call_id="call-filter-test",
+            event_type=LatencyEventType.SPEECH_END_TO_FIRST_AUDIO.value,
+            duration_ms=300.0
+        )
+        metrics_manager.record_latency_event(
+            call_id="call-filter-test",
+            event_type=LatencyEventType.TOOL_CALL_DURATION.value,
+            duration_ms=1500.0
+        )
+        
+        # Filter by speech_end_to_first_audio
+        events = metrics_manager.get_latency_events(
+            event_type=LatencyEventType.SPEECH_END_TO_FIRST_AUDIO.value
+        )
+        
+        assert all(e.event_type == LatencyEventType.SPEECH_END_TO_FIRST_AUDIO.value for e in events)
+    
+    def test_latency_prometheus_metrics(self, metrics_manager):
+        """Test Prometheus format latency metrics."""
+        # Record some events first
+        metrics_manager.record_latency_event(
+            call_id="call-prom-test",
+            event_type=LatencyEventType.SPEECH_END_TO_FIRST_AUDIO.value,
+            duration_ms=500.0
+        )
+        
+        prom = metrics_manager.get_latency_prometheus_metrics()
+        
+        assert "voice_speech_to_audio_ms" in prom
+        assert "voice_tool_call_duration_ms" in prom
+        assert "voice_session_duration_ms" in prom
+        assert 'quantile="0.5"' in prom
+        assert 'quantile="0.95"' in prom
+        assert 'quantile="0.99"' in prom
+    
+    def test_dashboard_includes_latency(self, metrics_manager):
+        """Test dashboard data includes latency stats."""
+        # Record a latency event
+        metrics_manager.record_latency_event(
+            call_id="call-dashboard-test",
+            event_type=LatencyEventType.SPEECH_END_TO_FIRST_AUDIO.value,
+            duration_ms=350.0
+        )
+        
+        dashboard = metrics_manager.get_dashboard_data()
+        
+        assert "latency" in dashboard
+        assert "speech_end_to_first_audio_ms" in dashboard["latency"]
+        assert "tool_call_duration_ms" in dashboard["latency"]
+        assert "session_duration_ms" in dashboard["latency"]
+
+
+class TestLatencyEventTypes:
+    """Test latency event type enumeration."""
+    
+    def test_event_type_values(self):
+        """Test latency event type values."""
+        assert LatencyEventType.SPEECH_END_TO_FIRST_AUDIO.value == "speech_end_to_first_audio"
+        assert LatencyEventType.TOOL_CALL_DURATION.value == "tool_call_duration"
+        assert LatencyEventType.SESSION_DURATION.value == "session_duration"
 
 
 if __name__ == "__main__":
