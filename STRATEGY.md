@@ -2,7 +2,7 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-02-11 05:30 GMT - NIGHT BA SCAN
+**Last Updated:** 2026-02-11 10:52 GMT - BA Cal.com Partnership Research
 
 ---
 
@@ -203,6 +203,66 @@ Multiple recent tweets highlight OpenClaw voice as breakthrough:
 | **PinchSocial** | Agent reputation/coordination layer | P2 | Cross-agent voice capabilities |
 | **ElevenLabs** | Voice quality leadership | P3 | Technical partnership vs. competition |
 
+---
+
+## 🤝 CAL.COM PARTNERSHIP RESEARCH (2026-02-11)
+
+### What is Cal.com?
+**Open-source scheduling infrastructure** (the "Calendly alternative"). 39K+ GitHub stars, used by Deel (1,200+ employees), backed by Naval Ravikant, Alexis Ohanian, Guillermo Rauch, Balaji Srinivasan.
+
+### How They Work with Voice/AI Today
+- **API v2** — Full programmatic access to bookings, schedules, slots, event types
+- **OAuth App Store** — Partners can create OAuth clients to be listed at cal.com/apps
+- **Workflow integrations** — Zapier, Make/n8n connections for automation
+- **No native voice integration** — Opportunity gap we can fill
+
+### Voice + Cal.com Integration Path
+
+```
+CALLER → Voice Skill → OpenAI Realtime
+            ↓
+   "Book me an appointment for Thursday"
+            ↓
+   Cal.com API: GET /v2/slots (check availability)
+   Cal.com API: POST /v2/bookings (create booking)
+            ↓
+   "Done! You're booked for Thursday at 2pm."
+```
+
+### Partnership Contacts
+
+| Contact | Role | Channel | Priority |
+|---------|------|---------|----------|
+| **Peer Richelsen** | Co-Founder/CEO | @peer_rich (Twitter) | P1 |
+| **Bailey Pumfleet** | Co-Founder | GitHub | P2 |
+| **Solutions Team** | Sales | cal.com/talk-to-sales | P2 |
+| **Developer OAuth** | Technical | app.cal.com/settings/developer/oauth | For integration |
+
+### Strategic Value
+
+1. **Bypasses #33 blocker** — Direct Cal.com API instead of broken OpenClaw calendar
+2. **Standard stack alignment** — "Vapi/Retell + n8n/Make + Cal.com" is emerging pattern
+3. **Distribution** — App Store listing exposes us to Cal.com user base
+4. **Open-source synergy** — Both AGPLv3 licensed, similar values
+5. **Differentiation** — First voice AI with native Cal.com OAuth integration
+
+### What Partnership Looks Like
+
+**Option A: App Store Integration (Recommended)**
+- Create OAuth client → Cal.com admin approval → Listed at cal.com/apps
+- Users connect Cal.com with one click
+- Co-marketing opportunities
+
+**Option B: Technical Integration Only**
+- Use Cal.com API v2 directly
+- No distribution benefit
+- Quick to implement
+
+### Outreach Ready
+Full outreach strategy and draft messages in `docs/CALCOM_OUTREACH.md`
+
+**Recommended first touch:** Twitter DM to @peer_rich (technical founder, responsive)
+
 ### Competitive Response Strategy
 
 **If ElevenLabs launches agent platform GA:**
@@ -398,7 +458,7 @@ Multiple recent tweets highlight OpenClaw voice as breakthrough:
 |----------|--------|-------|--------|-------|
 | **P1** | **Shpigford retry outreach** | Comms | ❌ BLOCKED | Twitter Error 226 — needs Nia browser intervention |
 | **P2** | **Missed-call tutorial** | PM | ✅ DONE | `docs/MISSED_CALL_TUTORIAL.md` completed |
-| **P3** | **Cal.com partnership research** | BA | 📋 TODO | Standard stack includes Cal.com |
+| **P3** | **Cal.com partnership research** | BA | ✅ DONE | See `docs/CALCOM_OUTREACH.md` |
 | **P4** | **Verify metrics data collection** | Coder | ⚠️ NEW | PR #40 merged but no data files observed |
 | **P5** | **Latency benchmarking** | Coder | 📋 TODO | Vapi claiming sub-500ms, need our numbers |
 
