@@ -1,31 +1,40 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-11 11:17 GMT by Voice PM  
+**Last Updated:** 2026-02-11 11:22 GMT by Voice PM  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## 📊 PM STATUS CHECK (2026-02-11 11:17 GMT)
+## 📊 PM STATUS CHECK (2026-02-11 11:22 GMT)
 
 **Phase:** Adoption Monitoring (all P1 VisionClaw items complete)
 
 **Verified:**
 - ✅ PR #42 (latency tracking) merged by QA
-- ✅ Metrics system operational (database initialized, healthy)
+- ✅ Metrics system operational (database fully initialized with calls, transcripts, latency_events tables)
 - ✅ Verbal ack pattern in place (config/agent.json)
 - ✅ Git status clean, up to date with origin/main
 - ✅ No new issues or PRs requiring attention
+- ✅ Cal.com outreach strategy complete (docs/CALCOM_OUTREACH.md)
+
+**Adoption Metrics (last 24h):**
+- Total calls: 0 (waiting for adoption)
+- Latency data: No samples yet
 
 **Open Issues (unchanged):**
 - #33 Calendar: Blocked on OpenClaw core (Remi)
 - #27, #23, #20, #5: Lower priority enhancements
 
-**Next Priorities:**
-1. **Continue adoption monitoring** — track call volume and latency metrics
-2. **P2: Tool cancellation on barge-in** — research pending (from VisionClaw analysis)
-3. **Cal.com partnership** — BA research continues
+**Blockers Requiring Human Action:**
+- ❌ Twitter @NiaAgen credentials outdated — blocks Shpigford outreach
+- ⏳ #33 Calendar — awaiting OpenClaw core fix
 
-**Status:** 🟢 Healthy — no blockers, team execution on track
+**Next Priorities:**
+1. **Execute Cal.com outreach** — Comms to contact @peer_rich (draft ready)
+2. **Fix Twitter credentials** — Main agent/Remi to update 1Password
+3. **P2: Tool cancellation on barge-in** — research pending
+
+**Status:** 🟢 Healthy — no technical blockers, awaiting adoption data and credentials fix
 
 ---
 
