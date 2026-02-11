@@ -13,6 +13,9 @@ Endpoints:
 - GET /metrics/failures - Recent failures
 - GET /metrics/hourly - Hourly timeseries
 - GET /metrics/daily - Daily timeseries
+- POST /metrics/latency - Record a latency event
+- GET /metrics/latency - Get latency statistics
+- GET /metrics/latency/events - Get latency events
 
 Usage:
     python metrics_server.py [--port 8083]
@@ -22,6 +25,7 @@ import argparse
 import json
 import logging
 import os
+from datetime import datetime, timedelta
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 from dataclasses import asdict
@@ -35,9 +39,9 @@ logger = logging.getLogger("metrics-server")
 
 # Import metrics manager (handle both direct run and module import)
 try:
-    from call_metrics import metrics_manager
+    from call_metrics import metrics_manager, LatencyEventType
 except ImportError:
-    from scripts.call_metrics import metrics_manager
+    from scripts.call_metrics import metrics_manager, LatencyEventType
 
 class MetricsRequestHandler(BaseHTTPRequestHandler):
     """HTTP request handler for metrics endpoints."""
@@ -130,20 +134,88 @@ class MetricsRequestHandler(BaseHTTPRequestHandler):
                 self.send_json_response({"timeseries": data, "days": days})
                 return
             
+            # Latency statistics
+            if path == "/metrics/latency":
+                hours = int(query.get("hours", [24])[0])
+                end_time = datetime.utcnow()
+                start_time = end_time - timedelta(hours=hours)
+                stats = metrics_manager.get_latency_stats(start_time=start_time, end_time=end_time)
+                self.send_json_response({
+                    "period_hours": hours,
+                    "speech_end_to_first_audio_ms": {
+                        "count": stats.speech_to_audio_count,
+                        "avg": round(stats.speech_to_audio_avg_ms, 2),
+                        "min": round(stats.speech_to_audio_min_ms, 2),
+                        "max": round(stats.speech_to_audio_max_ms, 2),
+                        "p50": round(stats.speech_to_audio_p50_ms, 2),
+                        "p95": round(stats.speech_to_audio_p95_ms, 2),
+                        "p99": round(stats.speech_to_audio_p99_ms, 2),
+                    },
+                    "tool_call_duration_ms": {
+                        "count": stats.tool_call_count,
+                        "avg": round(stats.tool_call_avg_ms, 2),
+                        "min": round(stats.tool_call_min_ms, 2),
+                        "max": round(stats.tool_call_max_ms, 2),
+                        "p50": round(stats.tool_call_p50_ms, 2),
+                        "p95": round(stats.tool_call_p95_ms, 2),
+                        "p99": round(stats.tool_call_p99_ms, 2),
+                    },
+                    "session_duration_ms": {
+                        "count": stats.session_count,
+                        "avg": round(stats.session_avg_ms, 2),
+                        "min": round(stats.session_min_ms, 2),
+                        "max": round(stats.session_max_ms, 2),
+                        "p50": round(stats.session_p50_ms, 2),
+                        "p95": round(stats.session_p95_ms, 2),
+                        "p99": round(stats.session_p99_ms, 2),
+                    },
+                })
+                return
+            
+            # Latency events list
+            if path == "/metrics/latency/events":
+                call_id = query.get("call_id", [None])[0]
+                event_type = query.get("event_type", [None])[0]
+                limit = int(query.get("limit", [100])[0])
+                
+                events = metrics_manager.get_latency_events(
+                    call_id=call_id,
+                    event_type=event_type,
+                    limit=limit
+                )
+                self.send_json_response({
+                    "events": [asdict(e) for e in events],
+                    "count": len(events),
+                    "filters": {
+                        "call_id": call_id,
+                        "event_type": event_type,
+                        "limit": limit
+                    }
+                })
+                return
+            
             # Root - show available endpoints
             if path == "/" or path == "":
                 endpoints = {
                     "name": "Voice Call Metrics Server",
-                    "version": "1.0.0",
+                    "version": "1.1.0",
                     "endpoints": {
-                        "/metrics/prometheus": "Prometheus-format metrics",
-                        "/metrics/dashboard": "Dashboard JSON data",
-                        "/metrics/export?format=json&days=30": "Export data",
-                        "/metrics/health": "Health check",
-                        "/metrics/failures?limit=10": "Recent failures",
-                        "/metrics/hourly?hours=24": "Hourly timeseries",
-                        "/metrics/daily?days=30": "Daily timeseries",
-                    }
+                        "GET /metrics/prometheus": "Prometheus-format metrics (includes latency)",
+                        "GET /metrics/dashboard": "Dashboard JSON data (includes latency)",
+                        "GET /metrics/export?format=json&days=30": "Export data",
+                        "GET /metrics/health": "Health check",
+                        "GET /metrics/failures?limit=10": "Recent failures",
+                        "GET /metrics/hourly?hours=24": "Hourly timeseries",
+                        "GET /metrics/daily?days=30": "Daily timeseries",
+                        "GET /metrics/latency?hours=24": "Latency statistics",
+                        "GET /metrics/latency/events?call_id=&event_type=&limit=100": "List latency events",
+                        "POST /metrics/latency": "Record latency event (body: {call_id, event_type, duration_ms, metadata?})",
+                    },
+                    "latency_event_types": [
+                        "speech_end_to_first_audio",
+                        "tool_call_duration",
+                        "session_duration"
+                    ]
                 }
                 self.send_json_response(endpoints)
                 return
@@ -155,11 +227,72 @@ class MetricsRequestHandler(BaseHTTPRequestHandler):
             logger.exception(f"Error handling request: {e}")
             self.send_json_response({"error": str(e)}, 500)
     
+    def do_POST(self):
+        """Handle POST requests."""
+        parsed = urlparse(self.path)
+        path = parsed.path
+        
+        try:
+            # Get request body
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length).decode("utf-8") if content_length > 0 else "{}"
+            data = json.loads(body)
+            
+            # Record latency event
+            if path == "/metrics/latency":
+                # Validate required fields
+                call_id = data.get("call_id")
+                event_type = data.get("event_type")
+                duration_ms = data.get("duration_ms")
+                
+                if not all([call_id, event_type, duration_ms is not None]):
+                    self.send_json_response({
+                        "error": "Missing required fields: call_id, event_type, duration_ms"
+                    }, 400)
+                    return
+                
+                # Validate event_type
+                valid_types = [e.value for e in LatencyEventType]
+                if event_type not in valid_types:
+                    self.send_json_response({
+                        "error": f"Invalid event_type. Must be one of: {valid_types}"
+                    }, 400)
+                    return
+                
+                # Record the event
+                metadata = data.get("metadata")
+                success = metrics_manager.record_latency_event(
+                    call_id=call_id,
+                    event_type=event_type,
+                    duration_ms=float(duration_ms),
+                    metadata=metadata
+                )
+                
+                if success:
+                    self.send_json_response({
+                        "status": "recorded",
+                        "call_id": call_id,
+                        "event_type": event_type,
+                        "duration_ms": duration_ms
+                    }, 201)
+                else:
+                    self.send_json_response({"error": "Failed to record event"}, 500)
+                return
+            
+            # 404
+            self.send_json_response({"error": "Not found"}, 404)
+            
+        except json.JSONDecodeError:
+            self.send_json_response({"error": "Invalid JSON"}, 400)
+        except Exception as e:
+            logger.exception(f"Error handling POST request: {e}")
+            self.send_json_response({"error": str(e)}, 500)
+    
     def do_OPTIONS(self):
         """Handle CORS preflight."""
         self.send_response(200)
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 
@@ -171,13 +304,16 @@ def run_server(port: int = 8083):
     
     logger.info(f"Starting metrics server on port {port}")
     logger.info("Endpoints:")
-    logger.info(f"  GET http://localhost:{port}/metrics/prometheus")
-    logger.info(f"  GET http://localhost:{port}/metrics/dashboard")
-    logger.info(f"  GET http://localhost:{port}/metrics/export")
-    logger.info(f"  GET http://localhost:{port}/metrics/health")
-    logger.info(f"  GET http://localhost:{port}/metrics/failures")
-    logger.info(f"  GET http://localhost:{port}/metrics/hourly")
-    logger.info(f"  GET http://localhost:{port}/metrics/daily")
+    logger.info(f"  GET  http://localhost:{port}/metrics/prometheus")
+    logger.info(f"  GET  http://localhost:{port}/metrics/dashboard")
+    logger.info(f"  GET  http://localhost:{port}/metrics/export")
+    logger.info(f"  GET  http://localhost:{port}/metrics/health")
+    logger.info(f"  GET  http://localhost:{port}/metrics/failures")
+    logger.info(f"  GET  http://localhost:{port}/metrics/hourly")
+    logger.info(f"  GET  http://localhost:{port}/metrics/daily")
+    logger.info(f"  GET  http://localhost:{port}/metrics/latency")
+    logger.info(f"  GET  http://localhost:{port}/metrics/latency/events")
+    logger.info(f"  POST http://localhost:{port}/metrics/latency")
     
     try:
         httpd.serve_forever()

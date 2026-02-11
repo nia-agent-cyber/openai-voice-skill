@@ -11,6 +11,7 @@ Features:
 - Structured logging for debugging
 - CSV/JSON exports for analytics
 - Real-time call status monitoring
+- **Latency tracking (speech_end_to_first_audio, tool_call_duration, session_duration)**
 
 Usage:
     from call_metrics import metrics_manager
@@ -20,6 +21,16 @@ Usage:
     
     # Export for analytics
     csv_data = metrics_manager.export_csv(days=30)
+    
+    # Record latency event
+    metrics_manager.record_latency_event(
+        call_id="call123",
+        event_type="speech_end_to_first_audio",
+        duration_ms=450.5
+    )
+    
+    # Get latency statistics
+    latency_stats = metrics_manager.get_latency_stats()
 """
 
 import json
@@ -87,6 +98,13 @@ class FailureReason(Enum):
     UNKNOWN = "unknown"
 
 
+class LatencyEventType(Enum):
+    """Types of latency events for tracking voice UX metrics."""
+    SPEECH_END_TO_FIRST_AUDIO = "speech_end_to_first_audio"  # Core UX metric
+    TOOL_CALL_DURATION = "tool_call_duration"  # Time spent in tool execution
+    SESSION_DURATION = "session_duration"  # Total call length
+
+
 @dataclass
 class CallMetrics:
     """Aggregate call metrics for a time period."""
@@ -142,12 +160,78 @@ class DailyBucket:
     success_rate: float = 0.0
 
 
+@dataclass
+class LatencyEvent:
+    """Individual latency event record."""
+    id: Optional[int] = None
+    call_id: str = ""
+    event_type: str = ""  # LatencyEventType value
+    duration_ms: float = 0.0
+    timestamp: Optional[datetime] = None
+    metadata: Optional[Dict[str, Any]] = None
+
+
+@dataclass
+class LatencyStats:
+    """Aggregate latency statistics for a time period."""
+    period_start: datetime = field(default_factory=datetime.utcnow)
+    period_end: datetime = field(default_factory=datetime.utcnow)
+    
+    # Speech end to first audio (core UX metric)
+    speech_to_audio_count: int = 0
+    speech_to_audio_avg_ms: float = 0.0
+    speech_to_audio_min_ms: float = 0.0
+    speech_to_audio_max_ms: float = 0.0
+    speech_to_audio_p50_ms: float = 0.0
+    speech_to_audio_p95_ms: float = 0.0
+    speech_to_audio_p99_ms: float = 0.0
+    
+    # Tool call duration
+    tool_call_count: int = 0
+    tool_call_avg_ms: float = 0.0
+    tool_call_min_ms: float = 0.0
+    tool_call_max_ms: float = 0.0
+    tool_call_p50_ms: float = 0.0
+    tool_call_p95_ms: float = 0.0
+    tool_call_p99_ms: float = 0.0
+    
+    # Session duration (total call length)
+    session_count: int = 0
+    session_avg_ms: float = 0.0
+    session_min_ms: float = 0.0
+    session_max_ms: float = 0.0
+    session_p50_ms: float = 0.0
+    session_p95_ms: float = 0.0
+    session_p99_ms: float = 0.0
+
+
 class CallMetricsManager:
     """Manages call metrics collection, aggregation, and export."""
     
     def __init__(self, db_path: Path = DATABASE_PATH):
         self.db_path = db_path
         self._setup_structured_logging()
+        self._init_latency_table()
+    
+    def _init_latency_table(self):
+        """Initialize latency_events table if it doesn't exist."""
+        with sqlite3.connect(self.db_path) as conn:
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS latency_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    call_id TEXT NOT NULL,
+                    event_type TEXT NOT NULL,
+                    duration_ms REAL NOT NULL,
+                    timestamp TEXT NOT NULL,
+                    metadata TEXT,
+                    FOREIGN KEY (call_id) REFERENCES calls (call_id)
+                )
+            ''')
+            # Indexes for efficient queries
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_latency_call_id ON latency_events(call_id)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_latency_event_type ON latency_events(event_type)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_latency_timestamp ON latency_events(timestamp)')
+            conn.commit()
     
     def _setup_structured_logging(self):
         """Configure structured logging for observability."""
@@ -461,6 +545,44 @@ class CallMetricsManager:
             "timeseries": {
                 "hourly": [asdict(b) for b in self.get_hourly_timeseries(24)],
             },
+            "latency": self._get_latency_summary(now),
+        }
+    
+    def _get_latency_summary(self, now: datetime) -> Dict[str, Any]:
+        """Get latency summary for dashboard."""
+        stats = self.get_latency_stats(
+            start_time=now - timedelta(hours=24),
+            end_time=now
+        )
+        
+        return {
+            "speech_end_to_first_audio_ms": {
+                "count": stats.speech_to_audio_count,
+                "avg": round(stats.speech_to_audio_avg_ms, 1),
+                "p50": round(stats.speech_to_audio_p50_ms, 1),
+                "p95": round(stats.speech_to_audio_p95_ms, 1),
+                "p99": round(stats.speech_to_audio_p99_ms, 1),
+                "min": round(stats.speech_to_audio_min_ms, 1),
+                "max": round(stats.speech_to_audio_max_ms, 1),
+            },
+            "tool_call_duration_ms": {
+                "count": stats.tool_call_count,
+                "avg": round(stats.tool_call_avg_ms, 1),
+                "p50": round(stats.tool_call_p50_ms, 1),
+                "p95": round(stats.tool_call_p95_ms, 1),
+                "p99": round(stats.tool_call_p99_ms, 1),
+                "min": round(stats.tool_call_min_ms, 1),
+                "max": round(stats.tool_call_max_ms, 1),
+            },
+            "session_duration_ms": {
+                "count": stats.session_count,
+                "avg": round(stats.session_avg_ms, 1),
+                "p50": round(stats.session_p50_ms, 1),
+                "p95": round(stats.session_p95_ms, 1),
+                "p99": round(stats.session_p99_ms, 1),
+                "min": round(stats.session_min_ms, 1),
+                "max": round(stats.session_max_ms, 1),
+            },
         }
     
     def get_prometheus_metrics(self) -> str:
@@ -510,7 +632,10 @@ class CallMetricsManager:
             f"voice_transcript_rate {metrics.transcript_rate:.2f}",
         ]
         
-        return "\n".join(lines) + "\n"
+        # Add latency metrics
+        latency_lines = self.get_latency_prometheus_metrics()
+        
+        return "\n".join(lines) + "\n\n" + latency_lines
     
     def export_csv(self, 
                    days: int = 30,
@@ -647,6 +772,219 @@ class CallMetricsManager:
         
         return failures
     
+    # ========================================
+    # LATENCY TRACKING METHODS
+    # Based on VisionClaw competitive analysis
+    # ========================================
+    
+    def record_latency_event(self, call_id: str, event_type: str, duration_ms: float,
+                            metadata: Optional[Dict[str, Any]] = None) -> bool:
+        """
+        Record a latency event for a call.
+        
+        Args:
+            call_id: The call identifier
+            event_type: Type of latency event (speech_end_to_first_audio, tool_call_duration, session_duration)
+            duration_ms: Duration in milliseconds
+            metadata: Optional additional metadata (e.g., tool name for tool_call_duration)
+        
+        Returns:
+            True if recorded successfully
+        """
+        try:
+            timestamp = datetime.utcnow()
+            
+            with sqlite3.connect(self.db_path) as conn:
+                conn.execute('''
+                    INSERT INTO latency_events (call_id, event_type, duration_ms, timestamp, metadata)
+                    VALUES (?, ?, ?, ?, ?)
+                ''', (
+                    call_id,
+                    event_type,
+                    duration_ms,
+                    timestamp.isoformat(),
+                    json.dumps(metadata) if metadata else None
+                ))
+                conn.commit()
+            
+            # Emit structured log for real-time monitoring
+            self.log_call_event(
+                "latency",
+                call_id,
+                latency_type=event_type,
+                duration_ms=duration_ms,
+                latency_metadata=metadata
+            )
+            
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error recording latency event: {e}")
+            return False
+    
+    def get_latency_stats(self, 
+                         start_time: Optional[datetime] = None,
+                         end_time: Optional[datetime] = None) -> LatencyStats:
+        """
+        Get aggregate latency statistics for a time period.
+        
+        Args:
+            start_time: Start of period (default: 24 hours ago)
+            end_time: End of period (default: now)
+        
+        Returns:
+            LatencyStats with all latency metrics
+        """
+        if end_time is None:
+            end_time = datetime.utcnow()
+        if start_time is None:
+            start_time = end_time - timedelta(hours=24)
+        
+        stats = LatencyStats(period_start=start_time, period_end=end_time)
+        
+        # Collect durations by event type
+        speech_to_audio: List[float] = []
+        tool_call: List[float] = []
+        session: List[float] = []
+        
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute('''
+                SELECT event_type, duration_ms
+                FROM latency_events
+                WHERE timestamp >= ? AND timestamp < ?
+            ''', (start_time.isoformat(), end_time.isoformat()))
+            
+            for row in cursor.fetchall():
+                event_type, duration_ms = row
+                if event_type == LatencyEventType.SPEECH_END_TO_FIRST_AUDIO.value:
+                    speech_to_audio.append(duration_ms)
+                elif event_type == LatencyEventType.TOOL_CALL_DURATION.value:
+                    tool_call.append(duration_ms)
+                elif event_type == LatencyEventType.SESSION_DURATION.value:
+                    session.append(duration_ms)
+        
+        # Calculate statistics for each metric type
+        def calc_percentile(sorted_list: List[float], p: float) -> float:
+            if not sorted_list:
+                return 0.0
+            n = len(sorted_list)
+            idx = int(n * p)
+            return sorted_list[min(idx, n - 1)]
+        
+        # Speech to audio stats
+        if speech_to_audio:
+            sorted_sta = sorted(speech_to_audio)
+            stats.speech_to_audio_count = len(sorted_sta)
+            stats.speech_to_audio_avg_ms = statistics.mean(sorted_sta)
+            stats.speech_to_audio_min_ms = min(sorted_sta)
+            stats.speech_to_audio_max_ms = max(sorted_sta)
+            stats.speech_to_audio_p50_ms = calc_percentile(sorted_sta, 0.50)
+            stats.speech_to_audio_p95_ms = calc_percentile(sorted_sta, 0.95)
+            stats.speech_to_audio_p99_ms = calc_percentile(sorted_sta, 0.99)
+        
+        # Tool call stats
+        if tool_call:
+            sorted_tc = sorted(tool_call)
+            stats.tool_call_count = len(sorted_tc)
+            stats.tool_call_avg_ms = statistics.mean(sorted_tc)
+            stats.tool_call_min_ms = min(sorted_tc)
+            stats.tool_call_max_ms = max(sorted_tc)
+            stats.tool_call_p50_ms = calc_percentile(sorted_tc, 0.50)
+            stats.tool_call_p95_ms = calc_percentile(sorted_tc, 0.95)
+            stats.tool_call_p99_ms = calc_percentile(sorted_tc, 0.99)
+        
+        # Session duration stats
+        if session:
+            sorted_sess = sorted(session)
+            stats.session_count = len(sorted_sess)
+            stats.session_avg_ms = statistics.mean(sorted_sess)
+            stats.session_min_ms = min(sorted_sess)
+            stats.session_max_ms = max(sorted_sess)
+            stats.session_p50_ms = calc_percentile(sorted_sess, 0.50)
+            stats.session_p95_ms = calc_percentile(sorted_sess, 0.95)
+            stats.session_p99_ms = calc_percentile(sorted_sess, 0.99)
+        
+        return stats
+    
+    def get_latency_events(self, call_id: Optional[str] = None, 
+                          event_type: Optional[str] = None,
+                          limit: int = 100) -> List[LatencyEvent]:
+        """
+        Get latency events with optional filtering.
+        
+        Args:
+            call_id: Filter by call ID (optional)
+            event_type: Filter by event type (optional)
+            limit: Maximum number of events to return
+        
+        Returns:
+            List of LatencyEvent objects
+        """
+        events = []
+        
+        query = 'SELECT id, call_id, event_type, duration_ms, timestamp, metadata FROM latency_events WHERE 1=1'
+        params = []
+        
+        if call_id:
+            query += ' AND call_id = ?'
+            params.append(call_id)
+        
+        if event_type:
+            query += ' AND event_type = ?'
+            params.append(event_type)
+        
+        query += ' ORDER BY timestamp DESC LIMIT ?'
+        params.append(limit)
+        
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute(query, params)
+            
+            for row in cursor.fetchall():
+                events.append(LatencyEvent(
+                    id=row[0],
+                    call_id=row[1],
+                    event_type=row[2],
+                    duration_ms=row[3],
+                    timestamp=datetime.fromisoformat(row[4]) if row[4] else None,
+                    metadata=json.loads(row[5]) if row[5] else None
+                ))
+        
+        return events
+    
+    def get_latency_prometheus_metrics(self) -> str:
+        """
+        Export latency metrics in Prometheus format.
+        
+        Returns:
+            String in Prometheus exposition format
+        """
+        stats = self.get_latency_stats()
+        
+        lines = [
+            "# HELP voice_speech_to_audio_ms Time from user speech end to first AI audio",
+            "# TYPE voice_speech_to_audio_ms summary",
+            f'voice_speech_to_audio_ms{{quantile="0.5"}} {stats.speech_to_audio_p50_ms:.2f}',
+            f'voice_speech_to_audio_ms{{quantile="0.95"}} {stats.speech_to_audio_p95_ms:.2f}',
+            f'voice_speech_to_audio_ms{{quantile="0.99"}} {stats.speech_to_audio_p99_ms:.2f}',
+            f"voice_speech_to_audio_ms_count {stats.speech_to_audio_count}",
+            "",
+            "# HELP voice_tool_call_duration_ms Duration of tool call execution",
+            "# TYPE voice_tool_call_duration_ms summary",
+            f'voice_tool_call_duration_ms{{quantile="0.5"}} {stats.tool_call_p50_ms:.2f}',
+            f'voice_tool_call_duration_ms{{quantile="0.95"}} {stats.tool_call_p95_ms:.2f}',
+            f'voice_tool_call_duration_ms{{quantile="0.99"}} {stats.tool_call_p99_ms:.2f}',
+            f"voice_tool_call_duration_ms_count {stats.tool_call_count}",
+            "",
+            "# HELP voice_session_duration_ms Total session/call duration",
+            "# TYPE voice_session_duration_ms summary",
+            f'voice_session_duration_ms{{quantile="0.5"}} {stats.session_p50_ms:.2f}',
+            f'voice_session_duration_ms{{quantile="0.95"}} {stats.session_p95_ms:.2f}',
+            f'voice_session_duration_ms{{quantile="0.99"}} {stats.session_p99_ms:.2f}',
+            f"voice_session_duration_ms_count {stats.session_count}",
+        ]
+        
+        return "\n".join(lines) + "\n"
+    
     def health_check(self) -> Dict[str, Any]:
         """
         Perform health check for monitoring systems.
@@ -702,10 +1040,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Call Metrics CLI")
     parser.add_argument("command", choices=[
         "dashboard", "metrics", "prometheus", "export-csv", "export-json",
-        "failures", "health", "hourly", "daily"
+        "failures", "health", "hourly", "daily", "latency", "latency-events"
     ])
     parser.add_argument("--days", type=int, default=30, help="Days for export")
     parser.add_argument("--hours", type=int, default=24, help="Hours for timeseries")
+    parser.add_argument("--call-id", type=str, help="Filter by call ID")
+    parser.add_argument("--event-type", type=str, help="Filter by event type")
+    parser.add_argument("--limit", type=int, default=100, help="Limit results")
     
     args = parser.parse_args()
     
@@ -730,3 +1071,13 @@ if __name__ == "__main__":
     elif args.command == "daily":
         data = [asdict(b) for b in metrics_manager.get_daily_timeseries(args.days)]
         print(json.dumps(data, indent=2))
+    elif args.command == "latency":
+        stats = metrics_manager.get_latency_stats()
+        print(json.dumps(asdict(stats), indent=2, default=str))
+    elif args.command == "latency-events":
+        events = metrics_manager.get_latency_events(
+            call_id=args.call_id,
+            event_type=args.event_type,
+            limit=args.limit
+        )
+        print(json.dumps([asdict(e) for e in events], indent=2, default=str))
