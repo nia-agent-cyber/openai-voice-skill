@@ -1,7 +1,36 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-11 04:01 GMT by Voice PM
+**Last Updated:** 2026-02-11 05:54 GMT by Voice PM
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
+
+---
+
+## 🔍 Competitive Analysis: VisionClaw (2026-02-11 05:54 GMT)
+
+**Analysis complete:** `docs/COMPETITIVE_ANALYSIS_VISIONCLAW.md`
+
+**TL;DR:** VisionClaw (iOS smart glasses app using Gemini Live) is complementary, not competitive. They solve wearables; we solve telephony. But their implementation reveals techniques we should adopt:
+
+### Key Learnings to Adopt
+
+| Priority | Improvement | Effort | Impact |
+|----------|-------------|--------|--------|
+| **P1** | Latency tracking (speech end → audio start) | Low | High |
+| **P1** | Verbal ack pattern in system prompt | Low | High |
+| **P2** | Tool call cancellation on barge-in | Medium | Medium |
+
+### Where We're Ahead
+- ✅ Production infrastructure (auth, voicemail, metrics)
+- ✅ PSTN integration (any phone, not just internet)
+- ✅ Enterprise features (allowlists, missed call flows)
+- ✅ Agent-native session continuity
+
+### Recommended Actions
+1. **Add latency metrics** to metrics_server.py — core UX measurement
+2. **Update system prompt** with verbal acknowledgment pattern
+3. **Research tool cancellation** on OpenAI Realtime interruption events
+
+**Strategic insight:** VisionClaw users needing phone calls would use us. We're complementary OpenClaw infrastructure.
 
 ---
 
@@ -157,6 +186,9 @@ Cleanup implemented. See `docs/ISSUE_38_ROOT_CAUSE.md` for permanent fix needed.
 | 10 | Cal.com partnership research | BA | 📋 PENDING |
 | 11 | **Verify metrics data collection** | PM/Coder | ⚠️ NEW — No data files found |
 | 12 | Fix #33 calendar | Remi | ⏳ OpenClaw core |
+| 13 | **Add latency tracking to metrics** | Coder | 📋 NEW (from VisionClaw analysis) |
+| 14 | **Verbal ack pattern in system prompt** | PM | 📋 NEW (from VisionClaw analysis) |
+| 15 | Research tool cancellation on barge-in | Coder | 📋 NEW (P2, from VisionClaw analysis) |
 
 ---
 
