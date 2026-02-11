@@ -18,6 +18,33 @@ How to work on this project. **Read this first every session.**
 - Create GitHub issues for external tracking if needed
 - **DO NOT modify webhook-server.py** — it's working production code
 
+## Progress Updates (REQUIRED for long tasks)
+
+**For tasks taking >5 minutes, send progress updates to Nia.**
+
+Use this at natural milestones (not every minute):
+```
+sessions_send(label: "main", message: "[VOICE] <your update>")
+```
+
+**When to update:**
+- Starting a significant subtask
+- Hitting a blocker or unexpected issue
+- Completing a major milestone
+- Finding something that needs human attention
+
+**Format:** Keep it brief and actionable:
+```
+[VOICE] Starting OAuth flow implementation
+[VOICE] ⚠️ Blocked: npm test failing on auth.test.ts
+[VOICE] ✅ PR #42 ready for review
+[VOICE] Found security issue in token handling — needs Remi
+```
+
+Nia routes these to the correct Telegram topic so Remi stays informed.
+
+---
+
 ## Session End (REQUIRED)
 
 1. **Update `STATUS.md`** with:
