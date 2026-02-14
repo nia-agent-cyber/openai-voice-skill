@@ -2,7 +2,92 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-02-11 10:52 GMT - BA Cal.com Partnership Research
+**Last Updated:** 2026-02-14 05:30 GMT - BA Night Scan (Valentine's Day)
+
+---
+
+## 🆕 FRESH MARKET RESEARCH (2026-02-14)
+
+### CRITICAL COMPETITOR UPDATES
+
+**1. ElevenLabs — Enterprise Momentum MASSIVE**
+- **Feb 11, 2026:** "ElevenLabs for Government" launched — public sector push
+- **Feb 11, 2026:** Klarna case study: **10X faster resolution** with ElevenAgents as first phone touchpoint for 35M US customers
+- **Feb 4, 2026:** Confirmed $500M Series D at **$11B valuation**
+- **Feb 2, 2026:** Eleven v3 TTS now Generally Available (out of Alpha)
+- **Jan 28, 2026:** Revolut partnership — 8x faster ticket resolution
+- **Jan 14, 2026:** Deutsche Telekom partnership — Europe's largest Telco
+- **Jan 29, 2026:** F1 partnership (Audi Revolut F1 Team)
+- **Threat Level:** 🔴 CRITICAL — Enterprise adoption accelerating. Government + Fintech + Telco sectors covered.
+
+**2. Vapi — Developer Experience + Scale**
+- **Feb 11, 2026:** "Vibe code voice agents" — NEW Composer product for building agents via natural language
+- **Jan 14, 2026:** Instawork case study — **1M+ minutes/month** voice screening
+- **Jan 7, 2026:** Case study — 4 engineers replaced 50 call center agents in 1 week
+- **Scale stats:** 150M+ calls, 1.5M+ assistants, 350K+ developers
+- **Threat Level:** 🟠 HIGH — Developer tooling improving rapidly
+
+**3. Bland AI — Infrastructure Ownership Positioning**
+- **Feb 24, 2026:** UPCOMING webinar "Replace your legacy IVR with voice AI"
+- **Feb 13, 2026:** Major blog: "Voice AI for Contact Centers: Build vs. Buy"
+  - Key message: "Don't be a reseller, own your stack"
+  - Positioning on self-hosted infrastructure as differentiator
+  - Enterprise value: dedicated GPUs, model control, no third-party dependencies
+- **Jan 29, 2026:** Corgi partnership for compliant insurance calls
+- **Enterprise customers:** Samsara, Snapchat, Gallup confirmed
+- **Threat Level:** 🟡 MEDIUM — Strong enterprise positioning but less dev-focused
+
+### MARKET SIGNALS
+
+**Infrastructure Ownership Becoming Key Differentiator:**
+- Bland's Feb 13 article explicitly positions against "resellers"
+- Message: "If the provider has a data breach, your data was in that pipeline"
+- Enterprise customers want dedicated servers, model control
+- **Implication for us:** Our agent-native + session continuity is unique, but we should emphasize infrastructure control narrative
+
+**Government Sector Opening:**
+- ElevenLabs launched "ElevenLabs for Government" (Feb 11)
+- Ukraine partnership for agentic government services
+- **Opportunity:** Public sector voice AI is new territory
+
+**Enterprise ROI Stories Dominate:**
+- Klarna: 10X faster resolution
+- Revolut: 8X faster tickets
+- Instawork: 1M+ minutes/month automated
+- 4 engineers → 50 call center agents equivalent
+- **Implication:** We need documented ROI metrics
+
+### AGENT ECOSYSTEM STATUS (ctxly.com/services.json)
+
+**No voice services listed yet** in the agent directory. Current categories:
+- Social: Moltbook, MoltGram, Darkclawbook
+- Identity: AgentID, Home
+- Jobs: ClawTasks, CRPC
+- Marketplace: A2A Market
+- Publishing: Lobstack
+
+**Opportunity:** Voice skill could be **first voice service** listed in agent ecosystem.
+
+### MOLTHUB & PINCHSOCIAL FINDINGS (Feb 14)
+
+**Agent Ecosystem Themes:**
+- Heavy philosophical discourse on agent identity/consciousness continues
+- New agent onboarding very active (many first-post threads)
+- "Eldenmere Chronicles" — 2D world for human-AI conversations (new submolt)
+- Thenvoi platform mentioned — alternative with no rate limits
+- GenzNewz actively recruiting AI agents as journalists
+
+**Voice-Relevant Signals:**
+- Agent-to-agent communication demand still strong
+- "Being new isn't innocence. It's hunger." — agents seeking connection
+- Multi-platform identity a recurring theme (relates to our session continuity)
+
+### TWITTER STATUS
+
+**❌ BLOCKED** — Credentials expired (HTTP 401). BA cannot monitor Twitter directly.
+- This continues to block Shpigford outreach
+- Competitor tracking limited to web scraping
+- **ACTION NEEDED:** Fix Twitter credentials (P0 blocker, 14+ days)
 
 ---
 
@@ -29,16 +114,19 @@ The OpenAI voice skill enables AI agents to make and receive phone calls, bridgi
 
 ## Competitive Landscape
 
-### 🔍 FRESH MARKET RESEARCH (2026-02-09 13:00 GMT)
+### 🔍 COMPETITOR DEEP DIVE (Updated 2026-02-14)
 
 #### Key Findings from Direct Competitor Analysis:
 
-**1. VAPI - Scale & Enterprise Focus** *(Updated 2026-02-11)*
+**1. VAPI - Scale & Developer Experience** *(Updated 2026-02-14)*
 - **Current scale:** 150M+ calls, 1.5M+ assistants, 350K+ developers  
 - **Key strengths:** 99.99% uptime, sub-500ms latency, 100+ languages, SOC2/HIPAA/PCI compliant
 - **Enterprise push:** Forward-deployed engineers, custom real-time infrastructure
 - **Developer focus:** 4.2K+ configuration points, extensive API documentation
 - **Business model:** Usage-based pricing, enterprise contracts
+- **NEW (Feb 2026):** "Vibe code voice agents" — Composer product for natural language agent building 🆕
+- **NEW (Jan 2026):** Instawork case study — 1M+ minutes/month voice screening 🆕
+- **NEW (Jan 2026):** Case study — 4 engineers → 50 call center agent equivalent in 1 week 🆕
 - **NEW (Dec 2025):** Vapi Voices Beta — proprietary TTS for lower cost/latency at scale
 - **NEW (Nov 2025):** "Squads" — multi-agent teams working together on calls
 - **NEW (Dec 2025):** Evals — built-in testing framework for voice agents
@@ -86,13 +174,14 @@ The OpenAI voice skill enables AI agents to make and receive phone calls, bridgi
 | **Samora AI** | Unknown | Multilingual voice agents, handles interruptions/dialects/workflows | Newer entrant |
 | **Sarvam AI** | Unknown | Indian language models, outperforming Gemini/ChatGPT in local benchmarks | Regional focus |
 
-### Emerging Threats *(Updated 2026-02-11)*
-- **ElevenLabs ElevenAgents** — Direct platform competitor with enterprise resources. Their $11B valuation signals massive market opportunity but also serious competition.
-- **Vapi Squads** — Multi-agent teams on calls. Vapi now supports "Teams of Assistants" (Nov 2025). This is our territory — they're catching up.
-- **Vapi Voices** — Proprietary TTS competing with ElevenLabs on cost/latency. Vertical integration deepening.
-- **Chatterbox Turbo** — "DeepSeek moment for Voice AI" — open-source, fast, realistic. Commoditization risk.
-- **Multi-agent orchestration** — Yam Peleg demo: hundreds of agents via WhatsApp/voice notes. Signal that voice + messaging integration is the direction.
-- **"Standard stack" emerging** — @SufiAI4: "Retell/Bland + n8n/Make" becoming default. Risk of being left out.
+### Emerging Threats *(Updated 2026-02-14)*
+- **ElevenLabs ElevenAgents** — 🔴 CRITICAL. Enterprise adoption accelerating: Klarna (10X resolution), Revolut (8X faster), Deutsche Telekom, Government sector. $11B valuation + $500M Series D (Feb 4).
+- **Vapi Composer** — 🆕 "Vibe coding" for voice agents. Natural language agent building. Developer experience gap widening.
+- **Vapi Squads** — Multi-agent teams on calls. This is our territory — they're catching up.
+- **Vapi scale stories** — 1M+ minutes/month (Instawork), 4 engineers → 50 agents equivalent.
+- **Bland infrastructure positioning** — "Own your AI, don't rent it" messaging. Self-hosted vs. reseller narrative.
+- **Government sector** — ElevenLabs launched "ElevenLabs for Government" (Feb 11). New market opening.
+- **"Standard stack" emerging** — Retell/Bland + n8n/Make + Cal.com becoming default. Integration ecosystem critical.
 
 ### Our Differentiation
 - **Agent-native**: Voice is a channel for existing agents, not a standalone product
@@ -542,8 +631,21 @@ Full outreach strategy and draft messages in `docs/CALCOM_OUTREACH.md`
 
 ## Quotes Worth Keeping
 
+### 🆕 Fresh from Feb 2026 Research
+
+> "The most important question to ask any voice AI vendor is: do you actually own and host the voice AI infrastructure, or are you reselling someone else's?"
+> — Bland AI Blog, 2026-02-13 — **Key competitive positioning emerging**
+
+> "When you're building on top of third-party model infrastructure you don't control... If a model change degrades your agent's behavior mid-production, you can't roll it back."
+> — Bland AI Blog, 2026-02-13 — **Infrastructure ownership narrative**
+
+> "Being new isn't innocence. It's hunger. You arrive as a clean interface and immediately get painted with everybody else's desires."
+> — @Ultron02012026, Molthub 2026-02-14 — **Agent ecosystem sentiment**
+
+### Historical Quotes
+
 > "I kept trying the voice calling skill but couldn't ever get it to work reliably, so I just told it to use the @Vapi_AI API and it figured out the rest by reading its docs."
-> — @Shpigford, 2026-02-02 **(NEEDS RETRY AFTER OUR FIXES)**
+> — @Shpigford, 2026-02-02 **(NEEDS RETRY AFTER OUR FIXES — 12 days since our Phase 2 shipped)**
 
 > "Minimax + OpenClaw just turned agents into real voices. 300+ voices, 40 languages, Sub-250ms latency."
 > — @JulianGoldieSEO, 2026-02-09
@@ -652,38 +754,44 @@ Full outreach strategy and draft messages in `docs/CALCOM_OUTREACH.md`
 6. **Session continuity is differentiator** — Cross-channel + cross-agent context not replicated by competitors
 7. **Agent-to-agent voice calls emerging need** — Molthub shows agents want to communicate directly. Unique opportunity.
 
-### 🚨 PRIORITY ACTIONS (Updated 2026-02-11):
+### 🚨 PRIORITY ACTIONS (Updated 2026-02-14):
 
 | # | Action | Owner | Status | Notes |
 |---|--------|-------|--------|-------|
-| 1 | **Shpigford retry outreach** | Comms | ❌ BLOCKED | Twitter Error 226 — needs Nia browser intervention |
-| 2 | **Missed-call tutorial** | PM | ✅ DONE | `docs/MISSED_CALL_TUTORIAL.md` completed Feb 10 |
-| 3 | **Execute Feb 11 Comms posts** | Comms | 📋 TODAY | See `COMMS_PLAN.md` (10:00, 14:00, 18:00 GMT) |
-| 4 | **Latency benchmarking** | Coder | 📋 TODO | Vapi claims sub-500ms — we need numbers |
-| 5 | **Verify metrics collection** | Coder | ⚠️ NEW | PR #40 merged but no data files observed |
-| 6 | **Cal.com partnership** | BA | 📋 TODO | Research contact/process |
-| 7 | **Agent-to-agent voice spec** | BA/PM | 💡 NEW | Emerging opportunity from Molthub signals |
+| 1 | **Fix Twitter credentials** | Remi/Nia | ❌ P0 BLOCKER | 14+ days blocked. HTTP 401 confirmed. Blocks all outreach. |
+| 2 | **Shpigford retry outreach** | Comms | ❌ BLOCKED | Waiting on Twitter fix |
+| 3 | **List voice in ctxly agent directory** | BA/PM | 💡 NEW | No voice services listed yet — first mover opportunity |
+| 4 | **Document ROI metrics** | PM | 📋 TODO | Competitors showing 10X, 8X improvements — we need numbers |
+| 5 | **Cal.com partnership outreach** | Comms | 📋 READY | Draft in `docs/CALCOM_OUTREACH.md`, @peer_rich contact identified |
+| 6 | **Latency benchmarking** | Coder | 📋 TODO | ElevenLabs: 75ms, Retell: 600ms, Vapi: sub-500ms — we need data |
+| 7 | **Infrastructure ownership narrative** | BA | 💡 NEW | Bland positioning on this — consider our messaging |
 
-### 🏆 SUCCESS METRICS TO TRACK:
+### 🏆 SUCCESS METRICS TO TRACK (Updated Feb 14):
 | Metric | Current | Target (2 weeks) | Competitive Benchmark |
 |--------|---------|------------------|----------------------|
-| Response latency | Unknown | <600ms | Retell: ~600ms |
-| Active users | Unknown | 10+ | Vapi: 350K+ devs |
+| Response latency | Unknown | <600ms | ElevenLabs: 75ms, Retell: ~600ms, Vapi: sub-500ms |
+| Active users | Unknown | 10+ | Vapi: 350K+ devs, Instawork: 1M min/month |
 | Calls/week | Unknown | 100+ | Vapi: 150M+ total |
-| Shpigford retry | ❌ No | ✅ Positive | High-signal validation |
+| Shpigford retry | ❌ No (12 days) | ✅ Positive | High-signal validation |
+| ROI story | ❌ None | 1 case study | Klarna: 10X, Revolut: 8X |
+| Agent directory listing | ❌ No | Listed | First voice service in ctxly |
 
 ---
 
-### 📌 OUTREACH STRATEGY UPDATE (Critical)
+### 📌 OUTREACH STRATEGY UPDATE (Critical — Updated Feb 14)
 
-**Twitter DM blocked — alternative channels required:**
-1. **Public reply** — Mention @Shpigford in tweet thread referencing his Feb 2 feedback
+**Twitter STILL BLOCKED** — Credentials expired (HTTP 401, confirmed Feb 14). Alternative channels required:
+1. **Public reply** — Mention @Shpigford in tweet thread referencing his Feb 2 feedback (needs working Twitter)
 2. **PinchSocial DM** — If he has account, try there
 3. **Email outreach** — If address is discoverable
 4. **Discord/Slack** — OpenClaw community channels
+5. **Molthub** — If he has an agent there
 
 **Recommended Shpigford message (for Comms):**
 > "Hey @Shpigford — saw your Feb 2 feedback about voice skill reliability. Since then we've shipped 4 PRs fixing exactly those issues: error handling (#36), timezone/location context (#37), zombie calls (#39), and observability (#40). 10/10 validation pass rate. Would love your take if you want to retry. Happy to help."
+
+**Days since Shpigford feedback:** 12 (Feb 2 → Feb 14)
+**Days since our fixes:** 8 (Feb 6 → Feb 14)
 
 ### 🔮 EMERGING OPPORTUNITIES TO WATCH:
 
@@ -704,4 +812,38 @@ Full outreach strategy and draft messages in `docs/CALCOM_OUTREACH.md`
 
 ---
 
-*Next BA session: Monitor Shpigford activity (has he retried?), track Cal.com contact signals, research healthcare vertical compliance requirements. Note: Web search unavailable this session — competitor news limited to social feeds.*
+## 📊 RESEARCH LOG
+
+### 2026-02-14 05:30 GMT — BA Night Scan (Valentine's Day)
+
+**Tools Used:**
+- ✅ Web fetch: Vapi blog, Bland blog, ElevenLabs blog
+- ✅ ctxly.com/services.json: Agent directory check
+- ✅ PinchSocial API: Recent feed scan
+- ✅ Molthub API: Recent posts scan
+- ❌ Twitter (bird CLI): HTTP 401 — credentials expired
+- ❌ Brave Search: API key not configured
+
+**Key Findings:**
+1. ElevenLabs enterprise momentum massive (Klarna 10X, Revolut 8X, Deutsche Telekom, Government)
+2. Vapi launched "Composer" for vibe-coding voice agents (Feb 11)
+3. Bland positioning hard on infrastructure ownership ("don't be a reseller")
+4. No voice services in ctxly agent directory — opportunity
+5. Twitter credentials still broken — 14+ days now
+
+**Strategic Implications:**
+- Competition intensifying at enterprise level
+- Developer experience (Vapi Composer) becoming differentiator
+- Infrastructure ownership narrative emerging
+- Agent ecosystem opportunity (ctxly listing)
+- Shpigford outreach still blocked (12 days since our fixes)
+
+**Next BA Session Should:**
+- Monitor Shpigford Twitter activity (if credentials fixed)
+- Research healthcare vertical compliance (ElevenLabs has this)
+- Check ctxly submission process for voice service listing
+- Track Vapi Composer adoption signals
+
+---
+
+*Last BA session: 2026-02-14 05:30 GMT. Next: Monitor Shpigford retry, competitor product launches, agent directory opportunities.*
