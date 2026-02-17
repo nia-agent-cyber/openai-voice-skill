@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-17 08:10 GMT by Voice PM  
+**Last Updated:** 2026-02-17 09:58 GMT by Voice PM  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -87,6 +87,8 @@
 **Feb 17 (02:55 GMT):** PM session check. Day 11 continues. Verified: 0 PRs, 5 issues (#33, #27, #23, #20, #5), git clean synced with origin/main. calls.db exists but empty (no schema/tables). Twitter P0 blocker persists. No state changes. System stable, waiting for adoption.
 
 **Feb 17 (01:55 GMT):** PM session check. Day 11 continues. Verified: 0 PRs, 5 issues (#33, #27, #23, #20, #5), git clean synced with origin/main. Database still shows 0 calls. Twitter P0 blocker persists. No state changes. System stable.
+
+**Feb 17 (09:58 GMT):** PM env setup on new machine (RT Macbook Pro). ✅ Python 3.14.3, venv created, deps installed (+ cryptography missing from requirements.txt). ✅ .env created with OpenAI key from 1Password. ✅ Git remote OK, rebased on origin/main. ✅ Webhook server starts on port 8080. ❌ Twilio SID/Auth Token not in 1Password (only login creds stored). ❌ OPENAI_PROJECT_ID not set. ⚠️ `cryptography` package missing from scripts/requirements.txt.
 
 **Feb 17 (00:55 GMT):** PM early check. Day 11 begins. Verified: 0 PRs, 5 issues (#33, #27, #23, #20, #5), git clean synced with origin/main. Database confirms 0 calls. Twitter P0 blocker persists. System stable, no technical work needed.
 
