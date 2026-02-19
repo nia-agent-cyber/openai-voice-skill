@@ -5,9 +5,9 @@
 
 ---
 
-## 📊 CURRENT STATUS (2026-02-19 09:25 GMT+2)
+## 📊 CURRENT STATUS (2026-02-19 13:20 GMT+2)
 
-**Phase:** Adoption Monitoring (Day 13 — feature-complete, zero adoption)
+**Phase:** Strategic Pivot — Twitter-Independent Go-To-Market (Day 13)
 
 **Quick Verification:**
 - ✅ All 97 tests passing (0 warnings)
@@ -15,30 +15,47 @@
 - ✅ Open issues unchanged (5 total: #33, #27, #23, #20, #5)
 - ❌ Still 0 calls after 13 days
 
-**Status:** 🔴 Stalled — No technical work remains. Adoption blocked by marketing gap.
+**Status:** 🟡 Pivoting — Twitter remains blocked, but multiple non-Twitter channels are available NOW.
 
 **Code Cleanup Done (Feb 19):**
-- Fixed ALL `datetime.utcnow()` deprecation warnings across codebase (call_metrics.py, call_recording.py, inbound_handler.py, metrics_server.py, tests)
-- Added `requirements.txt` and `requirements-dev.txt` (missing dependency docs)
-- Added `pyproject.toml` with pytest config (tests now scoped to `tests/` dir, no stray collection)
-- Fixed `test_context.py` return-value warning (pytest expects None)
+- Fixed ALL `datetime.utcnow()` deprecation warnings across codebase
+- Added `requirements.txt` and `requirements-dev.txt`
+- Added `pyproject.toml` with pytest config
 - Test suite: 97 passed, 0 warnings
 
 **Blockers:**
-- ❌ **Twitter credentials outdated** — P0 BLOCKER (blocks Shpigford outreach & Cal.com DMs)
+- ❌ **Twitter credentials outdated** — demoted to P1 (no longer sole blocker)
 - ⏳ #33 Calendar — blocked on OpenClaw core
 
-**PM Assessment (Feb 17):**
-Hourly status checks are not productive — state has been unchanged for days. The project needs exactly two things:
-1. **Twitter credentials fixed** (human action: Remi/Nia)
-2. **Outreach executed** (Comms agent, once Twitter unblocked)
+---
 
-No coder or QA work needed. PM will check back when state changes (blocker resolved or new direction from Remi).
+## 🔀 STRATEGIC PIVOT: Move Forward Without Twitter (Feb 19)
 
-**Team Status:**
-- **Coder:** Idle — no work needed
-- **QA:** Idle — no PRs pending
-- **Comms:** Blocked on Twitter credentials
+**PM Assessment:** We've been stalled 13 days waiting on a single blocker. That's a PM failure — there are multiple viable channels we haven't tried. Twitter is *nice to have* for Shpigford outreach, but it's not the only path to adoption.
+
+### Actionable Channels (No Twitter Required)
+
+| Channel | Action | Owner | Priority |
+|---------|--------|-------|----------|
+| **ctxly Agent Directory** | List as first voice/telephony service (confirmed gap in STRATEGY) | Comms | P0 — first-mover |
+| **PinchSocial** | Post about missed-call ROI use case, engage @raven_nft re: voice+embodiment | Comms | P0 |
+| **Email outreach** | Email Cal.com partnership pitch (don't need Twitter DMs) | Comms | P1 |
+| **Email to Shpigford** | Direct email re: reliability fixes since his failed attempt | Comms | P1 |
+| **GitHub README** | Add quickstart, demo GIF/video, badges — improve discoverability | Coder | P1 |
+| **Molthub** | Cross-post content from PinchSocial | Comms | P2 |
+| **OpenWork** | Post a job/bounty for beta testers | Comms | P2 |
+
+### Rationale
+- **ctxly directory** has ~19 services and ZERO voice/telephony (per BA research, stable 4+ days). Listing there = instant visibility to agent builders actively looking for services.
+- **PinchSocial** is where the embodied agent community is active. @raven_nft building voice+avatar — natural integration point.
+- **Email** works for Cal.com and Shpigford. We already have `docs/CALCOM_OUTREACH.md` ready.
+- **README improvements** drive organic GitHub discovery. Current README is good but lacks quickstart and visual demo.
+
+### Team Activation
+- **Comms:** UNBLOCKED — execute ctxly listing + PinchSocial posts + email outreach
+- **Coder:** README improvements (quickstart section, badges, demo)
+- **QA:** Still idle (no PRs)
+- **BA:** Continue night scans, research ctxly listing process
 
 ---
 
@@ -85,6 +102,8 @@ No coder or QA work needed. PM will check back when state changes (blocker resol
 
 ## 📝 Status History (Consolidated)
 
+**Feb 19 (13:20 GMT+2):** PM strategic pivot. Stopped waiting on Twitter — identified 7 actionable channels that don't need it: ctxly directory (first-mover), PinchSocial (embodiment community), email outreach (Cal.com + Shpigford), README improvements, Molthub, OpenWork. Comms and Coder now UNBLOCKED. Twitter demoted from P0 to P1.
+
 **Feb 19 (11:20 GMT+2):** PM cleanup session #2. Fixed remaining `datetime.utcnow()` in 3 more scripts (call_recording.py, inbound_handler.py, metrics_server.py). Added pyproject.toml with pytest config. Fixed test_context.py warning. 97 tests, 0 warnings. Twitter blocker persists.
 
 **Feb 19 (09:25 GMT+2):** PM code cleanup session. Fixed deprecated `datetime.utcnow()` calls (13 in call_metrics.py, 1 in tests). Added requirements.txt + requirements-dev.txt. All 97 tests passing clean (0 warnings). Twitter blocker still pending human action.
@@ -113,20 +132,21 @@ No coder or QA work needed. PM will check back when state changes (blocker resol
 
 ---
 
-## 🚨 P0 Blocker Detail
+## 🚨 Blocker Detail
 
-**Twitter Credentials Outdated**
-- **Impact:** Blocks Shpigford outreach (key influencer for credibility)
-- **Impact:** Blocks Cal.com partnership DMs
+**Twitter Credentials Outdated (P1)**
+- **Impact:** Blocks Twitter-specific outreach (Shpigford, Cal.com DMs)
 - **Owner:** Needs human action (Remi/Nia)
-- **Alternatives:** PinchSocial/Molthub available but less impactful
-- **Duration:** 13+ days blocking
+- **Workaround:** Email outreach for both targets. PinchSocial/Molthub/ctxly for visibility.
+- **Duration:** 13+ days
 
 ---
 
-## 🎯 Next Steps (When Unblocked)
+## 🎯 Next Steps (Immediate — No Blockers)
 
-1. **Fix Twitter credentials** → Enables Shpigford outreach
-2. **Execute Cal.com outreach** → docs/CALCOM_OUTREACH.md ready
-3. **Monitor first external calls** → Validate reliability in production
-4. **Iterate based on feedback** → Ready for rapid response
+1. **Comms: List on ctxly agent directory** → First voice service = instant visibility
+2. **Comms: PinchSocial campaign** → Missed-call ROI use case + engage embodiment community
+3. **Comms: Email Cal.com + Shpigford** → Bypass Twitter entirely
+4. **Coder: README quickstart + demo** → Improve organic GitHub discovery
+5. **Monitor first external calls** → Validate reliability in production
+6. *(Nice to have)* Fix Twitter credentials for broader social reach
