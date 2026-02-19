@@ -45,6 +45,7 @@ def test_context():
     )
     
     print(f"📋 Unknown caller instructions: {len(unknown_enhanced)} chars")
+    assert len(enhanced) > len(base_instructions), "Enhanced instructions should be longer than base"
     
     # Show sample of enhanced instructions
     print(f"\n📄 Sample enhanced instructions:")
@@ -52,14 +53,9 @@ def test_context():
     print(enhanced[:300] + "..." if len(enhanced) > 300 else enhanced)
     print("="*50)
     
-    return True
+    return None
 
 if __name__ == "__main__":
-    success = test_context()
-    if success:
-        print("\n🎉 Context integration test completed successfully!")
-        print("✅ Ready for voice calls with session context")
-    else:
-        print("\n❌ Context integration test failed")
-    
-    sys.exit(0 if success else 1)
+    test_context()
+    print("\n🎉 Context integration test completed successfully!")
+    print("✅ Ready for voice calls with session context")

@@ -25,7 +25,7 @@ import argparse
 import json
 import logging
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 from dataclasses import asdict
@@ -137,7 +137,7 @@ class MetricsRequestHandler(BaseHTTPRequestHandler):
             # Latency statistics
             if path == "/metrics/latency":
                 hours = int(query.get("hours", [24])[0])
-                end_time = datetime.utcnow()
+                end_time = datetime.now(timezone.utc)
                 start_time = end_time - timedelta(hours=hours)
                 stats = metrics_manager.get_latency_stats(start_time=start_time, end_time=end_time)
                 self.send_json_response({

@@ -11,7 +11,7 @@ import json
 import logging
 import os
 import sqlite3
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional, Dict, List, Any
 from dataclasses import dataclass, asdict
@@ -137,7 +137,7 @@ class CallRecordingManager:
             call_type=call_type,
             caller_number=caller_number,
             callee_number=callee_number,
-            started_at=datetime.utcnow(),
+            started_at=datetime.now(timezone.utc),
             ended_at=None,
             duration_seconds=None,
             status='active',
@@ -196,7 +196,7 @@ class CallRecordingManager:
                 return None
             
             # Calculate duration
-            ended_at = datetime.utcnow()
+            ended_at = datetime.now(timezone.utc)
             started_at = datetime.fromisoformat(row[4])  # started_at column
             duration_seconds = (ended_at - started_at).total_seconds()
             
@@ -236,7 +236,7 @@ class CallRecordingManager:
             
         entry = TranscriptEntry(
             call_id=call_id,
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
             speaker=speaker,
             content=content,
             event_type=event_type,
@@ -473,7 +473,7 @@ class CallRecordingManager:
         if threshold_seconds is None:
             threshold_seconds = STALE_CALL_THRESHOLD_SECONDS
         
-        cutoff_time = datetime.utcnow() - timedelta(seconds=threshold_seconds)
+        cutoff_time = datetime.now(timezone.utc) - timedelta(seconds=threshold_seconds)
         cutoff_iso = cutoff_time.isoformat()
         
         logger.info(f"Cleaning up stale calls older than {threshold_seconds}s (cutoff: {cutoff_iso})")
@@ -498,7 +498,7 @@ class CallRecordingManager:
                 try:
                     # Calculate actual duration
                     started_dt = datetime.fromisoformat(started_at)
-                    ended_at = datetime.utcnow()
+                    ended_at = datetime.now(timezone.utc)
                     duration_seconds = (ended_at - started_dt).total_seconds()
                     
                     # Mark as 'timeout' (distinct from 'completed' so we know it was cleaned up)
@@ -559,7 +559,7 @@ class CallRecordingManager:
         if threshold_seconds is None:
             threshold_seconds = STALE_CALL_THRESHOLD_SECONDS
         
-        cutoff_time = datetime.utcnow() - timedelta(seconds=threshold_seconds)
+        cutoff_time = datetime.now(timezone.utc) - timedelta(seconds=threshold_seconds)
         cutoff_iso = cutoff_time.isoformat()
         
         zombies = []
@@ -576,7 +576,7 @@ class CallRecordingManager:
             for row in cursor.fetchall():
                 call_id, call_type, caller_number, callee_number, started_at, has_transcript, has_audio = row
                 started_dt = datetime.fromisoformat(started_at)
-                duration = (datetime.utcnow() - started_dt).total_seconds()
+                duration = (datetime.now(timezone.utc) - started_dt).total_seconds()
                 
                 zombies.append({
                     'call_id': call_id,

@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-19 09:25 GMT+2 by Voice PM  
+**Last Updated:** 2026-02-19 11:20 GMT+2 by Voice PM  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -18,9 +18,11 @@
 **Status:** 🔴 Stalled — No technical work remains. Adoption blocked by marketing gap.
 
 **Code Cleanup Done (Feb 19):**
-- Fixed all `datetime.utcnow()` deprecation warnings in `call_metrics.py` and tests (→ `datetime.now(timezone.utc)`)
+- Fixed ALL `datetime.utcnow()` deprecation warnings across codebase (call_metrics.py, call_recording.py, inbound_handler.py, metrics_server.py, tests)
 - Added `requirements.txt` and `requirements-dev.txt` (missing dependency docs)
-- Test suite now runs clean: 97 passed, 0 warnings
+- Added `pyproject.toml` with pytest config (tests now scoped to `tests/` dir, no stray collection)
+- Fixed `test_context.py` return-value warning (pytest expects None)
+- Test suite: 97 passed, 0 warnings
 
 **Blockers:**
 - ❌ **Twitter credentials outdated** — P0 BLOCKER (blocks Shpigford outreach & Cal.com DMs)
@@ -83,7 +85,9 @@ No coder or QA work needed. PM will check back when state changes (blocker resol
 
 ## 📝 Status History (Consolidated)
 
-**Feb 19 (09:25 GMT+2):** PM code cleanup session. Fixed all deprecated `datetime.utcnow()` calls (13 in call_metrics.py, 1 in tests). Added requirements.txt + requirements-dev.txt. All 97 tests passing clean (0 warnings). Twitter blocker still pending human action.
+**Feb 19 (11:20 GMT+2):** PM cleanup session #2. Fixed remaining `datetime.utcnow()` in 3 more scripts (call_recording.py, inbound_handler.py, metrics_server.py). Added pyproject.toml with pytest config. Fixed test_context.py warning. 97 tests, 0 warnings. Twitter blocker persists.
+
+**Feb 19 (09:25 GMT+2):** PM code cleanup session. Fixed deprecated `datetime.utcnow()` calls (13 in call_metrics.py, 1 in tests). Added requirements.txt + requirements-dev.txt. All 97 tests passing clean (0 warnings). Twitter blocker still pending human action.
 
 **Feb 19 (07:09 GMT+2):** PM morning check. Day 13, no change. 0 calls, 0 PRs, 5 issues. Twitter blocker still pending human action. No coder/QA work needed.
 

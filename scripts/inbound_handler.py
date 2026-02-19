@@ -30,7 +30,7 @@ import os
 import re
 import time
 from dataclasses import dataclass, field, asdict
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 
@@ -373,7 +373,7 @@ async def record_call_started(request: ContextRequest):
     Record that a call has started (updates caller history).
     """
     normalized = normalize_phone(request.caller_phone)
-    now = datetime.utcnow().isoformat() + "Z"
+    now = datetime.now(timezone.utc).isoformat() + "Z"
     
     if normalized in caller_history:
         history = caller_history[normalized]
@@ -397,7 +397,7 @@ async def record_call_started(request: ContextRequest):
 @app.post("/missed-call")
 async def record_missed_call(request: MissedCallRecord):
     """Record a missed call for later follow-up."""
-    now = datetime.utcnow().isoformat() + "Z"
+    now = datetime.now(timezone.utc).isoformat() + "Z"
     
     missed_call = MissedCall(
         timestamp=now,
@@ -474,7 +474,7 @@ async def schedule_callback(timestamp: str):
     for call in missed_calls:
         if call.timestamp == timestamp:
             call.callback_scheduled = True
-            call.callback_scheduled_at = datetime.utcnow().isoformat() + "Z"
+            call.callback_scheduled_at = datetime.now(timezone.utc).isoformat() + "Z"
             return {"status": "scheduled", "timestamp": timestamp}
     
     raise HTTPException(status_code=404, detail="Missed call not found")
@@ -516,7 +516,7 @@ async def health_check():
     """Health check endpoint."""
     return {
         "status": "healthy",
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
         "known_callers": len(caller_history),
         "missed_calls": len(missed_calls),
         "pending_callbacks": len([c for c in missed_calls if not c.callback_scheduled and c.has_voicemail])
