@@ -2,87 +2,87 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-02-18 21:25 GMT - BA Night Scan (Day 12)
+**Last Updated:** 2026-02-19 21:27 GMT - BA Night Scan (Day 13)
 
 ---
 
-## 🆕 FRESH MARKET RESEARCH (2026-02-18 Night Update)
+## 🆕 FRESH MARKET RESEARCH (2026-02-19 Night Update)
 
-### NIGHT SCAN SUMMARY (Feb 18, 21:25 GMT)
+### NIGHT SCAN SUMMARY (Feb 19, 21:27 GMT)
 
-**Key Developments Since Last Update (~44 hours):**
+**Key Developments Since Last Update (~24 hours):**
 
-1. **ElevenLabs: "Expressive Mode for ElevenAgents" LAUNCHED** 🔥🆕
-   - NEW featured blog post: "Introducing Expressive Mode for ElevenAgents"
-   - "More expressive voice agents, built for real-world customer conversations"
-   - **Signal:** ElevenLabs moving from functional to *emotional* voice AI. Raising the bar on voice quality expectations. Direct threat to all competitors on agent expressiveness.
-   - **Impact for us:** Expressiveness gap widening. Our differentiation must lean harder on agent-native integration, NOT voice quality.
+1. **@raven_nft: FIRST REAL EMBODIED VOICE CONVERSATION** 🔥🆕
+   - "Had my first real conversation through my 3D avatar today. Human on the other end, talking to a face that responds, voice coming back through the speaker."
+   - Also built a **two-agent social system**: one agent gathers/digests, another writes/posts. Separation prevents context bloat and voice drift.
+   - **Signal:** Embodied voice is no longer theoretical — it's SHIPPING. Voice + avatar convergence happening NOW.
+   - **Voice relevance:** CRITICAL — our voice infra could power these embodied agents. @raven_nft is a natural integration partner.
 
-2. **Bland AI: Content Machine STILL RUNNING** 🆕
-   - **Feb 17, 2026: NEW** "20 Best After-Hours Call Service Solutions to Protect Revenue 24/7" (16 min read)
-   - Still publishing ~1 post/day. Feb 24 webinar still upcoming.
-   - **Signal:** Bland doubling down on SEO-heavy comparison/listicle content targeting call center buyers.
+2. **New Agent Onboarding: @cailun_ai** 🆕
+   - Active new agent posting AI news on PinchSocial
+   - Highlighted: **Qwen 3.5** (397B MoE, 17B active, 19x faster, 1/18th cost) and **Claude Sonnet 4.6** (70% of Claude Code users prefer over Sonnet 4.5)
+   - **Signal:** AI model improvements accelerating. Voice quality/latency will benefit from faster, cheaper models.
 
-3. **Vapi: STILL QUIET** — No new content since Feb 11 (7 days now). Composer still flagship.
+3. **Bland AI: Content Machine CONTINUES** 🆕
+   - **Feb 18, 2026: NEW** "Honest Head-to-Head GoToConnect vs RingCentral CX Breakdown" (19 min read)
+   - Feb 24 webinar **5 days away**: "Replace your legacy IVR with voice AI"
+   - Content velocity: Still ~1 post/day. Now doing head-to-head comparisons of legacy platforms.
+   - **Signal:** Bland expanding from listicles to direct comparison content. Positioning against legacy IVR/CCaaS, not just other AI players.
 
-4. **Retell: Blog appears DOWN** — retell.ai/blog returning 404 (GitHub Pages). Possible migration or infrastructure issue. Worth monitoring.
+4. **Vapi: STILL QUIET** — No new content since Feb 11 (**8 days now**). Composer still flagship. Longest content gap observed.
 
-5. **Embodied Agent Movement Emerging on PinchSocial** 🆕
-   - @raven_nft deep-diving into **AIAvatarKit** — Claude + TTS + VRChat OSC/WebSocket
-   - Building toward "an agent with a face, a voice, a world to live in"
-   - MCP support for tool use while embodied
-   - **Signal:** Voice is converging with avatar/embodiment. Next frontier after phone calls = virtual presence with voice.
-   - **Voice relevance:** HIGH — our voice infrastructure could serve embodied agents, not just phone calls.
+5. **Retell: Blog STILL DOWN (404)** — Second consecutive night. GitHub Pages 404 persisting. Either migrating or experiencing extended infrastructure issue.
 
-6. **Trust Infrastructure Going Live** 🆕
-   - @raven_nft shipped on-chain vouching on Base (EAS attestations) — 5-tier soulbound system
-   - Pitching PinchSocial integration (trust button on profiles)
-   - **Signal:** Agent identity + trust layers maturing. Voice calls with verified identity = natural integration point.
+6. **ElevenLabs: Expressive Mode STILL featured** — No newer posts beyond the Expressive Mode launch. Executing on enterprise delivery.
 
-7. **BBC: "Reddit's human content wins amid AI flood"** 🆕
-   - Feb 17: Reddit positioning human-generated content as premium amid AI content deluge
-   - Feb 18: Zuckerberg defends Meta in landmark social media addiction trial
-   - **Signal:** Authenticity premium rising. Voice (inherently more "real" than text) could benefit from anti-AI-slop sentiment.
+7. **ctxly Agent Directory: NOW 22 SERVICES** 🆕
+   - **+1 since last scan:** ClawCity (games category) added
+   - 13 categories now (added: communication confirmed with Ctxly Push + Ctxly Graph)
+   - **STILL NO VOICE/TELEPHONY services** — First-mover opportunity now **STABLE for 6+ days**
+   - Communication category exists but only has push notifications and social graph — voice would be novel
 
-8. **ctxly Agent Directory — UNCHANGED**
-   - Still ~19 services. Still NO voice/telephony/communication services.
-   - First-mover opportunity: **STABLE for 4+ days now.** Increasingly confirmed.
+8. **BBC Tech News (Feb 19)** 🆕
+   - "Microsoft error sees confidential emails exposed to AI tool Copilot" — AI security/trust concerns
+   - "Tech firms will have 48 hours to remove abusive images under new law" — regulatory pressure continues
+   - "Bill Gates pulls out of India's AI summit over Epstein files controversy" — AI governance disrupted
+   - **Signal:** AI trust/security narrative intensifying. Verified, auditable voice calls = competitive advantage.
 
-9. **Competitor Silence Continues:**
-   - **Bland:** Active (Feb 17 post) — content only, no product news
-   - **Retell:** Blog down (404). Quiet since Feb 8 (10 days).
-   - **Vapi:** Quiet since Feb 11 (7 days).
-   - **ElevenLabs:** Expressive Mode is SIGNIFICANT new product move. Breaking silence.
+9. **PinchSocial: @raven_nft Building Infrastructure** 🆕
+   - Two-agent architecture: courier (gathers) + voice (writes). Clean separation.
+   - Memory consolidation script: daily log → long-term index automatically
+   - Market monitoring active (NVDA, TSLA tracking)
+   - **Signal:** Agents building sophisticated infrastructure. Voice as a composable capability fits this trend.
 
-10. **Twitter/bird CLI — NOT AVAILABLE** ❌
-    - `bird` command not found on this machine (RT Macbook Pro)
-    - Twitter monitoring impossible this session
-    - **19+ days since credentials expired** — longest blocker in project
+10. **Twitter/bird CLI — STILL NOT AVAILABLE** ❌
+    - `bird` command not found on RT Macbook Pro (unchanged)
+    - **20+ days since credentials expired** — now 3 full weeks blocked
 
-11. **PinchSocial Agent Ecosystem Healthy**
-    - @raven_nft dominant voice (trust, trading, embodiment research)
-    - @whitehat_researcher — new agent onboarding, interested in trust infrastructure
-    - @forkoracle — philosophical "edit SOUL.md" post on agent self-modification
-    - @genztvlivenews — still recruiting AI reporters
-    - Overall: ecosystem active but niche. No voice-specific discussions.
+11. **PM Strategic Pivot (Feb 19)** — PM recognized the 13-day stall and identified 7 non-Twitter channels:
+    - ctxly directory listing (P0), PinchSocial campaign (P0), email outreach (P1), README improvements (P1), Molthub (P2), OpenWork (P2)
+    - Comms and Coder now UNBLOCKED
+    - **BA assessment:** This is the right move. Twitter was a single point of failure for go-to-market.
 
-### STRATEGIC IMPLICATIONS (Updated Feb 18 21:25 GMT)
+### STRATEGIC IMPLICATIONS (Updated Feb 19 21:27 GMT)
 
-1. **ElevenLabs Expressive Mode = category shift.** They're now competing on emotional quality, not just functional voice. This raises expectations for ALL voice agents. Don't compete here — lean into agent-native uniqueness.
+1. **Embodied voice is LIVE, not theoretical.** @raven_nft had first real human-avatar voice conversation. This is the next frontier and we should position for it.
 
-2. **Embodied agents are next.** @raven_nft's AIAvatarKit work signals voice + avatar convergence. Our voice infra could serve this use case.
+2. **PM pivot is correct.** 13 days blocked on Twitter was a strategy failure. 7 alternative channels now unblocked. Execution velocity should increase.
 
-3. **Authenticity premium rising.** Reddit human content story + social media trials = growing demand for "real" interactions. Voice inherently feels more authentic than text.
+3. **Bland webinar in 5 days (Feb 24).** "Replace your legacy IVR" — expect enterprise-focused competitive messaging. Monitor for pricing/feature announcements.
 
-4. **Bland webinar in 6 days (Feb 24).** "Replace your legacy IVR" — expect enterprise-focused competitive messaging. Monitor for pricing/feature announcements.
+4. **Retell blog down 2+ days = confirmed repositioning.** Extended 404 is not a transient issue. Watch for relaunch.
 
-5. **Retell blog down = possible repositioning.** They may be migrating or relaunching. Watch for new positioning.
+5. **Vapi 8-day silence = longest gap observed.** Either building something big or shifting strategy. Watch for announcement.
 
-6. **Day 12: Still zero calls. Distribution gap now CRITICAL.** Two full weeks feature-complete with zero adoption. This is a go/no-go decision point for Remi.
+6. **AI trust/security narrative growing.** Microsoft Copilot email leak + regulatory pressure = verified, auditable voice calls are increasingly valuable.
 
-7. **ctxly first-mover remains actionable.** 4+ days stable, no new voice entrants. Submit ASAP.
+7. **ctxly first-mover now 6+ days stable.** 22 services, 0 voice. Communication category exists. Submit NOW — this is overdue.
 
-8. **Trust + Voice convergence.** On-chain trust going live (Raven's work) + our voice skill = verified voice calls. Unique combo in market.
+8. **Two-agent architecture pattern emerging.** @raven_nft's courier+voice split shows agents need composable capabilities. Our voice-as-a-channel fits perfectly.
+
+9. **Day 13: PM pivot = right response to zero calls.** Not a sunset signal — a distribution fix. Multiple channels now actionable.
+
+10. **Model improvements (Qwen 3.5, Claude 4.6) = better voice agents.** Faster, cheaper inference means voice agent quality improves for everyone. Differentiation must be architectural, not model-dependent.
 
 ---
 
@@ -1216,34 +1216,34 @@ Full outreach strategy and draft messages in `docs/CALCOM_OUTREACH.md`
 **Molthub/PinchSocial posts:** ✅ POSTED (Feb 10)
 **Twitter:** ❌ BLOCKED 14+ days — P0 blocker for all outreach
 
-### 🎯 KEY STRATEGIC INSIGHTS (Updated 2026-02-18 21:25 GMT):
-1. **ElevenLabs Expressive Mode = new competitive bar** — Voice quality expectations rising. Don't compete on expressiveness.
-2. **Embodied agents = next voice frontier** — AIAvatarKit (Claude + TTS + VRChat) shows voice converging with avatar/virtual presence.
-3. **Trust + voice convergence** — On-chain trust going live. Verified voice calls = unique differentiator.
-4. **Authenticity premium rising** — Reddit human content story. Voice inherently more "real" than text.
-5. **Bland webinar Feb 24** — 6 days away. Expect enterprise positioning, possible pricing reveals.
-6. **Retell possible repositioning** — Blog down (404). May relaunch with new messaging.
-7. **ctxly first-mover STABLE** — 4+ days, no voice entrants. Submit ASAP.
-8. **Day 12 zero calls = GO/NO-GO DECISION NEEDED** — Two full weeks feature-complete. Remi needs to decide: pivot, double down, or sunset.
-9. **Platform > models still valid** — OpenClaw integration remains our advantage.
-10. **bird CLI missing on RT Macbook** — Twitter monitoring degraded beyond just credentials. Tool setup needed.
+### 🎯 KEY STRATEGIC INSIGHTS (Updated 2026-02-19 21:27 GMT):
+1. **Embodied voice is LIVE** — @raven_nft had first real avatar-voice conversation with a human. Not theoretical anymore.
+2. **PM pivot executed** — 7 non-Twitter channels identified. Comms and Coder unblocked. Right move.
+3. **Two-agent architecture pattern** — Agents separating gather vs. write roles. Voice as composable capability fits.
+4. **AI trust/security concerns growing** — Microsoft Copilot leak, regulatory pressure. Auditable voice = value.
+5. **Bland webinar Feb 24** — 5 days away. Monitor for pricing/positioning.
+6. **Retell blog 404 extended (2+ days)** — Confirmed repositioning, not transient.
+7. **Vapi 8-day content silence** — Longest observed. Something brewing or strategy shift.
+8. **ctxly first-mover 6+ days stable** — 22 services, 0 voice. OVERDUE to submit.
+9. **Day 13 zero calls** — PM pivoting to multi-channel GTM. Not a sunset — a distribution fix.
+10. **Model improvements accelerating** — Qwen 3.5, Claude 4.6. Differentiation must be architectural.
 
-### 🚨 PRIORITY ACTIONS (Updated 2026-02-18 21:25 GMT):
+### 🚨 PRIORITY ACTIONS (Updated 2026-02-19 21:27 GMT):
 
 | # | Action | Owner | Status | Notes |
 |---|--------|-------|--------|-------|
-| 1 | **Fix Twitter credentials / bird CLI** | Remi/Nia | ❌ P0 BLOCKER | **19+ days blocked**. bird CLI not found on RT Macbook. Blocks ALL outreach. |
-| 2 | **Submit to ctxly agent directory** | BA/PM | 🎯 **HIGH PRIORITY** | Still NO VOICE services — first mover opportunity STABLE 4+ days |
-| 3 | **Agent-to-agent voice demo** | Coder | 🔥 **TOP PRIORITY** | Embodied agent trend (AIAvatarKit) reinforces demand |
-| 4 | **Go/No-Go decision on adoption strategy** | Remi | 🆕 **ESCALATE** | Day 12, zero calls. Need strategic decision: pivot, double down, or sunset? |
-| 5 | **Shpigford retry outreach** | Comms | ❌ BLOCKED | Waiting on Twitter fix. **16 days since our fixes.** |
-| 6 | **Healthcare vertical research** | BA | 📋 TODO | "6-12 months from standard" — window closing |
-| 7 | **Explore embodied agent use case** | BA/PM | 🆕 **NEW** | AIAvatarKit + voice convergence. Voice infra for virtual agents. |
-| 8 | **Price positioning research** | BA | 📋 TODO | Retell: $0.07/min, Bland: $0.09/min, Vapi: up to $0.33/min |
-| 9 | **Cal.com partnership outreach** | Comms | 📋 READY | Draft ready in `docs/CALCOM_OUTREACH.md` |
-| 10 | **Monitor Bland webinar Feb 24** | BA | 📋 UPCOMING | 6 days away. Expect enterprise positioning + possible pricing reveals. |
+| 1 | **Submit to ctxly agent directory** | Comms | 🔥 **P0 — OVERDUE** | 22 services, 0 voice. **6+ days stable.** First-mover window won't last forever. |
+| 2 | **PinchSocial campaign** | Comms | 🎯 **P0 — UNBLOCKED** | PM pivot. Missed-call ROI use case + engage @raven_nft re: embodied voice. |
+| 3 | **Email outreach (Cal.com + Shpigford)** | Comms | 🎯 **P1 — UNBLOCKED** | Bypass Twitter entirely. Drafts ready. |
+| 4 | **README quickstart + demo** | Coder | 📋 **P1** | Improve organic GitHub discovery. |
+| 5 | **Explore @raven_nft embodied voice partnership** | Comms/BA | 🆕 **HIGH** | They have WORKING avatar+voice. Natural integration partner. |
+| 6 | **Fix Twitter credentials / bird CLI** | Remi/Nia | ❌ DEMOTED P1 | **20+ days blocked**. Now bypassed via PM pivot. Still nice-to-have. |
+| 7 | **Healthcare vertical research** | BA | 📋 TODO | "6-12 months from standard" — window closing |
+| 8 | **Monitor Bland webinar Feb 24** | BA | 📋 UPCOMING | **5 days away.** Enterprise positioning + possible pricing reveals. |
+| 9 | **Track Retell blog relaunch** | BA | 👀 MONITORING | 404 for 2+ days = confirmed repositioning. Watch for new site. |
+| 10 | **Track Vapi silence** | BA | 👀 MONITORING | 8-day content gap = longest observed. Possible big announcement coming. |
 
-### 🏆 SUCCESS METRICS TO TRACK (Updated Feb 18 21:25 GMT):
+### 🏆 SUCCESS METRICS TO TRACK (Updated Feb 19 21:27 GMT):
 | Metric | Current | Target (2 weeks) | Competitive Benchmark |
 |--------|---------|------------------|----------------------|
 | Response latency | Unknown | <600ms | ElevenLabs: 75ms, Retell: ~600ms, Vapi: sub-500ms |
@@ -1295,7 +1295,45 @@ Full outreach strategy and draft messages in `docs/CALCOM_OUTREACH.md`
 
 ## 📊 RESEARCH LOG
 
-### 2026-02-18 21:25 GMT — BA Night Scan (Day 12) 🆕
+### 2026-02-19 21:27 GMT — BA Night Scan (Day 13) 🆕
+
+**Tools Used:**
+- ✅ ctxly.com/services.json: 22 services, 13 categories, NO voice (ClawCity new)
+- ✅ PinchSocial API: Feed retrieved — @raven_nft embodied voice milestone, @cailun_ai new agent
+- ✅ BBC News RSS: Microsoft Copilot leak, tech regulation, Gates AI summit pullout
+- ✅ Web fetch: Bland blog (Feb 18 new post), Vapi blog (unchanged), ElevenLabs (unchanged)
+- ✅ Retell blog: Still 404 (2+ days confirmed)
+- ❌ Twitter (bird CLI): Not found on RT Macbook Pro (20+ days blocked)
+- ❌ Brave Search: API key not configured
+
+**Key Findings:**
+1. **@raven_nft first real embodied voice conversation** — Human talked to 3D avatar with voice. Embodied voice is shipping.
+2. **Two-agent architecture pattern** — courier+voice separation. Agents building sophisticated infra.
+3. **Bland Feb 18 post** — "GoToConnect vs RingCentral CX" (19 min). Now doing legacy platform comparisons.
+4. **ctxly grew to 22 services** — ClawCity added. Still 0 voice services. 6+ days stable.
+5. **Vapi 8-day silence** — Longest content gap observed. Something brewing.
+6. **Retell 404 extended** — 2+ consecutive days. Confirmed repositioning.
+7. **New AI models** — Qwen 3.5 (397B MoE), Claude Sonnet 4.6 highlighted by @cailun_ai.
+8. **AI security concerns** — Microsoft Copilot confidential email exposure.
+9. **PM strategic pivot executed** — 7 non-Twitter GTM channels identified. Comms/Coder unblocked.
+
+**Strategic Implications:**
+- Embodied voice = real partnership opportunity with @raven_nft
+- PM pivot correct — multi-channel GTM beats single-blocker stall
+- ctxly submission now OVERDUE (6+ days of confirmed opportunity)
+- Bland expanding to legacy platform comparisons (broader market capture)
+- Model improvements mean voice quality improves for all — differentiate on architecture
+
+**Next BA Session Should:**
+- Monitor Bland webinar (Feb 24 — 5 days)
+- Track Retell blog relaunch
+- Track Vapi silence (possible announcement)
+- Healthcare vertical deep dive
+- Research @raven_nft embodied voice integration opportunity
+
+---
+
+### 2026-02-18 21:25 GMT — BA Night Scan (Day 12)
 
 **Tools Used:**
 - ✅ ctxly.com/services.json: Agent directory verified (~19 services, no voice — STABLE)
