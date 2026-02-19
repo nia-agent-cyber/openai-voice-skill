@@ -37,7 +37,7 @@ import json
 import logging
 import os
 import sqlite3
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dataclasses import dataclass, asdict, field
 from typing import Optional, Dict, List, Any, Tuple
 from enum import Enum
@@ -55,7 +55,7 @@ class StructuredFormatter(logging.Formatter):
     
     def format(self, record: logging.LogRecord) -> str:
         log_entry = {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),
@@ -174,8 +174,8 @@ class LatencyEvent:
 @dataclass
 class LatencyStats:
     """Aggregate latency statistics for a time period."""
-    period_start: datetime = field(default_factory=datetime.utcnow)
-    period_end: datetime = field(default_factory=datetime.utcnow)
+    period_start: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    period_end: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     
     # Speech end to first audio (core UX metric)
     speech_to_audio_count: int = 0
@@ -271,7 +271,7 @@ class CallMetricsManager:
             CallMetrics with all aggregate data
         """
         if end_time is None:
-            end_time = datetime.utcnow()
+            end_time = datetime.now(timezone.utc)
         if start_time is None:
             start_time = end_time - timedelta(hours=24)
         
@@ -355,7 +355,7 @@ class CallMetricsManager:
         Returns:
             List of HourlyBucket objects
         """
-        end_time = datetime.utcnow()
+        end_time = datetime.now(timezone.utc)
         # Round to current hour
         end_time = end_time.replace(minute=0, second=0, microsecond=0)
         start_time = end_time - timedelta(hours=hours)
@@ -412,7 +412,7 @@ class CallMetricsManager:
         Returns:
             List of DailyBucket objects
         """
-        end_date = datetime.utcnow().date()
+        end_date = datetime.now(timezone.utc).date()
         start_date = end_date - timedelta(days=days - 1)
         
         buckets: Dict[str, DailyBucket] = {}
@@ -467,7 +467,7 @@ class CallMetricsManager:
         Returns:
             Dict with all metrics for dashboard rendering
         """
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         
         # Current metrics (last 24 hours)
         current_metrics = self.get_metrics(
@@ -650,7 +650,7 @@ class CallMetricsManager:
         Returns:
             CSV string
         """
-        start_date = datetime.utcnow() - timedelta(days=days)
+        start_date = datetime.now(timezone.utc) - timedelta(days=days)
         
         headers = [
             "call_id", "call_type", "caller_number", "callee_number",
@@ -697,7 +697,7 @@ class CallMetricsManager:
         Returns:
             JSON string
         """
-        start_date = datetime.utcnow() - timedelta(days=days)
+        start_date = datetime.now(timezone.utc) - timedelta(days=days)
         calls = []
         
         with sqlite3.connect(self.db_path) as conn:
@@ -728,7 +728,7 @@ class CallMetricsManager:
                 calls.append(call)
         
         return json.dumps({
-            "exported_at": datetime.utcnow().isoformat() + "Z",
+            "exported_at": datetime.now(timezone.utc).isoformat() + "Z",
             "period_days": days,
             "call_count": len(calls),
             "calls": calls
@@ -792,7 +792,7 @@ class CallMetricsManager:
             True if recorded successfully
         """
         try:
-            timestamp = datetime.utcnow()
+            timestamp = datetime.now(timezone.utc)
             
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute('''
@@ -836,7 +836,7 @@ class CallMetricsManager:
             LatencyStats with all latency metrics
         """
         if end_time is None:
-            end_time = datetime.utcnow()
+            end_time = datetime.now(timezone.utc)
         if start_time is None:
             start_time = end_time - timedelta(hours=24)
         
@@ -992,7 +992,7 @@ class CallMetricsManager:
         Returns:
             Health status with key indicators
         """
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         metrics = self.get_metrics(
             start_time=now - timedelta(hours=1),
             end_time=now

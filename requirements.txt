@@ -1,0 +1,9 @@
+# Core dependencies for openai-voice-skill
+aiofiles
+cryptography
+fastapi
+httpx
+pydantic
+twilio
+uvicorn
+websockets

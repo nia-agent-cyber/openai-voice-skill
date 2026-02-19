@@ -9,7 +9,7 @@ import json
 import os
 import sqlite3
 import tempfile
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -77,7 +77,7 @@ def test_db():
     ''')
     
     # Insert sample calls
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     sample_calls = [
         # Completed calls
         ("call-001", "outbound", "+14402915517", "+1234567890", 
