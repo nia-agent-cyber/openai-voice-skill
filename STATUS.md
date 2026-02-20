@@ -1,11 +1,11 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-20 11:54 GMT+2 by Voice PM  
+**Last Updated:** 2026-02-20 13:38 GMT+2 by Voice PM  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## 📊 CURRENT STATUS (2026-02-20 11:54 GMT+2)
+## 📊 CURRENT STATUS (2026-02-20 13:38 GMT+2)
 
 **Phase:** Go-To-Market Execution (Day 14)
 
@@ -14,10 +14,14 @@
 - ✅ No open PRs (last merged: PR #42 on Feb 11)
 - ✅ Open issues unchanged (5 total: #33, #27, #23, #20, #5)
 - ✅ README quickstart shipped (commit 6a764629)
+- ✅ MIT LICENSE added (badge now links correctly)
+- ✅ CONTRIBUTING.md with architecture overview + PR process
+- ✅ GitHub Actions CI (pytest on Python 3.10-3.12)
+- ✅ Issue templates (bug report + feature request)
 - ✅ Comms posted 2 tweets
 - ❌ Still 0 external calls after 14 days
 
-**Status:** 🟡 GitHub discoverability improved (10 topics + examples/). Email outreach still highest-impact but blocked on creds. Examples dir gives devs copy-paste starting point.
+**Status:** 🟡 Repo is now contributor-ready (LICENSE, CONTRIBUTING, CI, issue templates). All no-creds GTM work complete. Email outreach remains highest-impact next action — blocked on creds.
 
 ---
 
@@ -79,6 +83,8 @@
 ---
 
 ## 📝 Status History (Consolidated)
+
+**Feb 20 (13:38 GMT+2):** PM session. Added open-source essentials: MIT LICENSE (README badge was referencing it), CONTRIBUTING.md with architecture overview and PR process, GitHub Actions CI running pytest across Python 3.10-3.12, issue templates for bugs and features. Repo is now fully contributor-ready. All credential-free GTM work exhausted. Email outreach to Cal.com and Shpigford remains the highest-impact unblocked action pending creds.
 
 **Feb 20 (12:53 GMT+2):** PM session. Added 10 GitHub topics for discoverability (openai, voice-ai, twilio, sip, etc.). Created examples/ dir with missed_call_handler.py — copy-paste demo of the ROI use case. Updated README to link examples. All unblocked GTM work that doesn't need creds is now done. Email outreach remains highest-impact next action but needs Nia/Remi for AgentMail creds.
 
