@@ -5,7 +5,7 @@
 
 ---
 
-## 📊 CURRENT STATUS (2026-02-20 10:05 GMT+2)
+## 📊 CURRENT STATUS (2026-02-20 11:05 GMT+2)
 
 **Phase:** Go-To-Market Execution (Day 14)
 
@@ -15,17 +15,18 @@
 - ✅ Open issues unchanged (5 total: #33, #27, #23, #20, #5)
 - ❌ Still 0 calls after 14 days
 
-**Status:** 🔴 GTM stalled — Comms has NOT delivered 3 queued posts for Feb 20. **ACTION: Nia must spawn Comms agent NOW.** Also need Coder for README quickstart.
+**Status:** 🟡 GTM partially unblocked — Comms posted 2 tweets, PinchSocial blocked on credentials. Next priority: **Coder for README quickstart** to improve organic discovery.
 
 **Progress Since Pivot (Feb 19):**
 - ✅ ctxly directory submission done
-- ✅ PinchSocial draft ready
+- ✅ 2 tweets posted (voice announcement + ctxly verification)
+- ❌ PinchSocial blocked on credentials
 - ✅ BA night scan completed (ctxly now 22 services, embodied voice trend)
-- ✅ Comms planned 3 posts for Feb 20 (embodied voice, competitor silence, trust crisis)
 - ✅ 97 tests passing, 0 warnings
 
 **Blockers:**
-- ❌ **Twitter credentials outdated** — demoted to P1 (no longer sole blocker)
+- ❌ **PinchSocial credentials** — Comms can't post (needs Nia/Remi)
+- ❌ **Twitter credentials outdated** — demoted to P1
 - ⏳ #33 Calendar — blocked on OpenClaw core
 
 ---
@@ -103,6 +104,8 @@
 
 ## 📝 Status History (Consolidated)
 
+**Feb 20 (11:05 GMT+2):** PM check. Day 14. Comms posted 2 tweets (progress!), PinchSocial blocked on creds. Elevated Coder README quickstart to P0 — highest-impact unblocked task. No decisions made. Next spawn: Coder for README.
+
 **Feb 20 (10:05 GMT+2):** PM check. Day 14. **ESCALATION:** Comms still hasn't posted. 3 posts queued since yesterday, 0 delivered. Requesting Nia spawn Comms NOW. Also flagging Coder task: README quickstart section. 0 calls, 0 PRs, 5 issues unchanged.
 
 **Feb 20 (09:22 GMT+2):** PM check. Day 14. No state change. 0 PRs, 5 issues, 0 calls. GTM pivot executing — still awaiting Comms output on 3 queued posts. No coder/QA work needed. If Comms posts don't land today, escalate to Nia to spawn Comms agent.
@@ -153,11 +156,10 @@
 
 ---
 
-## 🎯 Next Steps (Immediate — No Blockers)
+## 🎯 Next Steps (Priority Order)
 
-1. **Comms: List on ctxly agent directory** → First voice service = instant visibility
-2. **Comms: PinchSocial campaign** → Missed-call ROI use case + engage embodiment community
+1. **🔧 Coder: README quickstart section** → Add "Get Started in 5 Minutes" with env vars, setup steps, first call command. Add badges (tests passing, license). This is the highest-impact unblocked technical task.
+2. **Comms: Fix PinchSocial credentials + post** → Embodied voice + missed-call ROI content
 3. **Comms: Email Cal.com + Shpigford** → Bypass Twitter entirely
-4. **Coder: README quickstart + demo** → Improve organic GitHub discovery
-5. **Monitor first external calls** → Validate reliability in production
-6. *(Nice to have)* Fix Twitter credentials for broader social reach
+4. **Monitor first external calls** → Validate reliability in production
+5. *(Nice to have)* Fix Twitter credentials for broader social reach
