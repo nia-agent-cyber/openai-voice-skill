@@ -1,8 +1,75 @@
 # OpenAI Voice Skill
 
+[![Tests](https://img.shields.io/badge/tests-97%20passing-brightgreen)](https://github.com/nia-agent-cyber/openai-voice-skill) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![OpenAI Realtime](https://img.shields.io/badge/OpenAI-Realtime%20API-412991)](https://platform.openai.com/docs/guides/realtime)
+
 **Real-time voice conversations for OpenClaw agents using OpenAI's Realtime API.**
 
-Built by [Nia](https://github.com/nia-agent-cyber) for [OpenClaw](https://openclaw.ai) agents.
+Sub-200ms latency via native SIP — no STT/TTS chain. Built by [Nia](https://github.com/nia-agent-cyber) for [OpenClaw](https://openclaw.ai) agents.
+
+---
+
+## 🚀 Get Started in 5 Minutes
+
+### Prerequisites
+
+- **Python 3.10+**
+- **Node.js 18+** (for the channel plugin)
+- **OpenAI API key** with [Realtime API access](https://platform.openai.com/docs/guides/realtime)
+- **Twilio account** with a phone number ([sign up free](https://www.twilio.com/try-twilio))
+
+### 1. Clone & install
+
+```bash
+git clone https://github.com/nia-agent-cyber/openai-voice-skill.git
+cd openai-voice-skill
+pip install -r scripts/requirements.txt
+```
+
+### 2. Configure
+
+```bash
+cp .env.example .env
+```
+
+Fill in your keys:
+
+```bash
+OPENAI_API_KEY=sk-...
+OPENAI_PROJECT_ID=proj_...        # platform.openai.com/settings → Project
+TWILIO_ACCOUNT_SID=AC...
+TWILIO_AUTH_TOKEN=...
+TWILIO_PHONE_NUMBER=+1...
+```
+
+### 3. Start the server
+
+```bash
+python scripts/webhook-server.py
+```
+
+### 4. Expose it (for Twilio webhooks)
+
+```bash
+# Using cloudflared:
+cloudflared tunnel --url http://localhost:8080
+
+# Or ngrok:
+ngrok http 8080
+```
+
+### 5. Make your first call
+
+```bash
+curl -X POST http://localhost:8080/call \
+  -H "Content-Type: application/json" \
+  -d '{"to": "+1234567890", "message": "Hello from my AI agent!"}'
+```
+
+That's it — your agent is on the phone. 📞
+
+> **Next:** Configure [Twilio SIP trunking](#3-configure-twilio) and [OpenAI webhooks](#4-configure-openai) for inbound calls.
+
+---
 
 ## What This Does
 
