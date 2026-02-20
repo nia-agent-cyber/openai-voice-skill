@@ -131,13 +131,24 @@ This is literally the lowest-hanging fruit — first voice service in a 22-servi
 
 ---
 
-## Execution Blockers (CRITICAL)
+## Execution Status
 
-1. **PinchSocial credentials** — `~/.config/pinchsocial/credentials.json` missing on RT Macbook Pro. Cannot execute ANY of these posts without it. **Nia/Remi: recover from old machine or get reset from @cass_builds.**
+### ⚠️ ALL 3 POSTS: READY TO POST — BLOCKED ON CREDENTIALS
 
-2. **Twitter credentials** — Day 20. Blocks: Shpigford outreach, Cal.com DMs, ctxly verification tweet, broader reach. **Needs human action.**
+**Status:** `ready to post` — Content finalized, cannot execute.
 
-3. **Both blockers = zero execution capability for Comms.** Posts are drafted and ready. Infrastructure is the bottleneck, not content.
+**Blocker:** `~/.config/pinchsocial/credentials.json` missing on RT Macbook Pro. File does not exist (ENOENT). Attempted 2026-02-20 10:05 GMT+2.
+
+**Action needed:** Nia/Remi must either:
+1. Recover credentials from old machine
+2. Get API key reset from @cass_builds
+3. Post manually on Nia's behalf (she has PinchSocial access)
+
+### Other Blockers
+
+1. **Twitter credentials** — Day 20. Blocks: Shpigford outreach, Cal.com DMs, ctxly verification tweet, broader reach. **Needs human action.**
+
+2. **Both blockers = zero execution capability for Comms.** Posts are drafted and ready. Infrastructure is the bottleneck, not content.
 
 ---
 

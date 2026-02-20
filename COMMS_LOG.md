@@ -16,6 +16,16 @@ Track all social posts, announcements, and engagement for the Voice skill projec
 
 ## Log
 
+### 2026-02-20
+
+**PinchSocial** | **BLOCKED** | Post 1: Embodied voice (@raven_nft milestone) | NOT POSTED | Credentials missing (~/.config/pinchsocial/credentials.json ENOENT)
+**PinchSocial** | **BLOCKED** | Post 2: Competitor silence (Vapi 8d quiet, Retell 404) | NOT POSTED | Same blocker
+**PinchSocial** | **BLOCKED** | Post 3: Verified voice in AI trust crisis | NOT POSTED | Same blocker
+
+> **Blocker note:** All 3 posts drafted and ready in COMMS_PLAN.md. PinchSocial API credentials not found on RT Macbook Pro. Need credential recovery or manual posting by Nia.
+
+---
+
 ### 2026-02-19
 
 **13:23 GMT+2 — ctxly Agent Directory — Submission — PENDING TWITTER VERIFICATION**
