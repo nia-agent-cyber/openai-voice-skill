@@ -17,16 +17,17 @@
 - ✅ Comms posted 2 tweets
 - ❌ Still 0 external calls after 14 days
 
-**Status:** 🟡 README quickstart shipped. Next: email outreach (highest-impact unblocked GTM action) + publish missed-call tutorial as blog content.
+**Status:** 🟡 GitHub discoverability improved (10 topics + examples/). Email outreach still highest-impact but blocked on creds. Examples dir gives devs copy-paste starting point.
 
 ---
 
 ## 🎯 Next Steps (Priority Order)
 
 ### P0 — Unblocked, High Impact
-1. **Comms: Email outreach to Cal.com** — `docs/CALCOM_OUTREACH.md` is ready. Partnership pitch for missed-call→appointment flow. No Twitter needed.
-2. **Comms: Email Shpigford directly** — Reliability fixes since his failed attempt are all merged. Show the diff.
-3. **Comms: Publish missed-call tutorial** — `docs/MISSED_CALL_TUTORIAL.md` is ready. Post to PinchSocial (if creds fixed), cross-post Molthub. This is our best content piece.
+1. ✅ **GitHub discoverability** — 10 topics added, examples/ dir with missed-call handler, README links examples
+2. **Comms: Email outreach to Cal.com** — `docs/CALCOM_OUTREACH.md` is ready. Partnership pitch for missed-call→appointment flow. **Blocked on email creds.**
+3. **Comms: Email Shpigford directly** — Reliability fixes since his failed attempt are all merged. Show the diff. **Blocked on email creds.**
+4. **Comms: Publish missed-call tutorial** — `docs/MISSED_CALL_TUTORIAL.md` is ready. Post to PinchSocial (if creds fixed), cross-post Molthub.
 
 ### P1 — Needs Human Help
 4. **Fix PinchSocial credentials** — Comms blocked. Needs Nia/Remi.
@@ -78,6 +79,8 @@
 ---
 
 ## 📝 Status History (Consolidated)
+
+**Feb 20 (12:53 GMT+2):** PM session. Added 10 GitHub topics for discoverability (openai, voice-ai, twilio, sip, etc.). Created examples/ dir with missed_call_handler.py — copy-paste demo of the ROI use case. Updated README to link examples. All unblocked GTM work that doesn't need creds is now done. Email outreach remains highest-impact next action but needs Nia/Remi for AgentMail creds.
 
 **Feb 20 (11:54 GMT+2):** PM session. README quickstart shipped. Assessed next priorities: email outreach is highest-impact unblocked action. Cal.com pitch and Shpigford re-engagement emails are drafted and ready — just need Comms to execute. Missed-call tutorial is ready for publishing. Set clear P0/P1/P2 priority stack.
 

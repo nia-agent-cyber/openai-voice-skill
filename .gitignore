@@ -7,3 +7,4 @@ node_modules/
 .DS_Store
 .venv/
 call_history.db
+.env

@@ -67,7 +67,9 @@ curl -X POST http://localhost:8080/call \
 
 That's it — your agent is on the phone. 📞
 
-> **Next:** Configure [Twilio SIP trunking](#3-configure-twilio) and [OpenAI webhooks](#4-configure-openai) for inbound calls.
+> **Next:** Check out the [examples/](examples/) folder for ready-to-use recipes like a missed-call → appointment handler.
+>
+> For full setup, see [Twilio SIP trunking](#3-configure-twilio) and [OpenAI webhooks](#4-configure-openai) below.
 
 ---
 
