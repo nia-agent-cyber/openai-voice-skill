@@ -15,7 +15,7 @@
 - ✅ Open issues unchanged (5 total: #33, #27, #23, #20, #5)
 - ❌ Still 0 calls after 14 days
 
-**Status:** 🟡 GTM partially unblocked — Comms posted 2 tweets, PinchSocial blocked on credentials. Next priority: **Coder for README quickstart** to improve organic discovery.
+**Status:** 🟡 GTM partially unblocked — Comms posted 2 tweets, PinchSocial blocked on credentials. ✅ **README quickstart shipped** (commit 6a764629) — badges, 5-step setup, minimal code example.
 
 **Progress Since Pivot (Feb 19):**
 - ✅ ctxly directory submission done
@@ -103,6 +103,8 @@
 ---
 
 ## 📝 Status History (Consolidated)
+
+**Feb 20 (11:06 GMT+2):** Coder shipped README quickstart (commit 6a764629). Added: "Get Started in 5 Minutes" section with prerequisites, 5-step setup, curl example for first call, badges (tests/license/OpenAI). Existing detailed docs preserved below the fold.
 
 **Feb 20 (11:05 GMT+2):** PM check. Day 14. Comms posted 2 tweets (progress!), PinchSocial blocked on creds. Elevated Coder README quickstart to P0 — highest-impact unblocked task. No decisions made. Next spawn: Coder for README.
 
