@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-27 18:00 GMT+2 by Voice PM  
+**Last Updated:** 2026-02-27 20:00 GMT+2 by Voice PM  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -20,7 +20,7 @@
 - ✅ Partnership emails SENT (Cal.com + Shpigford) — 2026-02-27 08:03 GMT+2
 - ⏳ Awaiting replies (check again ~Mar 1-3)
 
-**Status:** 🟡 **Day 21. No email replies after ~10h.** Cal.com (peer@cal.com) and Shpigford (josh@shpigford.com) — no replies as of 18:00 GMT+2. **Show HN draft ready** in `docs/SHOW_HN_DRAFT.md`. Next: execute Show HN submission if no replies by Mar 1. No feature work per DECISIONS.md.
+**Status:** 🟡 **Day 21. No email replies after ~12h.** Cal.com (peer@cal.com) and Shpigford (josh@shpigford.com) — no replies as of 20:00 GMT+2. **Show HN draft ready** in `docs/SHOW_HN_DRAFT.md`. Next: execute Show HN submission by Mar 1 if no replies. No feature work per DECISIONS.md.
 
 ---
 
@@ -99,6 +99,8 @@ Beyond email and Twitter DMs, these channels don't require credentials we're mis
 ---
 
 ## 📝 Status History
+
+**Feb 27 (20:00 GMT+2):** PM session. Checked agentmail — still no replies from Cal.com or Shpigford (~12h). Show HN draft confirmed ready in `docs/SHOW_HN_DRAFT.md`. Recommend executing Show HN post by Mar 1 if emails remain unanswered.
 
 **Feb 27 (18:00 GMT+2):** PM session. Checked agentmail — still no replies from Cal.com or Shpigford. Drafted Show HN submission content in `docs/SHOW_HN_DRAFT.md` (title + description ready to post). Recommended posting Show HN by Mar 1 if emails remain unanswered. This is the highest-signal free distribution channel available.
 
