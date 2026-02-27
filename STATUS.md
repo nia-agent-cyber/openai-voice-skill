@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-02-27 14:03 GMT+2 by Voice PM  
+**Last Updated:** 2026-02-27 18:00 GMT+2 by Voice PM  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -20,7 +20,7 @@
 - ✅ Partnership emails SENT (Cal.com + Shpigford) — 2026-02-27 08:03 GMT+2
 - ⏳ Awaiting replies (check again ~Mar 1-3)
 
-**Status:** 🟡 **Day 21. Outreach emails sent ~10h ago. No replies yet.** Cal.com pitch sent to peer@cal.com, Shpigford re-engagement to josh@shpigford.com. No replies as of 16:03 GMT+2. Byron Rode & NicholasPuru are Twitter-only (DM blocked on creds). **New channel strategy identified** — see P0.5 below. No feature work justified per DECISIONS.md.
+**Status:** 🟡 **Day 21. No email replies after ~10h.** Cal.com (peer@cal.com) and Shpigford (josh@shpigford.com) — no replies as of 18:00 GMT+2. **Show HN draft ready** in `docs/SHOW_HN_DRAFT.md`. Next: execute Show HN submission if no replies by Mar 1. No feature work per DECISIONS.md.
 
 ---
 
@@ -99,6 +99,8 @@ Beyond email and Twitter DMs, these channels don't require credentials we're mis
 ---
 
 ## 📝 Status History
+
+**Feb 27 (18:00 GMT+2):** PM session. Checked agentmail — still no replies from Cal.com or Shpigford. Drafted Show HN submission content in `docs/SHOW_HN_DRAFT.md` (title + description ready to post). Recommended posting Show HN by Mar 1 if emails remain unanswered. This is the highest-signal free distribution channel available.
 
 **Feb 27 (16:03 GMT+2):** PM session. Checked agentmail — still no replies from Cal.com or Shpigford (~10h since sent). Identified 8 alternative distribution channels that don't require blocked Twitter creds: Show HN, Reddit, Dev.to, Product Hunt, Cal.com GitHub Discussions, Cal.com sales form, Discord communities, LinkedIn. Recommended executing Show HN + Cal.com GH Discussion + Dev.to tutorial by Mar 1 if emails remain unanswered. Updated STATUS.md with P0.5 channel strategy.
 
