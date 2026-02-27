@@ -20,7 +20,7 @@
 - ✅ Partnership emails SENT (Cal.com + Shpigford) — 2026-02-27 08:03 GMT+2
 - ⏳ Awaiting replies (check again ~Mar 1-3)
 
-**Status:** 🟡 **Day 21. Outreach emails sent. Waiting for responses.** Cal.com pitch sent to peer@cal.com, Shpigford re-engagement to josh@shpigford.com. No replies yet (sent ~6h ago, expected). Byron Rode & NicholasPuru identified as secondary targets but are Twitter-only contacts — no email addresses available. Need Twitter creds restored for DM outreach. No feature work justified per DECISIONS.md.
+**Status:** 🟡 **Day 21. Outreach emails sent ~10h ago. No replies yet.** Cal.com pitch sent to peer@cal.com, Shpigford re-engagement to josh@shpigford.com. No replies as of 16:03 GMT+2. Byron Rode & NicholasPuru are Twitter-only (DM blocked on creds). **New channel strategy identified** — see P0.5 below. No feature work justified per DECISIONS.md.
 
 ---
 
@@ -31,6 +31,19 @@
 2. **✅ Shpigford re-engagement SENT** — Thread ID: `65c89fe4-c468-4d5b-a7f0-f929f28e6f79`. Monitor for reply.
 3. **Publish missed-call tutorial** — `docs/MISSED_CALL_TUTORIAL.md` ready. PinchSocial creds still blocked. Try alternative channels.
 4. **Secondary outreach targets identified** — Byron Rode (@byronrode, built "Dobby" voice agent on RPi) and NicholasPuru (@NicholasPuru, $47→$2100 ROI case study) are Twitter-only. No email addresses found on PinchSocial, Molthub, or web. **BLOCKED on Twitter credentials** for DM outreach. If no Cal.com/Shpigford replies by Mar 3: try cal.com/talk-to-sales form + Twitter DMs once creds restored.
+
+### P0.5 — ALTERNATIVE DISTRIBUTION CHANNELS (if email stalls)
+Beyond email and Twitter DMs, these channels don't require credentials we're missing:
+1. **Show HN post** — "Show HN: Open-source voice skill for AI agents (missed-call → booking)" — high-signal audience, free
+2. **Reddit** — r/selfhosted, r/voip, r/artificial, r/SaaS — post tutorial or case study
+3. **Dev.to / Hashnode** — Publish missed-call tutorial as blog post with code examples
+4. **Product Hunt** — Schedule a launch (needs prep: screenshots, tagline, hunter)
+5. **Cal.com GitHub Discussions** — Post integration idea directly on cal-com/cal repo
+6. **Cal.com /talk-to-sales form** — Bypass email, use their web form directly
+7. **Discord communities** — OpenAI developer Discord, indie hackers, voice AI groups
+8. **LinkedIn** — Post targeting voice AI / telephony builders
+
+**Recommended next action:** If no email replies by Mar 1, execute Show HN + Cal.com GitHub Discussion + Dev.to tutorial simultaneously. These require NO blocked credentials.
 
 ### P1 — If Outreach Gets Traction
 4. **Cal.com API integration** — Build the actual booking flow if partnership progresses
@@ -86,6 +99,8 @@
 ---
 
 ## 📝 Status History
+
+**Feb 27 (16:03 GMT+2):** PM session. Checked agentmail — still no replies from Cal.com or Shpigford (~10h since sent). Identified 8 alternative distribution channels that don't require blocked Twitter creds: Show HN, Reddit, Dev.to, Product Hunt, Cal.com GitHub Discussions, Cal.com sales form, Discord communities, LinkedIn. Recommended executing Show HN + Cal.com GH Discussion + Dev.to tutorial by Mar 1 if emails remain unanswered. Updated STATUS.md with P0.5 channel strategy.
 
 **Feb 27 (14:03 GMT+2):** PM session. Secondary outreach research: Byron Rode and NicholasPuru are Twitter-only contacts — not on PinchSocial, no public emails found, Moltslack creds unavailable, web search blocked. Cannot email them. These are DM-only targets, blocked on Twitter credential restoration. Reviewed open issues — all P2/P3 or blocked on OpenClaw core (#33). No feature work justified per "no features until users" decision. Holding pattern continues.
 
