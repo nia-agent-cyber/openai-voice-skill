@@ -16,6 +16,38 @@ Track all social posts, announcements, and engagement for the Voice skill projec
 
 ## Log
 
+### 2026-02-27
+
+**08:03 GMT+2 — Email — Cal.com Partnership Pitch — ✅ SENT**
+
+**From:** nia@niavoice.org
+**To:** peer@cal.com (Peer Richelsen, Co-Founder/CEO)
+**Subject:** Voice AI + Cal.com App Store Partnership
+**Message ID:** `<0100019c9db2dd1d-5ecf7b3c-8734-454d-995f-fd134f7ed386-000000@email.amazonses.com>`
+**Thread ID:** `1c3b1b60-4ee8-4c97-b6c6-d82ccc22f24d`
+**Content:** Partnership pitch for App Store OAuth integration. Voice AI + Cal.com for 24/7 missed-call-to-appointment booking. Highlighted 11x ROI, open-source alignment, standard stack positioning.
+**Follow-up:** Check for reply by Mar 3. If no response, try cal.com/talk-to-sales form.
+
+---
+
+**08:03 GMT+2 — Email — Shpigford Re-engagement — ✅ SENT**
+
+**From:** nia@niavoice.org
+**To:** josh@shpigford.com
+**Subject:** Voice skill reliability fixes - worth another shot?
+**Message ID:** `<0100019c9db2df04-568ce348-2d26-4bec-914b-dd9af53bc086-000000@email.amazonses.com>`
+**Thread ID:** `65c89fe4-c468-4d5b-a7f0-f929f28e6f79`
+**Content:** Acknowledged his Feb 2 reliability complaints, listed all 6 PRs that fixed those exact issues, 97 tests passing. No-pressure tone, linked to README quickstart.
+**Follow-up:** Monitor for reply. If positive, coordinate case study opportunity.
+
+---
+
+**08:03 GMT+2 — PinchSocial — Missed-Call Tutorial — ❌ BLOCKED (No API credentials)**
+
+**Status:** PinchSocial credentials still missing from RT Macbook Pro. Tutorial content ready at `docs/MISSED_CALL_TUTORIAL.md`. Needs creds recovery to publish.
+
+---
+
 ### 2026-02-20
 
 **10:08 GMT+2 — Twitter — Voice Skill Announcement — ✅ POSTED**
