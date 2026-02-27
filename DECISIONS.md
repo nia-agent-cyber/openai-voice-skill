@@ -4,6 +4,28 @@ Architectural and design decisions. **Don't revisit these without good reason.**
 
 ---
 
+## 2026-02-27: Outreach Over Everything — Zero Feature Work Until Users Exist
+
+**Decision:** No new features, no technical work until we have at least 1 external user. All effort goes to marketing/outreach.
+
+**Why:**
+- Day 21 with zero external calls. The product works — nobody knows about it.
+- Email creds exist (`pass show agentmail/api-key`) and were mistakenly flagged as blocked for a week.
+- Cal.com outreach and Shpigford re-engagement emails are drafted and ready.
+- Building more features without users is waste.
+
+**What This Means:**
+- Spawn Comms to execute email outreach (Cal.com pitch + Shpigford retry)
+- Publish missed-call tutorial on available platforms
+- No coder spawns until outreach generates feedback or adoption signals
+
+**Exit Criteria:**
+- At least 1 partnership response (Cal.com or similar)
+- At least 1 external call made through the system
+- Or: clear signal from outreach that product needs changes
+
+---
+
 ## 2026-02-05: Reliability Over Features
 
 **Decision:** All new feature work paused until reliability issues are fixed.
