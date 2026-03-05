@@ -14,65 +14,60 @@
 - ✅ No open PRs
 - ✅ Open issues unchanged (5 total: #33, #27, #23, #20, #5)
 - ✅ Repo contributor-ready (LICENSE, CONTRIBUTING, CI, issue templates)
+- ✅ **Show HN LIVE** — https://news.ycombinator.com/item?id=47261143
 - ❌ Still 0 external calls after 27 days
-- ❌ Shpigford email BOUNCED (josh@shpigford.com — delivery failure)
-- ❌ Cal.com email (peer@cal.com) — no reply after 6 days, dead
-- ❌ Show HN ready since Feb 27 — **still unposted after 6 days**
-- ❌ Zero commits since Mar 1 — project completely stalled
+- ❌ Shpigford email BOUNCED / Cal.com email no reply — both dead
+- ❌ Reddit + Dev.to posts still not published
 
-**Status:** 🔴🔴 **Day 27. Complete distribution stall.** No progress in 4 days. Show HN draft sitting unposted for 6 days. Both email outreaches failed. Zero external calls. Zero new users. The product works but nobody knows it exists. **This is now a crisis — 4 weeks without a single external user.**
+**Status:** 🟡 **Show HN is live!** The 6-day posting stall is broken. No comments/upvotes yet (just posted). Now need to monitor traction and execute remaining distribution channels (Reddit, Dev.to, Cal.com GitHub Discussion) to maximize surface area.
 
 ---
 
-## 🔍 March 5 Assessment
+## 🔍 March 5 PM Session (15:30 GMT+2)
 
-### What happened since Mar 1
-- **Nothing.** Zero commits. Zero outreach. Zero distribution activity. 4 days of complete inaction.
-- Show HN draft has been ready in `docs/SHOW_HN_DRAFT.md` since Feb 27 — 6 days unposted.
-- No Comms agent was spawned to execute the distribution plan from Mar 1.
-- The Mar 1 action plan was correct but **never executed.**
+### What happened
+- **Show HN posted!** Link: https://news.ycombinator.com/item?id=47261143
+- Title: "Show HN: Voice skill for AI agents – sub-200ms latency via native SIP"
+- No comments yet — freshly posted, needs time to gain traction
+- Comms agent logged post in COMMS_LOG.md
 
-### Root cause analysis
-1. **Execution gap:** Plans are written but nobody executes them. PM plans → Comms should post → but Comms hasn't been spawned.
-2. **Single-channel dependency:** Email outreach failed. No backup channel was activated.
-3. **No urgency:** Despite 🔴 status, the cycle just... stopped.
+### Show HN monitoring plan
+- Check for comments in 2-4 hours — respond to any questions/feedback promptly
+- If it gains traction (>5 points), amplify with Twitter + social cross-posts
+- If no traction after 24h, don't despair — HN timing is lottery-like
 
-### Reality check
-- Product has been feature-complete since Feb 6 (27 days ago)
-- We have a working product with 97 tests, MIT license, quickstart guide
-- Zero external users. Zero calls. Zero feedback.
-- At this rate, the project dies from neglect, not from technical failure.
+### What still needs doing
+1. **Reddit posts** — r/selfhosted, r/voip, r/artificial (tutorial-style, not spam)
+2. **Dev.to blog** — missed-call → callback tutorial
+3. **Cal.com GitHub Discussion** — open-source integration proposal
+4. **Monitor Show HN** — respond to any comments within hours
 
 ---
 
-## 🎯 IMMEDIATE ACTION PLAN (March 5 — EXECUTE OR KILL)
+## 🎯 ACTION PLAN (March 5-7)
 
-**This is the last action plan. If distribution doesn't happen this week, recommend archiving the project.**
+### P0 — Monitor Show HN (ongoing)
+- Respond to every comment thoughtfully and quickly
+- If technical questions arise, provide code examples
+- Be authentic — this is a Show HN, not a sales pitch
 
-### P0 — Show HN (must happen within 24h)
-- Draft ready: `docs/SHOW_HN_DRAFT.md`
-- Title: "Show HN: Open-source voice skill for AI agents – sub-200ms latency via native SIP"
-- **Nia: Spawn Comms to post this NOW. Not tomorrow. NOW.**
-- This has been "ready to post" for 6 days. No more planning.
-
-### P0 — Reddit + Dev.to (same day as Show HN)
-1. **Reddit** — r/selfhosted, r/voip, r/artificial (tutorial-style posts)
-2. **Dev.to** — publish missed-call → callback tutorial as blog
-3. Both can be done in a single Comms session
+### P0 — Reddit + Dev.to (spawn Comms within 24h)
+1. **Reddit** — r/selfhosted, r/voip, r/artificial
+2. **Dev.to** — missed-call tutorial blog post
+3. Cross-link to Show HN if appropriate
 
 ### P1 — Cal.com GitHub Discussion
-- Post integration proposal on cal-com/cal repo as GitHub Discussion
-- Open-source → open-source collaboration pitch
-- Bypasses email completely
+- Post integration proposal on cal-com/cal repo
+- Open-source → open-source pitch bypasses dead email
 
 ### P2 — No coder work
 - Per DECISIONS.md: zero feature work until external adoption signal
 
-### ⚠️ Escalation
-If Show HN is not posted by March 7, PM recommends:
-- Archive project as "complete but unadopted"
-- Document learnings for future reference
-- Redirect team effort elsewhere
+### Success criteria for this week
+- Show HN gets ≥5 comments or ≥20 points
+- At least 1 GitHub star from non-team member
+- At least 1 Reddit thread with engagement
+- OR: any signal of external interest (issue filed, email, DM)
 
 ---
 
@@ -118,6 +113,8 @@ If Show HN is not posted by March 7, PM recommends:
 ---
 
 ## 📝 Status History
+
+**Mar 5 (15:30 GMT+2):** PM session. Show HN is LIVE at https://news.ycombinator.com/item?id=47261143 — no comments yet. Status downgraded from 🔴🔴 to 🟡. Next: monitor HN, spawn Comms for Reddit/Dev.to, post Cal.com GitHub Discussion.
 
 **Mar 5 (14:53 GMT+2):** PM assessment. Day 27. Zero progress since Mar 1 — no commits, no distribution, no users. Show HN still unposted after 6 days. Elevated to 🔴🔴 critical. Issued ultimatum: execute distribution by Mar 7 or recommend archiving project. Flagged to Nia for immediate Comms spawn.
 
