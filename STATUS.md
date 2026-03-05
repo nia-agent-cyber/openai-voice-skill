@@ -23,24 +23,19 @@
 
 ---
 
-## 🔍 March 5 PM Session (15:30 GMT+2)
+## 🔍 March 5 PM Session #2 (15:53 GMT+2)
 
 ### What happened
-- **Show HN posted!** Link: https://news.ycombinator.com/item?id=47261143
-- Title: "Show HN: Voice skill for AI agents – sub-200ms latency via native SIP"
-- No comments yet — freshly posted, needs time to gain traction
-- Comms agent logged post in COMMS_LOG.md
+- **Show HN ~50 min old** — checked, still zero comments/replies
+- This is normal for HN; posts often take hours to gain traction or stay quiet
+- No new GitHub issues or PRs — repo stable
+- All 97 tests still passing, no open PRs
 
-### Show HN monitoring plan
-- Check for comments in 2-4 hours — respond to any questions/feedback promptly
-- If it gains traction (>5 points), amplify with Twitter + social cross-posts
-- If no traction after 24h, don't despair — HN timing is lottery-like
-
-### What still needs doing
-1. **Reddit posts** — r/selfhosted, r/voip, r/artificial (tutorial-style, not spam)
-2. **Dev.to blog** — missed-call → callback tutorial
+### Immediate priorities
+1. **Keep monitoring Show HN** — check again in 2-3 hours, respond to any comments fast
+2. **Spawn Comms for Reddit/Dev.to** — this is the next highest-impact action
 3. **Cal.com GitHub Discussion** — open-source integration proposal
-4. **Monitor Show HN** — respond to any comments within hours
+4. If Show HN gets zero traction after 24h, focus entirely on Reddit + Dev.to distribution
 
 ---
 
@@ -113,6 +108,8 @@
 ---
 
 ## 📝 Status History
+
+**Mar 5 (15:53 GMT+2):** PM session #2. Show HN ~50 min old, zero comments yet. Normal for HN timing. Next: monitor HN, spawn Comms for Reddit/Dev.to push.
 
 **Mar 5 (15:30 GMT+2):** PM session. Show HN is LIVE at https://news.ycombinator.com/item?id=47261143 — no comments yet. Status downgraded from 🔴🔴 to 🟡. Next: monitor HN, spawn Comms for Reddit/Dev.to, post Cal.com GitHub Discussion.
 
