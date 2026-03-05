@@ -9,6 +9,13 @@
 - **Time:** 2026-03-05 15:01 GMT+2
 - **Content:** Full description with tech stack, use case (missed-call callback), 97 tests, MIT licensed
 
+### ✅ Cal.com GitHub Discussion — POSTED
+- **Title:** Integration idea: AI voice agent for missed-call auto-callback → Cal.com booking
+- **URL:** https://github.com/calcom/cal.com/discussions/28291
+- **Platform:** GitHub Discussions (calcom/cal.com repo, "Other" category)
+- **Time:** 2026-03-05 16:34 GMT+2
+- **Content:** Open-source integration proposal. Framed as missed-call callback using Cal.com webhooks + API v2 for slot checking and booking. Includes flow diagram, community questions, and link to our repo.
+
 ### ❌ Reddit — BLOCKED
 - **Reason:** No Reddit account credentials available in browser or password store
 - **Planned subreddits:** r/selfhosted, r/opensource, r/artificial
