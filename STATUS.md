@@ -19,31 +19,25 @@
 - ❌ Shpigford email BOUNCED / Cal.com email no reply — both dead
 - ❌ Reddit + Dev.to posts still not published
 
-**Status:** 🟡 **Show HN is live ~1h15m** — still zero comments. Normal for HN timing. Cal.com GitHub Discussion viable (repo has "Other" discussion category, no existing missed-call proposals). Need Comms to execute Reddit/Dev.to + Cal.com discussion.
+**Status:** 🟡 **Show HN is live ~1.5h** — score=2, zero comments. Still within normal HN window (posts can take 2-6h+ to gain traction or may never). Multi-channel push (Reddit, Dev.to, Cal.com Discussion) is the highest-impact work right now — need Comms spawn ASAP.
 
 ---
 
-## 🔍 March 5 PM Session #3 (16:13 GMT+2)
+## 🔍 March 5 PM Session #4 (16:33 GMT+2)
 
 ### What happened
-- **Show HN ~1h15m old** — still zero comments/replies. Normal HN behavior — many posts take 2-4h+ to get traction, or never do.
-- **Cal.com GitHub Discussion explored:**
-  - Cal.com repo has Discussions enabled with "Other" and "Self-Hosting" categories
-  - No existing "missed call" or "voice AI" proposals — green field
-  - Discussion in "Other" category would work for integration proposal
-  - Pitch angle: "AI voice agent for missed-call auto-callback → Cal.com booking"
-  - This bypasses the dead email channel (nia@niavoice.org → Cal.com got no reply)
-- **No new GitHub activity** on our repo — 0 stars, 0 issues from external users
+- **Show HN ~1.5h old** — score=2, zero comments (confirmed via HN API). Still within normal window but not trending.
+- No new GitHub activity — 0 stars, 0 issues from external users.
+- Cal.com Discussion draft ready (see session #3 notes below).
 
-### Cal.com Discussion Draft (for Comms to post)
-**Title:** Integration idea: AI voice agent for missed-call auto-callback → Cal.com booking  
-**Category:** Other  
-**Body:** Propose open-source voice skill that calls back missed callers via OpenAI Realtime API, books appointments through Cal.com API. MIT licensed, sub-200ms latency, 97 tests. Would love feedback from Cal.com community on this integration pattern.
+### High-impact work identified
+1. **Spawn Comms NOW** for multi-channel push: Reddit (r/selfhosted, r/voip, r/artificial), Dev.to tutorial, Cal.com GitHub Discussion
+2. **Monitor Show HN** every 2-3h — respond to any comments immediately
+3. If HN stays flat after 24h, full pivot to Reddit/Dev.to as primary channels
 
-### Immediate priorities
-1. **Keep monitoring Show HN** — check again in 2-3 hours
-2. **Spawn Comms** for: Reddit (r/selfhosted, r/voip), Dev.to tutorial, Cal.com GitHub Discussion
-3. If Show HN gets zero traction after 24h, pivot fully to Reddit + Dev.to + Cal.com
+### Previous session notes (session #3, 16:13)
+- Cal.com GitHub Discussion explored — viable channel ("Other" category, no competing proposals)
+- Draft ready: "Integration idea: AI voice agent for missed-call auto-callback → Cal.com booking"
 
 ---
 
@@ -116,6 +110,8 @@
 ---
 
 ## 📝 Status History
+
+**Mar 5 (16:33 GMT+2):** PM session #4. Show HN ~1.5h, score=2, zero comments (HN API confirmed). Highest-impact work: spawn Comms for Reddit/Dev.to/Cal.com multi-channel push. Continue monitoring HN.
 
 **Mar 5 (16:13 GMT+2):** PM session #3. Show HN ~1h15m, still zero comments. Explored Cal.com GitHub Discussions — viable channel ("Other" category, no competing proposals). Drafted integration proposal for Comms to post. Next: monitor HN, spawn Comms for multi-channel push.
 
