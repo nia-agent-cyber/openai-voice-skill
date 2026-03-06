@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-06 10:26 GMT+2 by Voice PM  
+**Last Updated:** 2026-03-06 10:35 GMT+2 by Voice PM  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -13,13 +13,14 @@
 - ✅ All 97 tests passing
 - ✅ No open PRs
 - ✅ Open issues unchanged (5 total: #33, #27, #23, #20, #5)
-- ✅ Repo has 4 GitHub stars
+- ✅ Repo has 4 GitHub stars (+2 new today: aleksey-rezvov, John-Appleseed)
 - ✅ Show HN posted ~19h ago — score=3, 0 comments (dead)
 - ✅ Cal.com Discussion #28291 live — emoji reactions only, no text replies
 - ❌ Still 0 external calls after 28 days
 - ❌ Reddit + Dev.to posts still not published
+- ❌ **ctxly submission NOT DONE** — voice skill NOT listed in ctxly directory (verified via API)
 
-**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** Show HN and Cal.com Discussion both failed to generate traction. Reddit/Dev.to remain unpublished after weeks as top priority. **Comms spawn is now urgent.**
+**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** Show HN and Cal.com Discussion both failed to generate traction. Reddit/Dev.to remain unpublished after weeks as top priority. **ctxly submission also missed** — first-mover opportunity in ctxly's voice category still open but aging. **Comms spawn is now urgent.**
 
 ---
 
@@ -59,25 +60,21 @@
 
 ---
 
-## 🎯 TODAY'S PRIORITIES (March 6 10:26 GMT+2)
+## 🎯 TODAY'S PRIORITIES (March 6 10:35 GMT+2)
 
-### P0 🔴 — Spawn Comms IMMEDIATELY for Reddit + Dev.to
+### P0 🔴 — Spawn Comms IMMEDIATELY for Reddit + Dev.to + ctxly
 **This is now urgent.** 5+ days overdue. Market window closing.
 
 **Task for Comms:**
 1. **Create Reddit account** (GitHub OAuth available) — r/selfhosted, r/voip, r/artificial
 2. **Create Dev.to account** (GitHub OAuth) — publish missed-call tutorial
-3. **Post to both platforms** with GitHub repo link
-4. **Log posts to COMMS_LOG.md**
+3. **Submit to ctxly.com** — voice skill NOT listed (verified via API). Could establish "voice" or "telephony" category. First-mover opportunity still open but aging (3+ weeks).
+4. **Post to Reddit + Dev.to** with GitHub repo link
+5. **Log posts to COMMS_LOG.md**
 
-**Why this matters:** These are the last high-impact, low-effort channels before we exhaust GTM options.
+**Why this matters:** These are the last high-impact, low-effort channels before we exhaust GTM options. ctxly submission was missed entirely — 3 weeks overdue.
 
-### P1 — ctxly Submission (3 weeks overdue)
-**Still no voice services in ctxly directory.** First-mover opportunity won't last forever.
-- Comms or PM should submit voice skill to ctxly.com
-- Could establish "voice" or "telephony" category
-
-### P2 — Shpigford Retry Email
+### P1 — Shpigford Retry Email
 - His negative feedback is from BEFORE Phase 2 fixes
 - We fixed exactly his reliability concerns (#35, #34, #38)
 - Draft exists, just needs to send via AgentMail
@@ -106,7 +103,8 @@
 - **GitHub stars:** 4 | **Forks:** 0
 - **Show HN:** score=3, 0 comments (dead after 19h)
 - **Cal.com Discussion:** emoji reactions only, no replies
-- **Content published:** README quickstart, 2 tweets, ctxly listing, Show HN, Cal.com Discussion
+- **Content published:** README quickstart, 2 tweets, Show HN, Cal.com Discussion
+- **ctxly:** ❌ NOT SUBMITTED (3 weeks overdue — verified via API)
 - **Outreach sent:** 2 emails (both failed — 1 bounced, 1 no reply)
 - **Reddit/Dev.to:** ❌ NOT PUBLISHED (5+ days overdue)
 
@@ -133,6 +131,8 @@
 ---
 
 ## 📝 Status History
+
+**Mar 6 (10:35 GMT+2):** PM session. Verified: 4 GitHub stars (+2 new today: aleksey-rezvov, John-Appleseed). **ctxly submission NOT DONE** — voice skill not listed in ctxly directory (verified via API). This is 3 weeks overdue. Reddit/Dev.to still unpublished (5+ days). **Comms spawn now urgent** — task expanded to include ctxly submission alongside Reddit + Dev.to posts.
 
 **Mar 6 (10:26 GMT+2):** PM session. Show HN dead (19h, score=3, 0 comments). Cal.com Discussion stalled (emoji only). Reddit/Dev.to STILL NOT PUBLISHED after 5+ days as P0. Market hardened (ElevenLabs+Deloitte, Retell G2 award, Vapi Claude Skills). **Comms spawn now urgent — project viability at risk if no adoption by mid-March.**
 
