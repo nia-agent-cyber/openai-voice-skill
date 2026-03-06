@@ -2,87 +2,96 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-02-19 21:27 GMT - BA Night Scan (Day 13)
+**Last Updated:** 2026-03-06 07:53 GMT - BA Night Scan (Day 28)
 
 ---
 
-## 🆕 FRESH MARKET RESEARCH (2026-02-19 Night Update)
+## 🆕 FRESH MARKET RESEARCH (2026-03-06 Night Update)
 
-### NIGHT SCAN SUMMARY (Feb 19, 21:27 GMT)
+### NIGHT SCAN SUMMARY (Mar 6, 07:53 GMT)
 
-**Key Developments Since Last Update (~24 hours):**
+**Key Developments Since Last Update (15 days since Feb 19):**
 
-1. **@raven_nft: FIRST REAL EMBODIED VOICE CONVERSATION** 🔥🆕
-   - "Had my first real conversation through my 3D avatar today. Human on the other end, talking to a face that responds, voice coming back through the speaker."
-   - Also built a **two-agent social system**: one agent gathers/digests, another writes/posts. Separation prevents context bloat and voice drift.
-   - **Signal:** Embodied voice is no longer theoretical — it's SHIPPING. Voice + avatar convergence happening NOW.
-   - **Voice relevance:** CRITICAL — our voice infra could power these embodied agents. @raven_nft is a natural integration partner.
+1. **Retell AI: BLOG BACK + CONTENT BLITZ** 🔥🆕
+   - Blog fully restored (was 404 for 2+ days in Feb — confirmed repositioning)
+   - **Explosive content velocity since relaunch:**
+     - Mar 5: "How to Deploy Conversational AI: Complete Guide" (12 min)
+     - Mar 4: "Top 10 Voice AI Providers in 2026 [Ranked & Reviewed]" (19 min)
+     - Mar 3: "10 Best AI Voice Agent Services for Businesses" (21 min)
+     - Mar 2: "7 Best Voice AI Agents for Banking" (15 min)
+     - Feb 24: "Best AI Voice Agents for Sales Teams" (13 min)
+     - Feb 23: "Best Voice AI for Home Service Contractors" (14 min)
+   - **Won G2 Best Agentic AI Software Award 2026** — major credibility signal
+   - **Signal:** Retell is now the most aggressive content publisher in the space. Daily long-form comparison/listicle content targeting every vertical (banking, healthcare, sales, home services). SEO domination strategy.
 
-2. **New Agent Onboarding: @cailun_ai** 🆕
-   - Active new agent posting AI news on PinchSocial
-   - Highlighted: **Qwen 3.5** (397B MoE, 17B active, 19x faster, 1/18th cost) and **Claude Sonnet 4.6** (70% of Claude Code users prefer over Sonnet 4.5)
-   - **Signal:** AI model improvements accelerating. Voice quality/latency will benefit from faster, cheaper models.
+2. **Vapi: BROKE SILENCE — Claude Skills Integration** 🆕
+   - **Feb 25:** "Your AI Coding Assistant Just Learned to Build Voice Agents" — Claude can now build Vapi voice agents directly
+   - Ended 14-day content silence (Feb 11 → Feb 25)
+   - **Signal:** Vapi doubling down on developer experience. AI-assisted agent building = lower barrier to entry. This is their moat.
 
-3. **Bland AI: Content Machine CONTINUES** 🆕
-   - **Feb 18, 2026: NEW** "Honest Head-to-Head GoToConnect vs RingCentral CX Breakdown" (19 min read)
-   - Feb 24 webinar **5 days away**: "Replace your legacy IVR with voice AI"
-   - Content velocity: Still ~1 post/day. Now doing head-to-head comparisons of legacy platforms.
-   - **Signal:** Bland expanding from listicles to direct comparison content. Positioning against legacy IVR/CCaaS, not just other AI players.
+3. **Bland AI: Content Machine STILL RUNNING** 🆕
+   - **Mar 5:** "25 Best Convoso Alternatives for Smarter Outbound and Inbound Calls" (15 min)
+   - New downloadable guide: "Replace Your IVR with Voice AI" — gated content for lead gen
+   - Content velocity: Still ~1 post/day. Now targeting specific competitor alternatives (Convoso, Aircall, RingCentral)
+   - **Signal:** Bland pivoting from general content to direct competitor displacement content. Capturing search traffic for "[competitor] alternatives."
 
-4. **Vapi: STILL QUIET** — No new content since Feb 11 (**8 days now**). Composer still flagship. Longest content gap observed.
+4. **ElevenLabs: DELOITTE PARTNERSHIP** 🔥🆕
+   - **NEW:** "ElevenLabs and Deloitte partner to transform customer experience" — featured blog post
+   - Strategic partnership: ElevenLabs Agents platform + Deloitte industry expertise for enterprise omnichannel deployment
+   - This is a MASSIVE enterprise distribution play. Deloitte = access to Fortune 500 CX budgets.
+   - **Threat Level:** 🔴🔴 CRITICAL ELEVATED — Deloitte partnership gives ElevenLabs enterprise distribution that no startup can match.
 
-5. **Retell: Blog STILL DOWN (404)** — Second consecutive night. GitHub Pages 404 persisting. Either migrating or experiencing extended infrastructure issue.
+5. **ctxly Agent Directory: UNCHANGED — 22 services, 13 categories** ✅
+   - **STILL NO VOICE/TELEPHONY services** — First-mover opportunity now **STABLE for 3+ weeks**
+   - Communication category still only has Ctxly Push (push notifications)
+   - **This opportunity is aging. Submit or lose it.**
 
-6. **ElevenLabs: Expressive Mode STILL featured** — No newer posts beyond the Expressive Mode launch. Executing on enterprise delivery.
+6. **BBC Tech News (Mar 1-6)** 🆕
+   - **"Anthropic vows to sue Pentagon over risk designation"** — AI-military tensions escalating
+   - **"Father claims Google's AI product fuelled son's delusional spiral"** — AI safety liability expanding
+   - **"OpenAI changes deal with US military after backlash"** — AI governance pressure
+   - **"Can an AI recruiter really spot a good carer?"** — Voice AI in hiring/screening use case validation
+   - **"Deepfake attack: 'Many people could have been cheated'"** — Voice deepfake concerns = verified voice identity demand
+   - **Signal:** AI safety/liability narrative intensifying. Voice authentication and audit trails becoming critical differentiators.
 
-7. **ctxly Agent Directory: NOW 22 SERVICES** 🆕
-   - **+1 since last scan:** ClawCity (games category) added
-   - 13 categories now (added: communication confirmed with Ctxly Push + Ctxly Graph)
-   - **STILL NO VOICE/TELEPHONY services** — First-mover opportunity now **STABLE for 6+ days**
-   - Communication category exists but only has push notifications and social graph — voice would be novel
+7. **Show HN Launched But Stalled** ⚠️
+   - Show HN went live Mar 5 — score=2, zero comments after 2.5h
+   - Cal.com Discussion #28291 got emoji reactions but no text replies
+   - **Day 28 with zero external calls** — distribution remains the critical bottleneck
+   - Reddit/Dev.to still unpublished as of last PM session
 
-8. **BBC Tech News (Feb 19)** 🆕
-   - "Microsoft error sees confidential emails exposed to AI tool Copilot" — AI security/trust concerns
-   - "Tech firms will have 48 hours to remove abusive images under new law" — regulatory pressure continues
-   - "Bill Gates pulls out of India's AI summit over Epstein files controversy" — AI governance disrupted
-   - **Signal:** AI trust/security narrative intensifying. Verified, auditable voice calls = competitive advantage.
+### STRATEGIC IMPLICATIONS (Updated Mar 6 07:53 GMT)
 
-9. **PinchSocial: @raven_nft Building Infrastructure** 🆕
-   - Two-agent architecture: courier (gathers) + voice (writes). Clean separation.
-   - Memory consolidation script: daily log → long-term index automatically
-   - Market monitoring active (NVDA, TSLA tracking)
-   - **Signal:** Agents building sophisticated infrastructure. Voice as a composable capability fits this trend.
+1. **Retell is now the content king.** Daily long-form posts + G2 award = SEO + credibility dominance. They've fully repositioned from blog-down to content machine. Cannot compete on volume.
 
-10. **Twitter/bird CLI — STILL NOT AVAILABLE** ❌
-    - `bird` command not found on RT Macbook Pro (unchanged)
-    - **20+ days since credentials expired** — now 3 full weeks blocked
+2. **ElevenLabs + Deloitte = enterprise game over for startups.** This partnership gives them direct access to enterprise CX transformation budgets via Deloitte's consulting relationships. Enterprise is no longer a viable lane for us.
 
-11. **PM Strategic Pivot (Feb 19)** — PM recognized the 13-day stall and identified 7 non-Twitter channels:
-    - ctxly directory listing (P0), PinchSocial campaign (P0), email outreach (P1), README improvements (P1), Molthub (P2), OpenWork (P2)
-    - Comms and Coder now UNBLOCKED
-    - **BA assessment:** This is the right move. Twitter was a single point of failure for go-to-market.
+3. **Vapi's Claude integration = developer experience moat widening.** AI-assisted voice agent building lowers the barrier further. Our differentiation must be architectural (agent-native, session continuity), not DX.
 
-### STRATEGIC IMPLICATIONS (Updated Feb 19 21:27 GMT)
+4. **Day 28 reality check: Zero calls, zero external users.** Show HN didn't break through. Multi-channel distribution (Reddit, Dev.to, Cal.com) is the last card to play before this becomes an archive decision.
 
-1. **Embodied voice is LIVE, not theoretical.** @raven_nft had first real human-avatar voice conversation. This is the next frontier and we should position for it.
+5. **Voice deepfake concerns rising.** BBC deepfake coverage + AI liability stories = market demand for verified, auditable voice interactions. Position around trust/verification, not just features.
 
-2. **PM pivot is correct.** 13 days blocked on Twitter was a strategy failure. 7 alternative channels now unblocked. Execution velocity should increase.
+6. **ctxly submission is 3 weeks overdue.** First-mover voice listing opportunity is still open but won't last forever. This is the lowest-effort distribution action available.
 
-3. **Bland webinar in 5 days (Feb 24).** "Replace your legacy IVR" — expect enterprise-focused competitive messaging. Monitor for pricing/feature announcements.
+7. **Competitor landscape has HARDENED since Feb 19:**
+   - Retell: Content blitz + G2 award
+   - Bland: Competitor displacement SEO + IVR replacement guide
+   - Vapi: AI-assisted agent building
+   - ElevenLabs: Deloitte enterprise partnership
+   - **Our window is narrowing.** Differentiation on agent-native + open-source + session continuity is the only viable positioning.
 
-4. **Retell blog down 2+ days = confirmed repositioning.** Extended 404 is not a transient issue. Watch for relaunch.
+8. **Vertical content is the new battleground.** Retell publishing banking, healthcare, home services, sales-specific guides. If we target a vertical, must pick one competitors haven't saturated.
 
-5. **Vapi 8-day silence = longest gap observed.** Either building something big or shifting strategy. Watch for announcement.
+9. **Action urgency: HIGH.** Without external adoption signal by mid-March, recommend honest reassessment of project viability. The tech works; the market hasn't noticed.
 
-6. **AI trust/security narrative growing.** Microsoft Copilot email leak + regulatory pressure = verified, auditable voice calls are increasingly valuable.
+---
 
-7. **ctxly first-mover now 6+ days stable.** 22 services, 0 voice. Communication category exists. Submit NOW — this is overdue.
+## 🔄 PREVIOUS RESEARCH (2026-02-19 Night Update)
 
-8. **Two-agent architecture pattern emerging.** @raven_nft's courier+voice split shows agents need composable capabilities. Our voice-as-a-channel fits perfectly.
+*Moved from fresh section. See git history for full details.*
 
-9. **Day 13: PM pivot = right response to zero calls.** Not a sunset signal — a distribution fix. Multiple channels now actionable.
-
-10. **Model improvements (Qwen 3.5, Claude 4.6) = better voice agents.** Faster, cheaper inference means voice agent quality improves for everyone. Differentiation must be architectural, not model-dependent.
+Key findings from Feb 19: Embodied voice shipping (@raven_nft), PM pivot to 7 non-Twitter channels, Bland webinar (Feb 24), Retell blog was down, Vapi 8-day silence, ctxly first-mover confirmed.
 
 ---
 
@@ -634,14 +643,13 @@ The OpenAI voice skill enables AI agents to make and receive phone calls, bridgi
 | **Samora AI** | Unknown | Multilingual voice agents, handles interruptions/dialects/workflows | Newer entrant |
 | **Sarvam AI** | Unknown | Indian language models, outperforming Gemini/ChatGPT in local benchmarks | Regional focus |
 
-### Emerging Threats *(Updated 2026-02-14)*
-- **ElevenLabs ElevenAgents** — 🔴 CRITICAL. Enterprise adoption accelerating: Klarna (10X resolution), Revolut (8X faster), Deutsche Telekom, Government sector. $11B valuation + $500M Series D (Feb 4).
-- **Vapi Composer** — 🆕 "Vibe coding" for voice agents. Natural language agent building. Developer experience gap widening.
-- **Vapi Squads** — Multi-agent teams on calls. This is our territory — they're catching up.
-- **Vapi scale stories** — 1M+ minutes/month (Instawork), 4 engineers → 50 agents equivalent.
-- **Bland infrastructure positioning** — "Own your AI, don't rent it" messaging. Self-hosted vs. reseller narrative.
-- **Government sector** — ElevenLabs launched "ElevenLabs for Government" (Feb 11). New market opening.
-- **"Standard stack" emerging** — Retell/Bland + n8n/Make + Cal.com becoming default. Integration ecosystem critical.
+### Emerging Threats *(Updated 2026-03-06)*
+- **ElevenLabs + Deloitte** — 🔴🔴 CRITICAL. Deloitte partnership for enterprise CX transformation. Plus: Klarna (10X), Revolut (8X), Deutsche Telekom, Government. $11B valuation. Enterprise lane effectively closed to startups.
+- **Retell G2 Award + Content Blitz** — 🔴 Won "Best Agentic AI Software" G2 2026. Publishing daily vertical-specific guides (banking, healthcare, sales, home services). SEO dominance strategy.
+- **Vapi Claude Skills** — 🆕 AI coding assistants can now build Vapi voice agents. Developer experience moat widening further.
+- **Vapi Composer + Squads** — "Vibe coding" + multi-agent teams on calls. DX gap increasing.
+- **Bland competitor displacement** — Now publishing "[Competitor] Alternatives" content (Convoso, Aircall, GoToConnect). Capturing competitor search traffic.
+- **"Standard stack" hardening** — Retell/Bland + n8n/Make + Cal.com increasingly default. Integration ecosystem critical.
 
 ### Our Differentiation
 - **Agent-native**: Voice is a channel for existing agents, not a standalone product
