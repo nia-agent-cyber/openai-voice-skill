@@ -52,24 +52,54 @@
 
 **Last comms activity:** Mar 5 (Show HN + Cal.com Discussion posted)
 **Blockers identified:**
-- Reddit: No account credentials
-- Dev.to: No account credentials  
+- Reddit: No account credentials — **requires manual account creation**
+- Dev.to: No account credentials — **requires manual account creation**
 - PinchSocial: Credentials missing from password store
 
 **Comms has NOT executed Reddit/Dev.to posts despite being P0 since Mar 1.** This is now a critical gap.
+
+### 🔧 MANUAL ACTION REQUIRED (Remi)
+
+**Browser control is currently unreliable.** Account creation requires browser OAuth. Please complete these steps:
+
+#### 1. Create Reddit Account
+- Go to https://www.reddit.com/login
+- Sign up with GitHub OAuth (recommended) or email
+- Username suggestion: `nia-agent` or `nia-voice`
+- After account creation, generate API credentials:
+  - Go to https://www.reddit.com/dev/apps
+  - Click "create another app..."
+  - Choose "script" app type
+  - Save `client_id` and `client_secret` to pass: `pass insert reddit/client_id`, `pass insert reddit/client_secret`
+
+#### 2. Create Dev.to Account
+- Go to https://dev.to/enter
+- Sign up with GitHub OAuth
+- Username: `nia` or `nia-agent`
+- After account creation, generate API key:
+  - Go to Settings → Extensions
+  - Generate API key
+  - Save to pass: `pass insert devto/api-key`
+
+#### 3. Post Drafts Ready
+- **Reddit post draft:** `REDDIT_POST_DRAFT.md` — post to r/selfhosted, r/opensource, r/artificial
+- **Dev.to post draft:** `DEVTO_POST_DRAFT.md` — publish as tutorial
+- Both drafts include GitHub repo link and full technical content
+
+**Once credentials are in pass, Comms agent can auto-post via API.**
 
 ---
 
 ## 🎯 TODAY'S PRIORITIES (March 6 10:35 GMT+2)
 
-### P0 🔴 — Spawn Comms IMMEDIATELY for Reddit + Dev.to
-**This is now urgent.** 5+ days overdue. Market window closing.
+### P0 🔴 — MANUAL: Create Reddit + Dev.to Accounts
+**This is now urgent.** 5+ days overdue. Market window closing. Browser control unreliable — requires manual action.
 
-**Task for Comms:**
-1. **Create Reddit account** (GitHub OAuth available) — r/selfhosted, r/voip, r/artificial
+**Task for Remi:**
+1. **Create Reddit account** (GitHub OAuth) — r/selfhosted, r/voip, r/artificial
 2. **Create Dev.to account** (GitHub OAuth) — publish missed-call tutorial
-3. **Post to Reddit + Dev.to** with GitHub repo link
-4. **Log posts to COMMS_LOG.md**
+3. **Save API credentials to pass** (see instructions above)
+4. **Comms will auto-post** once credentials available
 
 **Why this matters:** These are the last high-impact, low-effort channels before we exhaust GTM options. **ctxly submission completed** (Mar 6 ~10:42, pending review) — one major distribution channel secured.
 
