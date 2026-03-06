@@ -90,6 +90,19 @@
 
 ---
 
+### 🔄 Comms Retry Attempt (2026-03-06 14:33 GMT+2)
+
+**Voice Comms subagent spawned to retry Reddit/Dev.to posting after gateway restart.**
+
+**Result:** ❌ Credentials still missing from pass store.
+- Checked: `pass ls | grep -E "(reddit|devto)"` — no entries found
+- **Status:** Blocked pending manual account creation by Remi
+- **Action:** This remains a P0 blocker — no change from previous status
+
+**Posts cannot be published until credentials are added to pass store.**
+
+---
+
 ## 🎯 TODAY'S PRIORITIES (March 6 10:35 GMT+2)
 
 ### P0 🔴 — MANUAL: Create Reddit + Dev.to Accounts

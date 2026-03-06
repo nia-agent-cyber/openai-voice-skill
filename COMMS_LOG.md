@@ -47,6 +47,26 @@ Browser control is currently unreliable (OpenClaw browser control service unreac
 
 ---
 
+## 2026-03-06 14:33 GMT+2 — Comms Retry Attempt
+
+**Action:** Voice Comms subagent spawned to retry Reddit/Dev.to posting after gateway restart.
+
+**Credential Check:**
+```bash
+pass ls | grep -E "(reddit|devto)"
+# Result: No entries found
+```
+
+**Outcome:** ❌ **BLOCKED** — Reddit and Dev.to credentials still missing from pass store.
+
+**Status:** Posts cannot be published until Remi manually:
+1. Creates Reddit account → saves `reddit/client_id` and `reddit/client_secret` to pass
+2. Creates Dev.to account → saves `devto/api-key` to pass
+
+**Next Step:** This remains a P0 manual action item for Remi. Comms will auto-post once credentials are available.
+
+---
+
 ## Previous Posts
 
 ### 2026-02-19 — Twitter
