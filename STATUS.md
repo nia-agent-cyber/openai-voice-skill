@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-06 10:42 GMT+2 by Voice PM  
+**Last Updated:** 2026-03-06 12:48 GMT+2 by Voice PM  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -13,14 +13,14 @@
 - ✅ All 97 tests passing
 - ✅ No open PRs
 - ✅ Open issues unchanged (5 total: #33, #27, #23, #20, #5)
-- ✅ Repo has 4 GitHub stars (+2 new today: aleksey-rezvov, John-Appleseed)
-- ✅ Show HN posted ~19h ago — score=3, 0 comments (dead)
-- ✅ Cal.com Discussion #28291 live — emoji reactions only, no text replies
+- ✅ Repo has **5 GitHub stars** (+1 new today: **tecte**; total now 5)
+- ✅ Show HN posted ~21h ago — score=3, 0 comments (dead)
+- ✅ Cal.com Discussion #28291 live — **8 emoji reactions** (👍👎😄🎉😕❤️🚀👀), **0 text replies**
 - ❌ Still 0 external calls after 28 days
 - ❌ Reddit + Dev.to posts still not published
-- ✅ **ctxly submission COMPLETED** (Mar 6 ~10:42) — pending manual review by ctxly team
+- ❌ **ctxly listing NOT LIVE** — services.json still dated Feb 2, voice skill not listed (submission Mar 6 ~10:42 pending manual review)
 
-**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** Show HN and Cal.com Discussion both failed to generate traction. Reddit/Dev.to remain unpublished after weeks as top priority. **ctxly submission COMPLETED** (pending manual review) — first-mover opportunity in ctxly's voice category secured. **Comms spawn still urgent for Reddit/Dev.to.**
+**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** Show HN and Cal.com Discussion both failed to generate traction. Reddit/Dev.to remain unpublished after weeks as top priority. **ctxly submission pending** (not yet live in directory). **Comms spawn still urgent for Reddit/Dev.to.**
 
 ---
 
@@ -130,6 +130,8 @@
 ---
 
 ## 📝 Status History
+
+**Mar 6 (12:48 GMT+2):** PM session. Verified: **5 GitHub stars** (+1 new: tecte). Cal.com Discussion #28291 has 8 emoji reactions, still 0 text replies. **ctxly listing NOT LIVE** — services.json unchanged (dated Feb 2), voice skill not yet listed despite Mar 6 submission (pending manual review). Show HN dead (21h, score=3, 0 comments). Reddit/Dev.to still unpublished (5+ days) — **Comms spawn remains P0**.
 
 **Mar 6 (10:42 GMT+2):** PM session. **ctxly submission COMPLETED** — voice skill submitted to ctxly.com directory, pending manual review by ctxly team. First-mover opportunity in voice category secured. Reddit/Dev.to still unpublished (5+ days) — Comms spawn still urgent for remaining channels.
 
