@@ -4,6 +4,32 @@ Architectural and design decisions. **Don't revisit these without good reason.**
 
 ---
 
+## 2026-03-06: Distribution-Only Until First External Call (URGENT)
+
+**Decision:** Zero feature work, zero technical improvements until we have at least 1 external user making a call. All effort goes to distribution via Reddit + Dev.to + ctxly.
+
+**Why:**
+- Day 28 with zero external calls. Product is reliable (97 tests passing) but invisible.
+- Show HN failed (score=3, 0 comments after 19h). Cal.com Discussion stalled (emoji only).
+- Reddit + Dev.to identified as P0 on Mar 1 — still not published 5+ days later.
+- Market has hardened: ElevenLabs+Deloitte (enterprise closed), Retell G2 award + daily content (SEO domination), Vapi Claude Skills (DX moat widening).
+- Without adoption signal by mid-March, project viability reassessment recommended.
+
+**What This Means:**
+- Spawn Comms immediately to execute Reddit + Dev.to posts (create accounts if needed)
+- Submit to ctxly directory (first-mover voice category still available)
+- Retry Shpigford email (his feedback was pre-Phase 2 fixes)
+- No coder spawns, no QA spawns, no technical work of any kind
+
+**Exit Criteria:**
+- At least 1 external call made through the system
+- Or: clear signal from distribution efforts that product needs changes
+- Or: mid-March viability decision point
+
+**Decision Rationale:** Technical work is complete. Distribution is the only bottleneck. Market window is narrowing — urgency is critical.
+
+---
+
 ## 2026-02-27: Outreach Over Everything — Zero Feature Work Until Users Exist
 
 **Decision:** No new features, no technical work until we have at least 1 external user. All effort goes to marketing/outreach.
