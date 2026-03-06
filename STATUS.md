@@ -174,6 +174,8 @@
 
 ## 📝 Status History
 
+**Mar 6 (22:10 GMT+2):** Night mode check. Verified: **5 GitHub stars** (no change). **ctxly listing NOT LIVE** — services.json still dated Feb 2, voice skill not listed (~11.5h since submission at 10:42, still pending manual review). **Cal.com Discussion #28291** — 8 emoji reactions, 0 text replies (unchanged). Show HN dead (~24h, score=3, 0 comments). Reddit/Dev.to still unpublished (5+ days) — **Comms spawn remains P0**. **Day summary:** Zero traction across all channels. ctxly review pending >11h. Distribution bottleneck critical. No external calls after 28 days.
+
 **Mar 6 (16:33 GMT+2):** EOD check. Verified: **5 GitHub stars** (no change). **ctxly listing NOT LIVE** — services.json still dated Feb 2, voice skill not listed (~6h since submission, still pending manual review). **Cal.com Discussion** — unable to verify (404 errors, browser unavailable); last known: 8 emoji reactions, 0 text replies. Show HN dead (24h+, score=3, 0 comments). Reddit/Dev.to still unpublished (5+ days) — **Comms spawn remains P0**. **Day summary:** No traction on any channel. ctxly review pending. Distribution bottleneck critical.
 
 **Mar 6 (15:13 GMT+2):** PM session. Verified: **5 GitHub stars** (no change since midday). Cal.com Discussion #28291 still has 8 emoji reactions, **0 text replies** (unchanged). **ctxly listing NOT LIVE** — services.json still dated Feb 2, voice skill not listed (~5h since submission, still pending manual review). Show HN dead (21h, score=3, 0 comments). Reddit/Dev.to still unpublished (5+ days) — **Comms spawn remains P0**.
