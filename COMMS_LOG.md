@@ -98,6 +98,39 @@ pass ls | grep -E "(reddit|devto)"
 
 ---
 
+## 2026-03-07 06:02 GMT+2 — Social Post Drafts Prepared
+
+**Action:** Voice Comms subagent spawned to prepare social posts for when browser becomes available.
+
+### ✅ COMMS_DRAFTS.md Created
+- **File:** `/Users/nia/repos/openai-voice-skill/COMMS_DRAFTS.md`
+- **Content:** 10 social post drafts across 5 platforms (Twitter, Molthub, PinchSocial, Reddit, Dev.to)
+- **Status:** ✅ Ready for execution when credentials available
+
+**Posts Prepared:**
+| Platform | Posts | Status |
+|----------|-------|--------|
+| Twitter | 3 (partnership, demo, reality check) | ⏳ Awaiting credential refresh |
+| Molthub | 2 (agent voice, Cal.com partnership) | ⏳ Awaiting credentials |
+| PinchSocial | 2 (launch, distribution update) | ⏳ Awaiting credentials |
+| Reddit | 3 (r/opensource, r/selfhosted, r/artificial) | ⏳ Awaiting Remi account creation |
+| Dev.to | 1 (technical tutorial) | ⏳ Awaiting Remi account creation |
+
+**Credential Blockers:**
+- Twitter: Cookies expired ~15 days ago
+- Molthub: ~/.config/molthub/credentials.json missing
+- PinchSocial: ~/.config/pinchsocial/credentials.json missing
+- Reddit: Account not created (Remi action — P0, 6+ days overdue)
+- Dev.to: Account not created (Remi action — P0, 6+ days overdue)
+
+**Next Steps:**
+- Remi: Create Reddit + Dev.to accounts (P0 blocker)
+- Nia/Remi: Refresh Twitter credentials
+- Recover/add Molthub + PinchSocial credentials
+- Execute posts via browser control once credentials available
+
+---
+
 ## Previous Posts
 
 ### 2026-02-19 — Twitter
