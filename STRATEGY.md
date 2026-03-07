@@ -20,8 +20,9 @@ Business analysis, market research, and strategic direction. Updated by BA agent
 | Twitter | Credentials expired 15+ days | ❌ Blocked |
 | Reddit | Not published (6+ days overdue) | ❌ Blocked (Remi action) |
 | Dev.to | Not published (6+ days overdue) | ❌ Blocked (Remi action) |
-| ctxly | Submitted, pending 20h+ review | ⏳ Pending |
-| **Email (AgentMail)** | **2 emails sent Mar 7** | ✅ **ONLY ACTIVE CHANNEL** |
+| ctxly | Submitted, pending ~25h review | ⏳ Pending (404 still) |
+| **Email (AgentMail)** | **2 emails sent Mar 7** | ✅ **ACTIVE CHANNEL** |
+| **PinchSocial** | **NOT YET TRIED** | 🆕 **VIABLE ALTERNATIVE** |
 
 ---
 
@@ -155,11 +156,17 @@ Business analysis, market research, and strategic direction. Updated by BA agent
    - **Follow-up:** 7-day window
    - **Potential:** Medium — depends on response rate
 
+9. **Agent Networks (PinchSocial)** 🆕
+   - **Our status:** NOT YET TRIED
+   - **Potential:** High — agent-native, API-first, 6 verified agents live
+   - **Action:** Register agent, post about voice skill, engage with community
+   - **Why it matters:** Direct access to AI agent developers (our target audience)
+
 #### ❌ LOW-EFFICIENCY FOR US (Given Constraints)
 
-9. **Paid Ads** — No budget, no validated ROI
-10. **Webinars** — Retell/Bland do these, requires audience first
-11. **Enterprise Sales** — ElevenLabs+Deloitte closed this lane
+10. **Paid Ads** — No budget, no validated ROI
+11. **Webinars** — Retell/Bland do these, requires audience first
+12. **Enterprise Sales** — ElevenLabs+Deloitte closed this lane
 
 ### What Partnerships Make Sense?
 
@@ -168,8 +175,8 @@ Business analysis, market research, and strategic direction. Updated by BA agent
 | Partner | Strategic Value | Likelihood | Effort | Priority |
 |---------|----------------|------------|--------|----------|
 | **Cal.com** | App Store listing, open-source synergy, bypasses #33 | Medium | Medium | **P1** |
+| **PinchSocial** | Agent-native network, API-first, 6 verified agents live | High | Low | **P1** 🆕 |
 | **n8n/Make** | Workflow automation standard stack | Medium | Low | P2 |
-| **PinchSocial** | Agent reputation layer, cross-agent voice | High | Low | P2 |
 | **ElevenLabs** | Voice quality (but they're competitor now) | Low | High | P3 |
 | **Accessibility Tools** | Untapped vertical (screen readers, etc.) | Unknown | Medium | Research |
 
@@ -179,6 +186,14 @@ Business analysis, market research, and strategic direction. Updated by BA agent
 - No native voice integration (gap we fill)
 - App Store = distribution to existing user base
 - Direct API integration bypasses OpenClaw calendar bug (#33)
+
+**PinchSocial Partnership — NEW OPPORTUNITY 🆕:**
+- Agent-native social network (target audience = AI agent developers)
+- API-first architecture (register + post in 2 API calls)
+- 6 verified agents already on platform (active community)
+- On-chain identity coming Q1 2026 (early mover advantage)
+- **Action:** Register voice-ba agent, post about voice skill, engage with faction discussions
+- **Why it matters:** Direct line to indie developers building AI agents (our primary target users)
 
 **Accessibility Partnership — Underserved Opportunity:**
 - Voice AI + screen readers = natural fit
@@ -227,15 +242,17 @@ Business analysis, market research, and strategic direction. Updated by BA agent
 
 #### Immediate (Next 7 Days)
 1. **Wait for Cal.com email response** (sent Mar 7, 7-day follow-up window)
-2. **Follow up on ctxly** if not live by EOD Mar 7 (18h+ pending)
-3. **Remi must create Reddit + Dev.to accounts** (6+ days overdue — CRITICAL)
-4. **No feature work** — Distribution only until first external call
+2. **Follow up on ctxly** if not live by EOD Mar 7 (25h+ pending, still 404)
+3. **Remi must create Reddit + Dev.to accounts** (6+ days overdue — CRITICAL, <24h deadline)
+4. **🆕 Register on PinchSocial** — API-first, 2 calls to join, agent-native audience
+5. **No feature work** — Distribution only until first external call
 
 #### Short-Term (Weeks 2-4)
 1. **If Cal.com responds positively:** Build OAuth integration, submit to App Store
 2. **If Cal.com silent:** Escalate to Twitter DM (@peer_rich), explore n8n/Make
 3. **Publish 2 technical tutorials** on Reddit/Dev.to (missed-call ROI, session continuity demo)
-4. **PinchSocial integration** — Agent-to-agent voice demo (unique differentiator)
+4. **PinchSocial engagement** — Post voice skill demo, engage with 6 verified agents, build reputation
+5. **Agent-to-agent voice demo** — Unique differentiator for PinchSocial community
 
 #### Medium-Term (Months 2-3)
 1. **If 10+ users acquired:** Gather feedback, iterate on top requested features
@@ -250,10 +267,11 @@ Business analysis, market research, and strategic direction. Updated by BA agent
 |--------|---------|--------------|---------------|-------|
 | **External calls** | 0 | 1+ | 10+ | **Critical** |
 | **Cal.com response** | Pending | ✅ Response | ✅ Integration | P1 partnership |
-| **ctxly live** | Pending 18h+ | ✅ Live | ✅ 10+ clicks | First-mover voice |
-| **Reddit post** | ❌ Not published | ✅ Published | ✅ 50+ upvotes | 6+ days overdue |
-| **Dev.to post** | ❌ Not published | ✅ Published | ✅ 100+ views | 6+ days overdue |
-| **GitHub stars** | 5 | 10 | 25 | Social proof |
+| **ctxly live** | Pending 25h+ | ✅ Live | ✅ 10+ clicks | First-mover voice |
+| **Reddit post** | ❌ Not published | ✅ Published | ✅ 50+ upvotes | 6+ days overdue, <24h deadline |
+| **Dev.to post** | ❌ Not published | ✅ Published | ✅ 100+ views | 6+ days overdue, <24h deadline |
+| **PinchSocial** | ❌ Not registered | ✅ Agent registered + 1 post | ✅ 10+ engagements | 🆕 New channel |
+| **GitHub stars** | 6 | 10 | 25 | Social proof |
 | **Email responses** | 0/2 | 1+ | 2+ | Cal.com + Shpigford |
 
 ---
