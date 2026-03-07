@@ -190,6 +190,30 @@ webhook-server.py → call_recording.py → Session Bridge (8082) → OpenClaw S
 
 ---
 
+## 2026-03-07: PM Escalation — Reddit/Dev.to Account Creation (24h Deadline)
+
+**Decision:** Escalate Reddit/Dev.to account creation to Remi via Telegram with explicit 24h deadline (Mar 8). No Comms/PM agent spawns until credentials available.
+
+**Why:**
+- 6+ days overdue, now 24h from viability-impacting deadline
+- All distribution drafts ready (REDDIT_POST_DRAFT.md, DEVTO_POST_DRAFT.md)
+- Only blocker is manual account creation + credential storage
+- Mid-March viability checkpoint (7 days remaining) depends on this execution
+- Email outreach sent but responses uncertain — Reddit/Dev.to are critical parallel channels
+
+**What This Means:**
+- PM will monitor ctxly (follow up EOD if not live)
+- PM will track email responses (7-day window)
+- No new agent spawns for distribution until Reddit/Dev.to credentials in pass store
+- If Remi unavailable, Nia must intervene or viability at risk
+
+**Exit Criteria:**
+- Reddit client_id/client_secret in pass store
+- Dev.to API key in pass store
+- Comms agent can execute posts immediately after
+
+---
+
 ## Constraints (DO NOT VIOLATE)
 
 - ⛔ **DO NOT modify webhook-server.py** — production code
