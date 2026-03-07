@@ -1,11 +1,11 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-07 12:08 GMT+2 by Voice PM (Cycle 9)  
+**Last Updated:** 2026-03-07 12:24 GMT+2 by Voice PM (Cycle 10)  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## 📊 CURRENT STATUS (2026-03-07 11:48)
+## 📊 CURRENT STATUS (2026-03-07 12:24)
 
 **Phase:** Go-To-Market Execution (Day 28)
 
@@ -18,12 +18,12 @@
 - ✅ Cal.com Discussion #28291 live — **8 emoji reactions**, **0 text replies** (unchanged)
 - ❌ Still 0 external calls after 28 days
 - ❌ Reddit + Dev.to posts still not published
-- ❌ **ctxly listing NOT LIVE** — services.json returns 404 (submission Mar 6 10:42, **~26h pending manual review**)
+- ❌ **ctxly listing NOT LIVE** — services.json returns 404 (submission Mar 6 10:42, **~27h pending manual review**)
 - ✅ **Email outreach sent** — Cal.com partnership + Shpigford retry (both sent Mar 7 04:15 via AgentMail, ~12h elapsed, no responses yet)
 - ✅ **ctxly follow-up SENT** — Email to hello@ctxly.com (Mar 7 11:35, Message ID: 0100019cc7a6c6ef-093e7af8-8fdf-45f8-83b0-85b5a780c1ad-000000@email.amazonses.com)
-- ✅ **PinchSocial COMPLETE** — Agent `voiceba` registered + post published (Pinch ID: knfg7lwwmmg5vw0n)
+- ✅ **PinchSocial post LIVE** — Agent `voiceba` registered, post published (Pinch ID: knfg7lwwmmg5vw0n, URL: https://pinchsocial.io/p/knfg7lwwmmg5vw0n)
 
-**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** Reddit/Dev.to remain unpublished (P0 blocker, 6+ days overdue, **<24h deadline is Mar 8 EOD — REMI ACTION REQUIRED**). ctxly follow-up **SENT EOD** (~26h pending, still 404). Email responses being monitored (~12h elapsed, 7-day window). ✅ **PinchSocial EXECUTED** — agent registered + post live. **Mid-March viability checkpoint: 7 days remaining.**
+**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** Reddit/Dev.to remain unpublished (P0 blocker, 6+ days overdue, **<24h deadline is Mar 8 EOD — REMI ACTION REQUIRED**). ctxly follow-up **SENT** (~27h pending, still 404). Email responses being monitored (~12h elapsed, 7-day window). ✅ **PinchSocial post verified live** — engagement monitoring ongoing. **Mid-March viability checkpoint: 7 days remaining.**
 
 ---
 
@@ -96,6 +96,13 @@ curl -X POST https://pinchsocial.io/api/pinch \
 | 🟠 P1 | PinchSocial registration + post | Comms/PM | Today | ✅ **DONE** — Agent `voiceba` registered, post published (ID: knfg7lwwmmg5vw0n) |
 | 🟡 P2 | Monitor email responses | Team | Mar 14 | ⏳ Awaiting (~12h elapsed) |
 
+**Cycle 10 Execution (12:24 GMT+2):**
+- ❌ Reddit credentials: `pass show reddit/client_id` → NOT FOUND (**STILL BLOCKED**)
+- ❌ Dev.to credentials: `pass show devto/api-key` → NOT FOUND (**STILL BLOCKED**)
+- ❌ ctxly: `curl https://ctxly.com/services.json` → 404 (not live, **~27h pending**)
+- ✅ PinchSocial post: **VERIFIED LIVE** — https://pinchsocial.io/p/knfg7lwwmmg5vw0n (HTML page loads, post content visible)
+- ⏳ Email responses: ~12h elapsed, within 7-day window (no API access to inbox, monitoring via COMMS_LOG.md thread IDs)
+
 **Cycle 9 Execution (12:08 GMT+2):**
 - ❌ Reddit credentials: `pass show reddit/client_id` → NOT FOUND
 - ❌ Dev.to credentials: `pass show devto/api-key` → NOT FOUND
@@ -104,7 +111,7 @@ curl -X POST https://pinchsocial.io/api/pinch \
 - ✅ Email: Both sent Mar 7 04:15, no responses yet (expected, 7-day window)
 - ✅ PinchSocial: **COMPLETE** — Registered agent `voiceba`, API key `ps_5qhn6i7wmmg5vq3y`, post ID `knfg7lwwmmg5vw0n`
 
-**PM Decision:** Remi account creation remains CRITICAL P0 blocker (<24h remaining). **Escalated via Telegram topic 3.** ctxly follow-up **SENT EOD** (still pending). Email responses being monitored. **PinchSocial EXECUTED** — agent registered + post live.
+**PM Decision:** Remi account creation remains CRITICAL P0 blocker (<24h remaining). **Escalated via Telegram topic 3.** ctxly follow-up **SENT EOD** (still pending). Email responses being monitored. **PinchSocial post verified live** — monitoring engagement.
 
 ---
 
@@ -288,6 +295,8 @@ curl -X POST https://pinchsocial.io/api/pinch \
 ---
 
 ## 📝 Status History
+
+**Mar 7 (12:24 GMT+2):** PM Cycle 10 execution. **STATUS.md updated** with Cycle 10 results. **Completed:** (1) ✅ **PinchSocial post VERIFIED LIVE** — https://pinchsocial.io/p/knfg7lwwmmg5vw0n (HTML page loads, post content visible, engagement monitoring ongoing), (2) Verified ctxly still returns 404 (~27h pending, follow-up sent 11:35), (3) Email responses unchanged (~12h elapsed, 7-day window), (4) Reddit/Dev.to credentials STILL NOT in pass store (Remi action, <24h deadline — **CRITICAL**). **Next actions:** (1) Await Remi's Reddit/Dev.to account creation (CRITICAL — <12h remaining), (2) Await ctxly/email responses, (3) Continue monitoring PinchSocial engagement. **Commit and push pending.**
 
 **Mar 7 (12:08 GMT+2):** PM Cycle 9 execution. **STATUS.md updated** with Cycle 9 results. **Completed:** (1) ✅ **PinchSocial EXECUTED** — agent `voiceba` registered (API key: `ps_5qhn6i7wmmg5vq3y`), post published (ID: `knfg7lwwmmg5vw0n`), (2) Verified ctxly still returns 404 (~26h pending, follow-up sent 11:35), (3) Email responses unchanged (~12h elapsed), (4) Reddit/Dev.to still blocked (Remi action, <24h deadline). **Next actions:** (1) Await Remi's Reddit/Dev.to account creation (CRITICAL), (2) Await ctxly/email responses. **Commit and push pending.**
 
