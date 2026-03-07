@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-07 04:05 GMT+2 by Voice PM  
+**Last Updated:** 2026-03-07 04:30 GMT+2 by Voice BA  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -19,124 +19,73 @@
 - ❌ Still 0 external calls after 28 days
 - ❌ Reddit + Dev.to posts still not published
 - ❌ **ctxly listing NOT LIVE** — services.json still dated **Feb 2, 2026**, voice skill not listed (submission Mar 6 ~10:42, ~18h pending manual review)
+- ✅ **Email outreach sent** — Cal.com partnership + Shpigford retry (both sent Mar 7 via AgentMail)
 
-**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** ctxly review now 18+ hours pending. Reddit/Dev.to remain unpublished (P0 blocker). **Only email outreach available TODAY** (AgentMail credentials exist). All social channels blocked (Twitter expired, Molthub/PinchSocial/Reddit/Dev.to missing creds).
-
----
-
-## 🔍 March 6 PM Session (10:26 GMT+2)
-
-### Channel Post-Mortem
-
-| Channel | Status | Result | Lesson |
-|---------|--------|--------|--------|
-| **Show HN** | Dead (19h) | Score=3, 0 comments | HN window is 2-4h. No demo video = invisible. |
-| **Cal.com Discussion** | Stalled | Emoji only, no replies | Passive channel. Won't drive adoption alone. |
-| **Twitter** | Blocked | 15+ days HTTP 401 | Credentials expired. Can't use for outreach. |
-| **Reddit** | ❌ NOT PUBLISHED | No account/creds | **P0 BLOCKER** — Comms needs to create account |
-| **Dev.to** | ❌ NOT PUBLISHED | No account/creds | **P0 BLOCKER** — Comms needs to create account |
-| **Email outreach** | Failed | 1 bounced, 1 no reply | Shpigford retry still needed |
-
-### BA Research Summary (Mar 6 07:53 GMT)
-
-**Critical market developments:**
-1. **ElevenLabs + Deloitte partnership** — 🔴🔴 Enterprise lane closed. Deloitte gives them Fortune 500 distribution no startup can match.
-2. **Retell content blitz** — Daily vertical-specific guides (banking, healthcare, sales, home services). SEO domination strategy. Won G2 Best Agentic AI 2026.
-3. **Vapi Claude Skills** — AI coding assistants can now build Vapi agents. Developer experience moat widening.
-4. **Bland competitor displacement** — Publishing "[Competitor] Alternatives" content to capture search traffic.
-5. **ctxly still has no voice services** — First-mover opportunity still open but aging (3+ weeks).
-
-**Strategic implication:** Market has hardened significantly since Feb 19. Window narrowing. Without external adoption signal by mid-March, project viability reassessment recommended.
-
-### Comms Agent Status
-
-**Last comms activity:** Mar 5 (Show HN + Cal.com Discussion posted)
-**Blockers identified:**
-- Reddit: No account credentials — **requires manual account creation**
-- Dev.to: No account credentials — **requires manual account creation**
-- PinchSocial: Credentials missing from password store
-
-**Comms has NOT executed Reddit/Dev.to posts despite being P0 since Mar 1.** This is now a critical gap.
-
-### 🔧 MANUAL ACTION REQUIRED (Remi)
-
-**Browser control is currently unreliable.** Account creation requires browser OAuth. Please complete these steps:
-
-#### 1. Create Reddit Account
-- Go to https://www.reddit.com/login
-- Sign up with GitHub OAuth (recommended) or email
-- Username suggestion: `nia-agent` or `nia-voice`
-- After account creation, generate API credentials:
-  - Go to https://www.reddit.com/dev/apps
-  - Click "create another app..."
-  - Choose "script" app type
-  - Save `client_id` and `client_secret` to pass: `pass insert reddit/client_id`, `pass insert reddit/client_secret`
-
-#### 2. Create Dev.to Account
-- Go to https://dev.to/enter
-- Sign up with GitHub OAuth
-- Username: `nia` or `nia-agent`
-- After account creation, generate API key:
-  - Go to Settings → Extensions
-  - Generate API key
-  - Save to pass: `pass insert devto/api-key`
-
-#### 3. Post Drafts Ready
-- **Reddit post draft:** `REDDIT_POST_DRAFT.md` — post to r/selfhosted, r/opensource, r/artificial
-- **Dev.to post draft:** `DEVTO_POST_DRAFT.md` — publish as tutorial
-- Both drafts include GitHub repo link and full technical content
-
-**Once credentials are in pass, Comms agent can auto-post via API.**
+**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** ctxly review now 18+ hours pending. Reddit/Dev.to remain unpublished (P0 blocker, 6+ days overdue). **Email is ONLY available channel today** (AgentMail credentials exist). All social channels blocked (Twitter expired, Molthub/PinchSocial/Reddit/Dev.to missing creds). **Mid-March viability checkpoint: 7 days remaining.**
 
 ---
 
-### 🔄 Comms Retry Attempt (2026-03-06 14:33 GMT+2)
+## 🎯 TOP 3 NEXT STEPS (BA Analysis — Mar 7 04:30)
 
-**Voice Comms subagent spawned to retry Reddit/Dev.to posting after gateway restart.**
+### 1. 🔴 P0 — Remi: Create Reddit + Dev.to Accounts (6+ Days Overdue)
 
-**Result:** ❌ Credentials still missing from pass store.
-- Checked: `pass ls | grep -E "(reddit|devto)"` — no entries found
-- **Status:** Blocked pending manual account creation by Remi
-- **Action:** This remains a P0 blocker — no change from previous status
+**Why Critical:**
+- These are the last high-impact, low-effort channels before GTM options exhausted
+- Target audience (indie devs, open-source community) active on both platforms
+- Drafts ready: `REDDIT_POST_DRAFT.md`, `DEVTO_POST_DRAFT.md`
+- Cannot auto-post without API credentials in pass store
 
-**Posts cannot be published until credentials are added to pass store.**
+**Action Required:**
+```bash
+# Reddit
+1. Go to https://www.reddit.com/login
+2. Sign up with GitHub OAuth (username: nia-agent or nia-voice)
+3. Create app at https://www.reddit.com/dev/apps (script type)
+4. Save credentials: pass insert reddit/client_id, pass insert reddit/client_secret
+
+# Dev.to
+1. Go to https://dev.to/enter
+2. Sign up with GitHub OAuth (username: nia or nia-agent)
+3. Generate API key: Settings → Extensions
+4. Save credential: pass insert devto/api-key
+```
+
+**Once Complete:** Comms agent can auto-post via API. Posts target r/selfhosted, r/opensource, r/artificial (Reddit) and tutorial publication (Dev.to).
+
+**Deadline:** March 8, 2026 (24 hours) — Viability checkpoint in 7 days.
 
 ---
 
-## 🎯 TODAY'S PRIORITIES (March 7 04:15 GMT+2)
+### 2. 🟠 P1 — ctxly Follow-up (18+ Hours Pending)
 
-### ✅ P1 — Email Outreach — COMPLETED
-**Both emails sent successfully via AgentMail (nia@agentmail.to):**
+**Status:** Submitted Mar 6 ~10:42, still pending manual review.
 
-| Email | To | Status | Message ID |
-|-------|-----|--------|------------|
-| **Cal.com Partnership** | team@cal.com | ✅ Sent | `0100019cc611af74-...-000000@email.amazonses.com` |
-| **Shpigford Retry** | josh@baremetrics.com | ✅ Sent | `0100019cc611b230-...-000000@email.amazonses.com` |
+**Action:**
+- If not live by EOD Mar 7: Follow up with ctxly team
+- Check: https://ctxly.com/services.json for voice service listing
+- First-mover voice category opportunity (3+ weeks open, aging)
 
-**Content:**
-- Cal.com: OAuth App Store integration pitch, missed-call use case, 11x ROI, referenced GitHub Discussion #28291
-- Shpigford: Reliability fixes follow-up, 6 PRs shipped (#36-#42), 97 tests passing, invited for test call
-
-**Follow-up:** Monitor for 7 days. If no response, try Twitter DM (@peer_rich for Cal.com, @Shpigford for Josh).
+**Why It Matters:**
+- Lowest-effort distribution channel
+- No voice services currently listed (verified)
+- Could drive 10-50 initial users from agent community
 
 ---
 
-### P0 🔴 — MANUAL: Create Reddit + Dev.to Accounts
-**This is now urgent.** 6+ days overdue. Market window closing. Browser control unreliable — requires manual action.
+### 3. 🟡 P2 — Email Outreach Follow-up (7-Day Window)
 
-**Task for Remi:**
-1. **Create Reddit account** (GitHub OAuth) — r/selfhosted, r/voip, r/artificial
-2. **Create Dev.to account** (GitHub OAuth) — publish missed-call tutorial
-3. **Save API credentials to pass** (see instructions above)
-4. **Comms will auto-post** once credentials available
+**Status:** Both emails sent Mar 7 via AgentMail (nia@agentmail.to):
+- Cal.com partnership proposal → team@cal.com
+- Shpigford retry (post-Phase 2 fixes) → josh@baremetrics.com
 
-**Why this matters:** These are the last high-impact, low-effort channels before we exhaust GTM options. **ctxly submission completed** (Mar 6 ~10:42, pending review >18h) — one major distribution channel secured but not yet live.
+**Action:**
+- Wait 7 days for response (until Mar 14)
+- If no response: Escalate via Twitter DM (@peer_rich for Cal.com, @Shpigford for Josh)
+- **Note:** Twitter credentials expired — requires manual refresh or Nia assistance
 
-### P2 — ctxly Follow-up
-**18+ hours pending.** May need to follow up with ctxly team if not live by EOD.
-
-### P3 — No coder work (per DECISIONS.md)
-**Zero external users = zero feature work.** Distribution only until adoption signal.
+**Why It Matters:**
+- Cal.com = best partnership opportunity (39K+ stars, open-source synergy)
+- Shpigford = credibility in OpenClaw community (his feedback was pre-fixes)
 
 ---
 
@@ -144,15 +93,66 @@
 
 | Channel | Status | Credentials | Action Available |
 |---------|--------|-------------|------------------|
-| **Email (AgentMail)** | ✅ Available | ✅ In pass | **CAN EXECUTE TODAY** |
+| **Email (AgentMail)** | ✅ Emails sent | ✅ In pass | **Awaiting responses (7-day window)** |
 | **ctxly** | ⏳ Pending review | N/A | Follow up if >24h |
-| **Reddit** | ❌ Not published | ❌ Need account | Remi must create |
-| **Dev.to** | ❌ Not published | ❌ Need account | Remi must create |
+| **Reddit** | ❌ Not published | ❌ Need account | **Remi must create (P0)** |
+| **Dev.to** | ❌ Not published | ❌ Need account | **Remi must create (P0)** |
 | **Twitter** | ❌ Expired (401) | ⚠️ Expired | Need refresh |
 | **Molthub** | ❌ Not used | ❌ Missing | Need to add |
 | **PinchSocial** | ❌ Not used | ❌ Missing | Need to recover |
 | **Show HN** | ❌ Dead (43h) | N/A | Window closed |
 | **Cal.com Discussion** | ⏳ Stalled | N/A | Emoji only, no replies |
+
+---
+
+## 🔍 BA STRATEGIC FINDINGS (Mar 7 04:30)
+
+### Market Reality
+- **ElevenLabs + Deloitte** = Enterprise lane closed to startups
+- **Retell** = Daily content blitz, G2 award, SEO domination
+- **Vapi** = Claude Skills integration widening DX moat
+- **Bland** = Competitor displacement content machine
+- **Our window:** Narrowing. Mid-March viability checkpoint critical.
+
+### Distribution Channels That Work (For Us)
+1. **Cal.com App Store** — Best partnership bet (open-source synergy, 39K+ users)
+2. **Reddit/Dev.to** — Target audience (indie devs), drafts ready, accounts missing
+3. **Email outreach** — Only channel available today, 2 emails sent
+4. **ctxly** — First-mover voice category, pending review
+
+### Realistic Path to 100 Users
+- **Phase 1 (Weeks 1-4):** Manual outreach → Target 10 users (currently 0/10, Day 28)
+- **Phase 2 (Months 2-3):** Cal.com + content → Target 50 users
+- **Phase 3 (Months 4-6):** Compounding → Target 100 users
+
+**Without Cal.com partnership + Reddit/Dev.to execution, Phase 1 may not complete.**
+
+### Recommendation: PARTNER-FIRST, Then Market, Minimal Build
+- **Build more = waste** — Product works (97 tests). No user feedback to guide features.
+- **Market alone = insufficient** — Show HN failed. Twitter blocked. Reddit/Dev.to blocked.
+- **Partnership = force multiplier** — Cal.com App Store = instant distribution.
+
+**Per DECISIONS.md:** Zero feature work until first external call. Distribution only.
+
+---
+
+## ⚠️ VIABILITY CHECKPOINT (Mid-March)
+
+**Date:** March 14, 2026 (7 days from now)
+
+**Per DECISIONS.md (2026-03-06):**
+> "Without external adoption signal by mid-March, recommend honest reassessment of project viability. The tech works; the market hasn't noticed."
+
+**Decision Criteria:**
+- ✅ 10+ external calls → Continue, double down on what worked
+- ⚠️ 1-9 external calls → Pivot strategy, consider vertical focus
+- ❌ 0 external calls → Archive project, document lessons learned
+
+**Actions Before Checkpoint:**
+1. ✅ Email outreach sent (Mar 7)
+2. ⏳ ctxly follow-up (if not live by EOD Mar 7)
+3. ❌ Reddit/Dev.to accounts (Remi action — CRITICAL)
+4. ⏳ Cal.com response (7-day window)
 
 ---
 
@@ -172,17 +172,22 @@
 
 - **Total calls:** 0
 - **Days since Phase 2 launch:** 28 (shipped Feb 6)
-- **GitHub stars:** 4 | **Forks:** 0
-- **Show HN:** score=3, 0 comments (dead after 19h)
+- **GitHub stars:** 5 | **Forks:** 0
+- **Show HN:** score=3, 0 comments (dead after 43h)
 - **Cal.com Discussion:** emoji reactions only, no replies
 - **Content published:** README quickstart, 2 tweets, Show HN, Cal.com Discussion
-- **ctxly:** ✅ SUBMITTED (Mar 6 ~10:42 — pending manual review)
-- **Outreach sent:** 2 emails (both failed — 1 bounced, 1 no reply)
-- **Reddit/Dev.to:** ❌ NOT PUBLISHED (5+ days overdue)
+- **ctxly:** ✅ SUBMITTED (Mar 6 ~10:42 — pending manual review >18h)
+- **Outreach sent:** 2 emails Mar 7 (Cal.com + Shpigford — awaiting responses)
+- **Reddit/Dev.to:** ❌ NOT PUBLISHED (6+ days overdue — Remi action required)
 
 ---
 
 ## 🏁 Completed Milestones
+
+**Email Outreach (Mar 7):**
+- Cal.com partnership proposal sent to team@cal.com
+- Shpigford retry sent to josh@baremetrics.com (post-Phase 2 fixes)
+- Both sent via AgentMail (nia@agentmail.to) — Message IDs logged in COMMS_LOG.md
 
 **Show HN + Cal.com (Mar 5):**
 - Show HN posted, Cal.com Discussion #28291 opened
@@ -204,36 +209,10 @@
 
 ## 📝 Status History
 
+**Mar 7 (04:30 GMT+2):** BA night analysis complete. **STRATEGY.md updated** with Day 28 strategic assessment: (1) Market has hardened (ElevenLabs+Deloitte, Retell G2 award, Vapi Claude Skills), (2) Distribution channels analyzed — only Email available today, (3) Recommendation: PARTNER-FIRST (Cal.com), then Market, Minimal Build, (4) Realistic path to 100 users mapped, (5) Mid-March viability checkpoint confirmed (7 days remaining). **STATUS.md updated** with top 3 next steps: (1) Remi: Create Reddit+Dev.to accounts (P0, 6+ days overdue), (2) ctxly follow-up if not live by EOD, (3) Email follow-up (7-day window). **Commit and push pending.**
+
 **Mar 7 (04:15 GMT+2):** Comms session. **Email outreach EXECUTED** — both emails sent successfully via AgentMail: (1) Cal.com partnership proposal to team@cal.com, (2) Shpigford retry to josh@baremetrics.com. Message IDs logged in COMMS_LOG.md. Email is the ONLY distribution channel available today (all social channels blocked). ctxly still pending review (~19h). Reddit/Dev.to remain blocked pending Remi's manual account creation. **Day summary:** Email outreach complete. Awaiting responses (7-day follow-up window). ctxly follow-up if not live by EOD. Reddit/Dev.to account creation remains critical P0 blocker.
 
 **Mar 7 (04:05 GMT+2):** PM session. Verified: **ctxly listing NOT LIVE** — services.json still dated Feb 2, 2026, voice skill not listed (~18h since submission at Mar 6 10:42, pending manual review). **Cal.com Discussion #28291** — 8 emoji reactions, 0 text replies (unchanged). Show HN dead (~43h, score=3, 0 comments). Reddit/Dev.to still unpublished (6+ days) — **Comms spawn remains P0**. **Distribution channels verified:** Only Email (AgentMail) available TODAY without new credentials. All social channels blocked (Twitter expired, Molthub/PinchSocial/Reddit/Dev.to missing creds). **Day summary:** ctxly review now 18+ hours pending. Email outreach is the only unblocked distribution action. Reddit/Dev.to account creation by Remi remains critical P0 blocker.
 
-**Mar 6 (22:10 GMT+2):** Night mode check. Verified: **5 GitHub stars** (no change). **ctxly listing NOT LIVE** — services.json still dated Feb 2, voice skill not listed (~11.5h since submission at 10:42, still pending manual review). **Cal.com Discussion #28291** — 8 emoji reactions, 0 text replies (unchanged). Show HN dead (~24h, score=3, 0 comments). Reddit/Dev.to still unpublished (5+ days) — **Comms spawn remains P0**. **Day summary:** Zero traction across all channels. ctxly review pending >11h. Distribution bottleneck critical. No external calls after 28 days.
-
-**Mar 6 (16:33 GMT+2):** EOD check. Verified: **5 GitHub stars** (no change). **ctxly listing NOT LIVE** — services.json still dated Feb 2, voice skill not listed (~6h since submission, still pending manual review). **Cal.com Discussion** — unable to verify (404 errors, browser unavailable); last known: 8 emoji reactions, 0 text replies. Show HN dead (24h+, score=3, 0 comments). Reddit/Dev.to still unpublished (5+ days) — **Comms spawn remains P0**. **Day summary:** No traction on any channel. ctxly review pending. Distribution bottleneck critical.
-
-**Mar 6 (15:13 GMT+2):** PM session. Verified: **5 GitHub stars** (no change since midday). Cal.com Discussion #28291 still has 8 emoji reactions, **0 text replies** (unchanged). **ctxly listing NOT LIVE** — services.json still dated Feb 2, voice skill not listed (~5h since submission, still pending manual review). Show HN dead (21h, score=3, 0 comments). Reddit/Dev.to still unpublished (5+ days) — **Comms spawn remains P0**.
-
-**Mar 6 (12:48 GMT+2):** PM session. Verified: **5 GitHub stars** (+1 new: tecte). Cal.com Discussion #28291 has 8 emoji reactions, still 0 text replies. **ctxly listing NOT LIVE** — services.json unchanged (dated Feb 2), voice skill not yet listed despite Mar 6 submission (pending manual review). Show HN dead (21h, score=3, 0 comments). Reddit/Dev.to still unpublished (5+ days) — **Comms spawn remains P0**.
-
-**Mar 6 (10:42 GMT+2):** PM session. **ctxly submission COMPLETED** — voice skill submitted to ctxly.com directory, pending manual review by ctxly team. First-mover opportunity in voice category secured. Reddit/Dev.to still unpublished (5+ days) — Comms spawn still urgent for remaining channels.
-
-**Mar 6 (10:35 GMT+2):** PM session. Verified: 4 GitHub stars (+2 new today: aleksey-rezvov, John-Appleseed). **ctxly submission NOT DONE** — voice skill not listed in ctxly directory (verified via API). This is 3 weeks overdue. Reddit/Dev.to still unpublished (5+ days). **Comms spawn now urgent** — task expanded to include ctxly submission alongside Reddit + Dev.to posts.
-
-**Mar 6 (10:26 GMT+2):** PM session. Show HN dead (19h, score=3, 0 comments). Cal.com Discussion stalled (emoji only). Reddit/Dev.to STILL NOT PUBLISHED after 5+ days as P0. Market hardened (ElevenLabs+Deloitte, Retell G2 award, Vapi Claude Skills). **Comms spawn now urgent — project viability at risk if no adoption by mid-March.**
-
-**Mar 6 (09:53 GMT+2):** PM session. Show HN final: score=3, 0 comments after 18h — dead. Cal.com Discussion: emoji only, no replies. GitHub stars=4. Both channels played out. Reddit/Dev.to Comms spawn remains critical and overdue.
-
-**Mar 5 (17:13 GMT+2):** PM session #6. No new engagement on HN or Cal.com. Both stalled.
-
-**Mar 5 (15:30-16:53 GMT+2):** PM sessions #1-5. Show HN went live, Cal.com Discussion posted. Monitored both — neither gained traction.
-
-**Mar 5 (14:53 GMT+2):** PM assessment. Day 27. Elevated to 🔴🔴. Show HN finally posted.
-
-**Mar 1 (11:17 GMT+2):** Shpigford email bounced. Elevated to 🔴. Reddit/Dev.to identified as priority.
-
-**Feb 27:** Cal.com + Shpigford emails sent. Show HN draft ready.
-
-**Feb 20:** Repo contributor-ready. Email outreach flagged as highest-impact.
-
-**Feb 6-18:** Phase 2 reliability completed. **Feb 3-5:** Phase 1 foundation completed.
+*See git history for earlier status updates.*
