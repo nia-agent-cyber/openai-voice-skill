@@ -30,6 +30,25 @@ Architectural and design decisions. **Don't revisit these without good reason.**
 
 ---
 
+## 2026-03-07: Channel Verification — Email Only Available Today
+
+**Finding:** Verified all distribution channels. Only **Email (AgentMail)** can execute TODAY without new credentials.
+
+**Channel Status:**
+| Channel | Status | Blocker |
+|---------|--------|---------|
+| Email (AgentMail) | ✅ Available | None — creds in pass |
+| ctxly | ⏳ Pending | Manual review (18h+) |
+| Reddit | ❌ Blocked | Need account creation (Remi) |
+| Dev.to | ❌ Blocked | Need account creation (Remi) |
+| Twitter | ❌ Blocked | Credentials expired (401) |
+| Molthub | ❌ Blocked | Creds missing from pass |
+| PinchSocial | ❌ Blocked | Creds missing from pass |
+
+**Action:** Execute email outreach (Shpigford retry + Cal.com partnership) while waiting for Remi to create Reddit/Dev.to accounts. ctxly follow-up if not live by EOD.
+
+---
+
 ## 2026-02-27: Outreach Over Everything — Zero Feature Work Until Users Exist
 
 **Decision:** No new features, no technical work until we have at least 1 external user. All effort goes to marketing/outreach.

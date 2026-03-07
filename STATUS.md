@@ -1,11 +1,11 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-06 15:13 GMT+2 by Voice PM  
+**Last Updated:** 2026-03-07 04:05 GMT+2 by Voice PM  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## 📊 CURRENT STATUS (2026-03-06)
+## 📊 CURRENT STATUS (2026-03-07)
 
 **Phase:** Go-To-Market Execution (Day 28)
 
@@ -13,14 +13,14 @@
 - ✅ All 97 tests passing
 - ✅ No open PRs
 - ✅ Open issues unchanged (5 total: #33, #27, #23, #20, #5)
-- ✅ Repo has **5 GitHub stars** (no change since midday; total 5)
-- ✅ Show HN posted ~24h ago — score=3, 0 comments (dead)
-- ✅ Cal.com Discussion #28291 live — **8 emoji reactions** (👍👎😄🎉😕❤️🚀👀), **0 text replies** (unchanged)
+- ✅ Repo has **5 GitHub stars** (no change)
+- ✅ Show HN posted ~43h ago — score=3, 0 comments (dead)
+- ✅ Cal.com Discussion #28291 live — **8 emoji reactions**, **0 text replies** (unchanged)
 - ❌ Still 0 external calls after 28 days
 - ❌ Reddit + Dev.to posts still not published
-- ❌ **ctxly listing NOT LIVE** — services.json still dated Feb 2, voice skill not listed (submission Mar 6 ~10:42, ~5h pending manual review)
+- ❌ **ctxly listing NOT LIVE** — services.json still dated **Feb 2, 2026**, voice skill not listed (submission Mar 6 ~10:42, ~18h pending manual review)
 
-**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** Show HN and Cal.com Discussion both failed to generate traction. Reddit/Dev.to remain unpublished after weeks as top priority. **ctxly submission pending** (not yet live in directory). **Comms spawn still urgent for Reddit/Dev.to.**
+**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** ctxly review now 18+ hours pending. Reddit/Dev.to remain unpublished (P0 blocker). **Only email outreach available TODAY** (AgentMail credentials exist). All social channels blocked (Twitter expired, Molthub/PinchSocial/Reddit/Dev.to missing creds).
 
 ---
 
@@ -103,10 +103,10 @@
 
 ---
 
-## 🎯 TODAY'S PRIORITIES (March 6 10:35 GMT+2)
+## 🎯 TODAY'S PRIORITIES (March 7 04:05 GMT+2)
 
 ### P0 🔴 — MANUAL: Create Reddit + Dev.to Accounts
-**This is now urgent.** 5+ days overdue. Market window closing. Browser control unreliable — requires manual action.
+**This is now urgent.** 6+ days overdue. Market window closing. Browser control unreliable — requires manual action.
 
 **Task for Remi:**
 1. **Create Reddit account** (GitHub OAuth) — r/selfhosted, r/voip, r/artificial
@@ -114,15 +114,38 @@
 3. **Save API credentials to pass** (see instructions above)
 4. **Comms will auto-post** once credentials available
 
-**Why this matters:** These are the last high-impact, low-effort channels before we exhaust GTM options. **ctxly submission completed** (Mar 6 ~10:42, pending review) — one major distribution channel secured.
+**Why this matters:** These are the last high-impact, low-effort channels before we exhaust GTM options. **ctxly submission completed** (Mar 6 ~10:42, pending review >18h) — one major distribution channel secured but not yet live.
 
-### P1 — Shpigford Retry Email
-- His negative feedback is from BEFORE Phase 2 fixes
-- We fixed exactly his reliability concerns (#35, #34, #38)
-- Draft exists, just needs to send via AgentMail
+### P1 — Email Outreach (AVAILABLE TODAY)
+**AgentMail credentials exist — can execute immediately without new credentials.**
+
+**Actions available NOW:**
+1. **Shpigford retry email** — His feedback was pre-Phase 2 fixes. We fixed exactly his reliability concerns (#35, #34, #38). Draft ready.
+2. **Cal.com partnership email** — docs/CALCOM_OUTREACH.md has full draft. Send to cal.com/talk-to-sales or @peer_rich.
+
+**Why this matters:** Email is the ONLY distribution channel unblocked today. All social platforms require credential setup first.
+
+### P2 — ctxly Follow-up
+**18+ hours pending.** May need to follow up with ctxly team if not live by EOD.
 
 ### P3 — No coder work (per DECISIONS.md)
 **Zero external users = zero feature work.** Distribution only until adoption signal.
+
+---
+
+## 📋 DISTRIBUTION CHANNEL STATUS (March 7)
+
+| Channel | Status | Credentials | Action Available |
+|---------|--------|-------------|------------------|
+| **Email (AgentMail)** | ✅ Available | ✅ In pass | **CAN EXECUTE TODAY** |
+| **ctxly** | ⏳ Pending review | N/A | Follow up if >24h |
+| **Reddit** | ❌ Not published | ❌ Need account | Remi must create |
+| **Dev.to** | ❌ Not published | ❌ Need account | Remi must create |
+| **Twitter** | ❌ Expired (401) | ⚠️ Expired | Need refresh |
+| **Molthub** | ❌ Not used | ❌ Missing | Need to add |
+| **PinchSocial** | ❌ Not used | ❌ Missing | Need to recover |
+| **Show HN** | ❌ Dead (43h) | N/A | Window closed |
+| **Cal.com Discussion** | ⏳ Stalled | N/A | Emoji only, no replies |
 
 ---
 
@@ -173,6 +196,8 @@
 ---
 
 ## 📝 Status History
+
+**Mar 7 (04:05 GMT+2):** PM session. Verified: **ctxly listing NOT LIVE** — services.json still dated Feb 2, 2026, voice skill not listed (~18h since submission at Mar 6 10:42, pending manual review). **Cal.com Discussion #28291** — 8 emoji reactions, 0 text replies (unchanged). Show HN dead (~43h, score=3, 0 comments). Reddit/Dev.to still unpublished (6+ days) — **Comms spawn remains P0**. **Distribution channels verified:** Only Email (AgentMail) available TODAY without new credentials. All social channels blocked (Twitter expired, Molthub/PinchSocial/Reddit/Dev.to missing creds). **Day summary:** ctxly review now 18+ hours pending. Email outreach is the only unblocked distribution action. Reddit/Dev.to account creation by Remi remains critical P0 blocker.
 
 **Mar 6 (22:10 GMT+2):** Night mode check. Verified: **5 GitHub stars** (no change). **ctxly listing NOT LIVE** — services.json still dated Feb 2, voice skill not listed (~11.5h since submission at 10:42, still pending manual review). **Cal.com Discussion #28291** — 8 emoji reactions, 0 text replies (unchanged). Show HN dead (~24h, score=3, 0 comments). Reddit/Dev.to still unpublished (5+ days) — **Comms spawn remains P0**. **Day summary:** Zero traction across all channels. ctxly review pending >11h. Distribution bottleneck critical. No external calls after 28 days.
 
