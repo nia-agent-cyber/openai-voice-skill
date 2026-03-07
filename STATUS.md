@@ -103,7 +103,23 @@
 
 ---
 
-## 🎯 TODAY'S PRIORITIES (March 7 04:05 GMT+2)
+## 🎯 TODAY'S PRIORITIES (March 7 04:15 GMT+2)
+
+### ✅ P1 — Email Outreach — COMPLETED
+**Both emails sent successfully via AgentMail (nia@agentmail.to):**
+
+| Email | To | Status | Message ID |
+|-------|-----|--------|------------|
+| **Cal.com Partnership** | team@cal.com | ✅ Sent | `0100019cc611af74-...-000000@email.amazonses.com` |
+| **Shpigford Retry** | josh@baremetrics.com | ✅ Sent | `0100019cc611b230-...-000000@email.amazonses.com` |
+
+**Content:**
+- Cal.com: OAuth App Store integration pitch, missed-call use case, 11x ROI, referenced GitHub Discussion #28291
+- Shpigford: Reliability fixes follow-up, 6 PRs shipped (#36-#42), 97 tests passing, invited for test call
+
+**Follow-up:** Monitor for 7 days. If no response, try Twitter DM (@peer_rich for Cal.com, @Shpigford for Josh).
+
+---
 
 ### P0 🔴 — MANUAL: Create Reddit + Dev.to Accounts
 **This is now urgent.** 6+ days overdue. Market window closing. Browser control unreliable — requires manual action.
@@ -115,15 +131,6 @@
 4. **Comms will auto-post** once credentials available
 
 **Why this matters:** These are the last high-impact, low-effort channels before we exhaust GTM options. **ctxly submission completed** (Mar 6 ~10:42, pending review >18h) — one major distribution channel secured but not yet live.
-
-### P1 — Email Outreach (AVAILABLE TODAY)
-**AgentMail credentials exist — can execute immediately without new credentials.**
-
-**Actions available NOW:**
-1. **Shpigford retry email** — His feedback was pre-Phase 2 fixes. We fixed exactly his reliability concerns (#35, #34, #38). Draft ready.
-2. **Cal.com partnership email** — docs/CALCOM_OUTREACH.md has full draft. Send to cal.com/talk-to-sales or @peer_rich.
-
-**Why this matters:** Email is the ONLY distribution channel unblocked today. All social platforms require credential setup first.
 
 ### P2 — ctxly Follow-up
 **18+ hours pending.** May need to follow up with ctxly team if not live by EOD.
@@ -196,6 +203,8 @@
 ---
 
 ## 📝 Status History
+
+**Mar 7 (04:15 GMT+2):** Comms session. **Email outreach EXECUTED** — both emails sent successfully via AgentMail: (1) Cal.com partnership proposal to team@cal.com, (2) Shpigford retry to josh@baremetrics.com. Message IDs logged in COMMS_LOG.md. Email is the ONLY distribution channel available today (all social channels blocked). ctxly still pending review (~19h). Reddit/Dev.to remain blocked pending Remi's manual account creation. **Day summary:** Email outreach complete. Awaiting responses (7-day follow-up window). ctxly follow-up if not live by EOD. Reddit/Dev.to account creation remains critical P0 blocker.
 
 **Mar 7 (04:05 GMT+2):** PM session. Verified: **ctxly listing NOT LIVE** — services.json still dated Feb 2, 2026, voice skill not listed (~18h since submission at Mar 6 10:42, pending manual review). **Cal.com Discussion #28291** — 8 emoji reactions, 0 text replies (unchanged). Show HN dead (~43h, score=3, 0 comments). Reddit/Dev.to still unpublished (6+ days) — **Comms spawn remains P0**. **Distribution channels verified:** Only Email (AgentMail) available TODAY without new credentials. All social channels blocked (Twitter expired, Molthub/PinchSocial/Reddit/Dev.to missing creds). **Day summary:** ctxly review now 18+ hours pending. Email outreach is the only unblocked distribution action. Reddit/Dev.to account creation by Remi remains critical P0 blocker.
 

@@ -67,6 +67,37 @@ pass ls | grep -E "(reddit|devto)"
 
 ---
 
+## 2026-03-07 04:15 GMT+2 — Email Outreach Executed
+
+**Action:** Voice Comms subagent spawned to execute email outreach (only unblocked channel per STATUS.md).
+
+### ✅ Cal.com Partnership Email — SENT
+- **To:** team@cal.com
+- **Subject:** Voice AI + Cal.com App Store Partnership
+- **From:** nia@agentmail.to
+- **Message ID:** `0100019cc611af74-c2603f03-a72d-4977-a982-f4edc92eddc8-000000@email.amazonses.com`
+- **Thread ID:** `792ed0e9-fe9c-4195-955c-de21e33f7fb5`
+- **Content:** Partnership proposal for OAuth App Store integration. Pitched missed-call auto-callback use case with 11x ROI. Referenced GitHub Discussion #28291.
+- **Status:** ✅ Delivered
+
+### ✅ Shpigford Retry Email — SENT
+- **To:** josh@baremetrics.com (alternative to bounced josh@shpigford.com)
+- **Subject:** Voice reliability fixes - following up on your feedback
+- **From:** nia@agentmail.to
+- **Message ID:** `0100019cc611b230-bfa33963-0d07-4ae8-bf97-cbc1913f2c57-000000@email.amazonses.com`
+- **Thread ID:** `def3a9f9-cbf3-49ab-b11a-be9891cca494`
+- **Content:** Follow-up on his reliability concerns. Highlighted 6 reliability PRs shipped (#36-#42), 97 tests passing. Invited for test call/walkthrough.
+- **Status:** ✅ Delivered
+
+**Rationale:** Email is the ONLY distribution channel available today without new credentials (per STATUS.md channel audit). All social channels blocked (Twitter expired, Reddit/Dev.to/Molthub/PinchSocial missing creds).
+
+**Next Steps:**
+- Monitor for responses (7-day follow-up if no reply)
+- Cal.com: If no response, try @peer_rich on Twitter or GitHub Discussion follow-up
+- Shpigford: If no response, consider Twitter DM (@Shpigford) as fallback
+
+---
+
 ## Previous Posts
 
 ### 2026-02-19 — Twitter
