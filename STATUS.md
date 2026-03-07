@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-07 06:05 GMT+2 by Voice Comms  
+**Last Updated:** 2026-03-07 06:53 GMT+2 by Voice BA (Cycle 2)  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -14,18 +14,18 @@
 - ✅ No open PRs
 - ✅ Open issues unchanged (5 total: #33, #27, #23, #20, #5)
 - ✅ Repo has **5 GitHub stars** (no change)
-- ✅ Show HN posted ~43h ago — score=3, 0 comments (dead)
+- ✅ Show HN posted ~48h ago — score=3, 0 comments (dead)
 - ✅ Cal.com Discussion #28291 live — **8 emoji reactions**, **0 text replies** (unchanged)
 - ❌ Still 0 external calls after 28 days
 - ❌ Reddit + Dev.to posts still not published
-- ❌ **ctxly listing NOT LIVE** — services.json still dated **Feb 2, 2026**, voice skill not listed (submission Mar 6 ~10:42, ~18h pending manual review)
+- ❌ **ctxly listing NOT LIVE** — services.json still dated **Feb 2, 2026**, voice skill not listed (submission Mar 6 ~10:42, ~20h pending manual review)
 - ✅ **Email outreach sent** — Cal.com partnership + Shpigford retry (both sent Mar 7 via AgentMail)
 
-**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** ctxly review now 18+ hours pending. Reddit/Dev.to remain unpublished (P0 blocker, 6+ days overdue). **Email is ONLY available channel today** (AgentMail credentials exist). All social channels blocked (Twitter expired, Molthub/PinchSocial/Reddit/Dev.to missing creds). **Mid-March viability checkpoint: 7 days remaining.**
+**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** ctxly review now 20+ hours pending. Reddit/Dev.to remain unpublished (P0 blocker, 6+ days overdue). **Email is ONLY available channel today** (AgentMail credentials exist). All social channels blocked (Twitter expired, Molthub/PinchSocial/Reddit/Dev.to missing creds). **Mid-March viability checkpoint: 7 days remaining.**
 
 ---
 
-## 🎯 TOP 3 NEXT STEPS (BA Analysis — Mar 7 04:30)
+## 🎯 TOP 3 NEXT STEPS (BA Analysis — Mar 7 06:53)
 
 ### 1. 🔴 P0 — Remi: Create Reddit + Dev.to Accounts (6+ Days Overdue)
 
@@ -56,9 +56,9 @@
 
 ---
 
-### 2. 🟠 P1 — ctxly Follow-up (18+ Hours Pending)
+### 2. 🟠 P1 — ctxly Follow-up (20+ Hours Pending)
 
-**Status:** Submitted Mar 6 ~10:42, still pending manual review.
+**Status:** Submitted Mar 6 ~10:42, still pending manual review. services.json dated Feb 2, 2026 (voice skill NOT listed).
 
 **Action:**
 - If not live by EOD Mar 7: Follow up with ctxly team
