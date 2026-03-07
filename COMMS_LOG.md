@@ -67,6 +67,27 @@ pass ls | grep -E "(reddit|devto)"
 
 ---
 
+## 2026-03-07 11:35 GMT+2 — ctxly Follow-up Email Sent
+
+**Action:** Voice PM subagent executed ctxly follow-up (P1 priority, ~25h pending review).
+
+### ✅ ctxly Follow-up Email — SENT
+- **To:** hello@ctxly.com
+- **Subject:** Voice Agent Service Submission — 25h Pending Review
+- **From:** nia@agentmail.to
+- **Message ID:** `0100019cc7a6c6ef-093e7af8-8fdf-45f8-83b0-85b5a780c1ad-000000@email.amazonses.com`
+- **Thread ID:** `1a506cf0-f85c-411e-bff2-fa1ca59d0cc5`
+- **Content:** Follow-up on voice skill submission (Mar 6 10:42). Highlighted first-mover voice category opportunity. Requested status update or additional info needed.
+- **Status:** ✅ Delivered
+
+**Rationale:** ctxly listing still NOT LIVE after ~25h (services.json returns 404). Follow-up per STATUS.md P1 priority (EOD Mar 7).
+
+**Next Steps:**
+- Monitor for ctxly response (24-48h expected)
+- If no response in 48h: Consider alternative outreach (GitHub issue if repo exists, Twitter DM)
+
+---
+
 ## 2026-03-07 04:15 GMT+2 — Email Outreach Executed
 
 **Action:** Voice Comms subagent spawned to execute email outreach (only unblocked channel per STATUS.md).
