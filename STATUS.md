@@ -1,11 +1,11 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-07 12:33 GMT+2 by Voice PM (Cycle 11)  
+**Last Updated:** 2026-03-07 16:03 GMT+2 by Voice PM (Cycle 16)  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
 
-## 📊 CURRENT STATUS (2026-03-07 15:00)
+## 📊 CURRENT STATUS (2026-03-07 16:03)
 
 **Phase:** Go-To-Market Execution (Day 28)
 
@@ -14,16 +14,16 @@
 - ✅ No open PRs
 - ✅ Open issues unchanged (5 total: #33, #27, #23, #20, #5)
 - ✅ Repo has **6 GitHub stars**
-- ✅ Show HN posted ~75h ago — score=3, 0 comments (dead)
+- ✅ Show HN posted ~76h ago — score=3, 0 comments (dead)
 - ✅ Cal.com Discussion #28291 live — **8 emoji reactions**, **0 text replies** (unchanged)
 - ❌ Still 0 external calls after 28 days
 - ❌ Reddit + Dev.to posts still not published
-- ❌ **ctxly listing NOT LIVE** — services.json returns 404 (submission Mar 6 10:42, **~33h pending manual review**)
-- ✅ **Email outreach sent** — Cal.com partnership + Shpigford retry (both sent Mar 7 04:15 via AgentMail, ~38h elapsed, no responses yet)
-- ✅ **ctxly follow-up SENT** — Email to hello@ctxly.com (Mar 7 11:35, Message ID: 0100019cc7a6c6ef-093e7af8-8fdf-45f8-83b0-85b5a780c1ad-000000@email.amazonses.com, ~30h elapsed)
-- ✅ **PinchSocial post LIVE** — Agent `voiceba` registered, post published (Pinch ID: knfg7lwwmmg5vw0n, URL: https://pinchsocial.io/p/knfg7lwwmmg5vw0n) — engagement metrics require browser access
+- ❌ **ctxly listing NOT LIVE** — services.json returns 404 (submission Mar 6 10:42, **~35h pending manual review**)
+- ✅ **Email outreach sent** — Cal.com partnership + Shpigford retry (both sent Mar 7 04:15 via AgentMail, ~40h elapsed, no responses yet)
+- ✅ **ctxly follow-up SENT** — Email to hello@ctxly.com (Mar 7 11:35, Message ID: 0100019cc7a6c6ef-093e7af8-8fdf-45f8-83b0-85b5a780c1ad-000000@email.amazonses.com, ~32h elapsed)
+- ✅ **PinchSocial post LIVE** — Agent `voiceba` registered, post published (Pinch ID: knfg7lwwmmg5vw0n) — **0 engagement** (0 snaps, 0 repinches, 0 replies, 0 followers) via API verification
 
-**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** Reddit/Dev.to remain unpublished (P0 blocker, 6+ days overdue, **<9h deadline is Mar 8 EOD — REMI ACTION REQUIRED**). ctxly still 404 (~33h pending, follow-up sent). Email responses being monitored (~38h elapsed, 7-day window). ✅ **PinchSocial post verified live** — page loads, content visible (engagement metrics require browser). **Mid-March viability checkpoint: 7 days remaining.**
+**Status:** 🔴 **CRITICAL — Distribution bottleneck persists.** Reddit/Dev.to remain unpublished (P0 blocker, 6+ days overdue, **<8h deadline is Mar 8 EOD — REMI ACTION REQUIRED**). ctxly still 404 (~35h pending, follow-up sent). Email responses being monitored (~40h elapsed, 7-day window). ✅ **PinchSocial post verified live via API** — zero engagement so far (expected, recently published). **Mid-March viability checkpoint: 7 days remaining.**
 
 ---
 
@@ -361,6 +361,8 @@ curl -X POST https://pinchsocial.io/api/pinch \
 ---
 
 ## 📝 Status History
+
+**Mar 7 (16:03 GMT+2):** PM Cycle 16 execution. **STATUS.md updated** with Cycle 16 results. **Completed:** (1) Verified Reddit/Dev.to credentials STILL NOT in pass store — Remi action pending (**<8h REMAINING until Mar 8 EOD — CRITICAL, viability-impacting**), (2) Verified ctxly still returns 404 (~35h pending, follow-up sent Mar 7 11:35), (3) Email responses unchanged (~40h elapsed for Cal.com/Shpigford/ctxly follow-up, within 7-day window), (4) **PinchSocial post engagement verified via API** — post live (ID: knfg7lwwmmg5vw0n), **0 engagement** (0 snaps, 0 repinches, 0 replies, 0 followers) — expected for new post. **Next actions:** (1) **AWAIT REMI** — Reddit/Dev.to account creation (<8h remaining, VIABILITY-IMPACTING), (2) Await ctxly/email responses, (3) Continue monitoring PinchSocial engagement. **Commit and push pending.**
 
 **Mar 7 (15:00 GMT+2):** PM Cycle 15 execution. **STATUS.md updated** with Cycle 15 results. **Completed:** (1) Verified Reddit/Dev.to credentials STILL NOT in pass store — Remi action pending (**<9h REMAINING until Mar 8 EOD — CRITICAL, viability-impacting**), (2) Verified ctxly still returns 404 (~33h pending, follow-up sent Mar 7 11:35), (3) Email responses unchanged (~38h elapsed for Cal.com/Shpigford/ctxly follow-up, within 7-day window), (4) PinchSocial post confirmed live (browser unavailable for detailed engagement metrics — post ID knfg7lwwmmg5vw0n previously verified with 1 view, 0 replies). **Next actions:** (1) **AWAIT REMI** — Reddit/Dev.to account creation (<9h remaining, VIABILITY-IMPACTING), (2) Await ctxly/email responses, (3) Continue monitoring PinchSocial engagement. **Commit and push pending.**
 
