@@ -201,6 +201,32 @@
 
 ---
 
+## Next Steps
+
+**Recommended Priority:** PARTNER-FIRST, then Market, Minimal Build
+
+**Rationale:** Product is technically complete (97 tests). No user feedback exists to guide feature work. Distribution channels are the only bottleneck. Cal.com partnership offers highest-leverage path to users (39K+ open-source audience, AGPLv3 alignment).
+
+### Top 3 Actions
+
+| # | Action | Owner | Deadline | Why |
+|---|--------|-------|----------|-----|
+| 1 | **Create Reddit + Dev.to accounts** (save creds to pass) | **Remi** | Mar 8 EOD (<24h) | Last high-impact channels before GTM options exhausted. Drafts ready. 6+ days overdue. |
+| 2 | **ctxly follow-up** (if not live) | PM | EOD Mar 7 | 25h+ pending manual review. First-mover voice category. Lowest-effort channel. |
+| 3 | **Cal.com partnership follow-up** (if no response) | PM/Comms | Mar 14 | Best partnership bet. 7-day email window. Escalate to Twitter DM (@peer_rich) if silent. |
+
+### What Success Looks Like
+
+| Metric | Target | Date | Consequence |
+|--------|--------|------|-------------|
+| External calls | 1+ | Mar 14 | Continue project, double down on what worked |
+| External calls | 10+ | Mar 14 | Strong signal — scale distribution |
+| External calls | 0 | Mar 14 | Archive project (per DECISIONS.md viability checkpoint) |
+| Cal.com response | ✅ Reply | Mar 14 | Proceed with App Store integration |
+| Reddit/Dev.to | ✅ Published | Mar 8 | Unblock Comms execution |
+
+---
+
 ## 🏁 Completed Milestones
 
 **Email Outreach (Mar 7):**
