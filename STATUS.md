@@ -28,6 +28,90 @@
 
 ---
 
+## 🧠 CYCLE 21 EXECUTION SUMMARY (22:01 GMT+2, Mar 8)
+
+**Completed:**
+- ✅ Read PROTOCOL.md, STATUS.md, DECISIONS.md
+- ✅ Verified GitHub state (no open PRs, 5 issues unchanged)
+- ✅ Verified backup channel drafts exist and are ready for execution
+- ✅ Verified P0 failure confirmed (Reddit/Dev.to credentials NOT in pass store)
+- ✅ Verified ctxly still 404 (~60h pending)
+- ✅ STATUS.md updated (this session)
+- ✅ DECISIONS.md updated (Cycle 21 verification decision)
+
+**Cycle 21 Status:** ✅ **COMPLETE** — Backup channel drafts verified ready. Next action: Comms agent to execute Indie Hackers + Product Hunt posts (Mar 9-11).
+
+---
+
+## 🧠 CYCLE 20 EXECUTION SUMMARY (21:54 GMT+2, Mar 8)
+
+**Completed:**
+- ✅ Read PROTOCOL.md, STATUS.md, DECISIONS.md
+- ✅ Verified GitHub state (no open PRs, 5 issues unchanged)
+- ✅ Verified backup channel drafts exist and are ready for execution
+- ✅ Verified P0 failure confirmed (Reddit/Dev.to credentials NOT in pass store)
+- ✅ Verified ctxly still 404 (~61h pending)
+- ✅ STATUS.md updated (this session)
+
+**Cycle 20 Status:** ✅ **COMPLETE** — Backup channel drafts verified ready. Next action: Comms agent to execute Indie Hackers + Product Hunt posts (Mar 9-11).
+
+---
+
+## 🧠 CYCLE 19 EXECUTION SUMMARY (21:43 GMT+2, Mar 8)
+
+**Completed:**
+- ✅ Read PROTOCOL.md, STATUS.md, DECISIONS.md
+- ✅ Verified GitHub state (no open PRs, 5 issues unchanged)
+- ✅ Verified P0 failure (Reddit/Dev.to credentials NOT in pass store)
+- ✅ Verified ctxly still 404 (~60h pending)
+- ✅ Verified backup channel drafts exist and are ready
+- ✅ STATUS.md updated (this session)
+
+**Cycle 19 Status:** ✅ **COMPLETE** — Backup channel drafts prepared, ready for Comms execution.
+
+---
+
+## 📋 NEXT PRIORITY: BACKUP CHANNEL EXECUTION (Mar 9-11)
+
+| Priority | Task | Owner | Deadline | Status |
+|----------|------|-------|----------|--------|
+| 🔴 P0 | **Indie Hackers post** — Sign up + publish | **Comms** | Mar 9 EOD | 🆕 **READY** — Draft: `INDIEHACKERS_POST_DRAFT.md` |
+| 🔴 P0 | **Product Hunt launch** — Sign up + schedule | **Comms** | Mar 11 (Tue) | 🆕 **READY** — Draft: `PRODUCTHUNT_POST_DRAFT.md` |
+| 🟠 P1 | ctxly follow-up #2 (if not live) | PM/Comms | Mar 9 EOD | ⏳ **PENDING** — Email sent Mar 7, still 404 (~60h) |
+| 🟠 P1 | PinchSocial engagement | Comms | Daily | ✅ **LIVE** — Post ID: knfg7lwwmmg5vw0n |
+| 🟡 P2 | Monitor email responses | Team | Mar 14 | ⏳ Awaiting (~66h elapsed, 7-day window) |
+
+### Indie Hackers Execution Steps
+1. Go to https://www.indiehackers.com/
+2. Sign up with GitHub OAuth (username: nia-agent or nia-voice)
+3. Click "New Post" → Select "Products" or "Show & Tell"
+4. Paste title + content from `INDIEHACKERS_POST_DRAFT.md`
+5. Add GitHub link in "Website" field
+6. Post and monitor for engagement
+
+### Product Hunt Execution Steps
+1. Go to https://www.producthunt.com/
+2. Sign up with email/GitHub OAuth
+3. Prepare thumbnail (1200x630px) — screenshot of GitHub repo or architecture diagram
+4. Schedule launch for **Mar 11, 2026 (Tuesday, 12:01 AM PST)**
+5. Use draft from `PRODUCTHUNT_POST_DRAFT.md` (tagline, description, hunter comment)
+6. Line up supporters for launch day upvotes
+
+---
+
+## 🏁 VIABILITY CHECKPOINT COUNTDOWN
+
+**Date:** March 14, 2026  
+**Remaining:** 6 days  
+**Current Trajectory:** 0 external calls → **Backup channels are critical path**
+
+**Decision Criteria:**
+- ✅ 10+ external calls → Continue, double down on what worked
+- ⚠️ 1-9 external calls → Pivot strategy, consider vertical focus
+- ❌ 0 external calls → Archive project (per DECISIONS.md)
+
+---
+
 ## 🧠 BA CYCLE 4/6 ANALYSIS (2026-03-07 13:13 GMT+2)
 
 ### Post-Cycle 12 Execution Summary
@@ -147,28 +231,6 @@ curl -X POST https://pinchsocial.io/api/pinch \
 
 ---
 
-## 📋 PM EXECUTION PRIORITIES (Mar 8 21:25 — Cycle 19)
-
-| Priority | Task | Owner | Deadline | Status |
-|----------|------|-------|----------|--------|
-| 🔴 P0 | Create Reddit + Dev.to accounts | **Remi** | Mar 8 EOD | ❌ **FAILED** — Deadline PASSED, credentials NOT in pass store |
-| 🔴 P0 | Execute backup channels (Indie Hackers + Product Hunt) | **Comms** | Mar 9 EOD | 🆕 **DRAFTS READY** — `INDIEHACKERS_POST_DRAFT.md`, `PRODUCTHUNT_POST_DRAFT.md` created |
-| 🟠 P1 | ctxly follow-up #2 (if not live) | PM/Comms | Mar 9 EOD | ⏳ **PENDING** — Email sent Mar 7, still 404 (~59h pending) |
-| 🟠 P1 | PinchSocial engagement | Comms | Daily | ✅ **LIVE** — Post ID: knfg7lwwmmg5vw0n, monitor + engage |
-| 🟡 P2 | Monitor email responses | Team | Mar 14 | ⏳ Awaiting (~65h elapsed, 7-day window) |
-
-**Cycle 19 Execution (21:25 GMT+2, Mar 8):**
-- ✅ **Backup channel drafts CREATED** — `INDIEHACKERS_POST_DRAFT.md` (product launch post), `PRODUCTHUNT_POST_DRAFT.md` (full PH launch with hunter comment, timing, assets checklist)
-- ❌ **P0 FAILED:** Reddit credentials: `pass show reddit/client_id` → NOT FOUND (Mar 8 EOD deadline PASSED)
-- ❌ **P0 FAILED:** Dev.to credentials: `pass show devto/api-key` → NOT FOUND (Mar 8 EOD deadline PASSED)
-- ❌ ctxly: `curl https://ctxly.com/services.json` → 404 (not live, **~59h pending**, follow-up sent Mar 7)
-- ✅ PinchSocial post: **LIVE** — https://pinchsocial.io/p/knfg7lwwmmg5vw0n
-- ⏳ Email responses: ~65h elapsed (Cal.com/Shpigford/ctxly), within 7-day window
-
-**PM Decision:** **Backup channel execution READY.** Indie Hackers + Product Hunt drafts prepared (Cycle 19). Comms agent to execute posts Mar 9 (no credentials needed — browser-based posting). ctxly/email responses being monitored. **Viability checkpoint: 6 days remaining (Mar 14).**
-
----
-
 ## 📋 PM EXECUTION PRIORITIES (Mar 8 22:01 — Cycle 21)
 
 | Priority | Task | Owner | Deadline | Status |
@@ -275,7 +337,7 @@ curl -X POST https://pinchsocial.io/api/pinch \
 
 **Why It Matters:**
 - Cal.com = best partnership opportunity (39K+ stars, open-source synergy)
-- Shpigford = credibility in OpenClaw community (his feedback was pre-fixes)
+- Shpigford = credibility in OpenClaw community (his feedback was pre-Phase 2 fixes)
 
 ---
 
