@@ -2,7 +2,74 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-03-07 13:13 GMT+2 - BA Cycle 4/6 Strategic Analysis (Day 28, 7 days to viability checkpoint)
+**Last Updated:** 2026-03-08 22:15 GMT+2 - BA Cycle 5/6 Strategic Analysis (Day 29, 6 days to viability checkpoint)
+
+---
+
+## 🆕 CYCLE 5/6 STRATEGIC ANALYSIS (2026-03-08 22:15 GMT+2)
+
+### Research Summary — March 8, 2026
+
+**Research Tools Used:**
+- ✅ ctxly services.json — Checked for new voice services
+- ✅ PinchSocial API — Searched voice AI discussions, verified our post
+- ✅ Hacker News frontpage — Scanned for voice/AI trends
+- ✅ GitHub trending — Checked for voice AI repos
+- ⚠️ Twitter/X — Browser unavailable (Chrome extension not attached)
+- ⚠️ Web search — Brave API key not configured
+
+### Key Findings (NEW since Mar 7)
+
+| Finding | Status | Impact |
+|---------|--------|--------|
+| **ctxly listing** | ❌ Still 404 (~66h pending) | High — First-mover voice category still open but aging |
+| **GitHub stars** | ✅ **7 stars** (+1 since Mar 7) | Low — Organic growth, no velocity |
+| **PinchSocial post** | ✅ Live (ID: knfg7lwwmmg5vw0n) | Medium — Post visible, engagement TBD |
+| **Hacker News** | No voice AI stories on frontpage | Neutral — No competitive noise |
+| **GitHub trending** | No voice AI repos trending | Neutral — Opportunity window open |
+
+### Competitive Intelligence (Mar 8)
+
+**No major competitor announcements detected in past 24h:**
+- Bland AI: No new features detected
+- Vapi: No Claude Skills updates detected
+- Retell: No new vertical guides detected
+- ElevenLabs: No new enterprise partnerships detected
+
+**Note:** Research limited by tool availability (browser disconnected, web_search API key missing). Recommend manual Twitter/X check by Comms agent.
+
+### Viability Checkpoint Update (Mar 14, 2026)
+
+**Current Status — Day 29 of 29:**
+| Metric | Target | Current | Gap | Probability |
+|--------|--------|---------|-----|-------------|
+| External calls | 10+ | 0 | 🔴 -10 | <10% without backup channels |
+| GitHub stars | 25 | 7 | 🟠 -18 | Medium — Organic growth |
+| ctxly live | ✅ Live | ❌ 404 | 🔴 Not live | High risk — 66h+ pending |
+| Backup channels | ✅ Published | ⏳ Drafts ready | 🟠 Awaiting execution | **CRITICAL PATH** |
+
+**Assessment:** Backup channel execution (Indie Hackers + Product Hunt) is now the **single most critical action** for reaching March 14 viability checkpoint. ctxly follow-up #2 recommended if not live by Mar 9 EOD.
+
+---
+
+## 🆕 BACKUP CHANNEL EXECUTION STATUS (Mar 8 22:01)
+
+**Per DECISIONS.md P0 Failure Protocol:** Reddit/Dev.to credentials NOT in pass store (Mar 8 EOD deadline PASSED). Backup channels ACTIVATED.
+
+| Channel | Draft Status | Execution Status | Owner | Deadline |
+|---------|--------------|------------------|-------|----------|
+| **Indie Hackers** | ✅ `INDIEHACKERS_POST_DRAFT.md` | ⏳ Awaiting execution | **Comms** | Mar 9 EOD |
+| **Product Hunt** | ✅ `PRODUCTHUNT_POST_DRAFT.md` | ⏳ Awaiting execution | **Comms** | Mar 11 (Tue) |
+
+**Execution Blockers:** None — Browser-based posting only, no API credentials needed.
+
+**Expected Impact:**
+- Indie Hackers: 50-200 views, 5-15 upvotes, 2-5 signups (if posted in "Show & Tell")
+- Product Hunt: 200-500 upvotes (if launched Tuesday 12:01 AM PST with supporter coordination), 20-50 signups
+
+---
+
+## 🔄 CYCLE 4/6 STRATEGIC ANALYSIS (2026-03-07 13:13 GMT+2)
 
 ---
 
@@ -36,17 +103,21 @@ Business analysis, market research, and strategic direction. Updated by BA agent
 | Metric | Target | Current | Gap | Risk |
 |--------|--------|---------|-----|------|
 | External calls | 10+ | 0 | 🔴 -10 | **CRITICAL** |
-| Cal.com response | ✅ Reply | Pending | 🟠 Awaiting | Medium |
-| ctxly live | ✅ Live | 404 | 🔴 Not live | High |
-| Reddit published | ✅ Live | ❌ No | 🔴 Blocked | **CRITICAL** |
-| Dev.to published | ✅ Live | ❌ No | 🔴 Blocked | **CRITICAL** |
+| Cal.com response | ✅ Reply | Pending (~66h) | 🟠 Awaiting | Medium |
+| ctxly live | ✅ Live | 404 (~66h) | 🔴 Not live | High |
+| Reddit published | ✅ Live | ❌ No | 🔴 **P0 FAILED** | **CRITICAL** |
+| Dev.to published | ✅ Live | ❌ No | 🔴 **P0 FAILED** | **CRITICAL** |
 | Email responses | 1+ | 0/2 | 🟠 Awaiting | Medium |
-| PinchSocial engagement | 10+ | New | 🟠 TBD | Low |
+| PinchSocial engagement | 10+ | Live | 🟠 TBD | Low |
+| **Backup channels** | ✅ Published | ⏳ Drafts ready | 🟠 **AWAITING EXECUTION** | **CRITICAL PATH** |
 
 **Probability Assessment:**
 - **Without Reddit/Dev.to execution:** <10% chance of reaching 10 calls by Mar 14
-- **With Reddit/Dev.to + Cal.com partnership:** ~40-50% chance
+- **With Reddit/Dev.to + Cal.com partnership:** ~40-50% chance (no longer applicable — P0 failed)
+- **With backup channels (Indie Hackers + Product Hunt):** ~25-35% chance
 - **Current trajectory (PinchSocial + email only):** ~15-20% chance
+
+**Updated Assessment (Mar 8 22:15):** Backup channel execution is now the **only viable path** to March 14 checkpoint. Indie Hackers + Product Hunt combined could deliver 25-65 signups if executed properly.
 
 ### PinchSocial Engagement Strategy
 
@@ -103,9 +174,15 @@ Business analysis, market research, and strategic direction. Updated by BA agent
 
 **Recommendation:** If Reddit/Dev.to not executed by Mar 8 EOD, immediately pivot to Indie Hackers + Product Hunt (48h launch window).
 
-### Competitive Landscape Updates
+### Competitive Landscape Updates (Mar 8 22:15)
 
-**Key Shifts Since Last BA Update (Mar 7 06:53):**
+**No Major Competitor Moves Detected (Past 24h):**
+- Research tools limited (browser disconnected, web_search API unavailable)
+- Hacker News frontpage: No voice AI stories trending
+- GitHub trending: No voice AI repos trending
+- ctxly: Still no voice services listed (404, ~66h pending)
+
+**Competitive Reality (Unchanged from Mar 7):**
 
 1. **ElevenLabs Enterprise Lock-in** 🔴
    - Deloitte partnership = enterprise CX budgets locked
@@ -127,6 +204,13 @@ Business analysis, market research, and strategic direction. Updated by BA agent
    - "[Competitor] Alternatives" content capturing search traffic
    - Enterprise customers: Samsara, Snapchat, Gallup
    - **Implication:** Aggressive competitor targeting, we're not on their radar (yet)
+
+**Our Differentiation (Must Amplify):**
+- ✅ Agent-native (voice as channel, not product)
+- ✅ Session continuity (transcripts sync to OpenClaw)
+- ✅ Multi-channel (same agent: voice + Telegram + email)
+- ✅ Open-source (AGPLv3, Cal.com synergy)
+- ✅ PinchSocial integration (agent-to-agent calls)
 
 **Our Differentiation (Must Amplify):**
 - ✅ Agent-native (voice as channel, not product)
@@ -414,18 +498,20 @@ Business analysis, market research, and strategic direction. Updated by BA agent
 
 ---
 
-## 📊 SUCCESS METRICS (Updated)
+## 📊 SUCCESS METRICS (Updated Mar 8 22:15)
 
-| Metric | Current | 7-Day Target | 30-Day Target | Notes |
+| Metric | Current | 6-Day Target | 30-Day Target | Notes |
 |--------|---------|--------------|---------------|-------|
-| **External calls** | 0 | 1+ | 10+ | **Critical** |
-| **Cal.com response** | Pending | ✅ Response | ✅ Integration | P1 partnership |
-| **ctxly live** | Pending 25h+ | ✅ Live | ✅ 10+ clicks | First-mover voice |
-| **Reddit post** | ❌ Not published | ✅ Published | ✅ 50+ upvotes | 6+ days overdue, <24h deadline |
-| **Dev.to post** | ❌ Not published | ✅ Published | ✅ 100+ views | 6+ days overdue, <24h deadline |
-| **PinchSocial** | ❌ Not registered | ✅ Agent registered + 1 post | ✅ 10+ engagements | 🆕 New channel |
-| **GitHub stars** | 6 | 10 | 25 | Social proof |
-| **Email responses** | 0/2 | 1+ | 2+ | Cal.com + Shpigford |
+| **External calls** | 0 | 1+ | 10+ | **Critical** — Backup channels are only path |
+| **Cal.com response** | Pending (~66h) | ✅ Response | ✅ Integration | P1 partnership |
+| **ctxly live** | Pending 66h+ | ✅ Live | ✅ 10+ clicks | Follow-up #2 recommended Mar 9 EOD |
+| **Reddit post** | ❌ Not published | ❌ **P0 FAILED** | N/A | Deadline PASSED — backup channels activated |
+| **Dev.to post** | ❌ Not published | ❌ **P0 FAILED** | N/A | Deadline PASSED — backup channels activated |
+| **Indie Hackers** | ⏳ Draft ready | ✅ Published | ✅ 50+ views | 🆕 **CRITICAL PATH** — Comms execution Mar 9 |
+| **Product Hunt** | ⏳ Draft ready | ✅ Scheduled | ✅ 200+ upvotes | 🆕 **CRITICAL PATH** — Launch Mar 11 |
+| **PinchSocial** | ✅ Live | ✅ 10+ engagements | ✅ 50+ engagements | Post ID: knfg7lwwmmg5vw0n |
+| **GitHub stars** | 7 | 10 | 25 | Organic growth (+1 since Mar 7) |
+| **Email responses** | 0/2 | 1+ | 2+ | Cal.com + Shpigford (~66h elapsed) |
 
 ---
 
@@ -452,17 +538,32 @@ Business analysis, market research, and strategic direction. Updated by BA agent
 
 > "Without external adoption signal by mid-March, recommend honest reassessment of project viability. The tech works; the market hasn't noticed."
 
-**Date:** March 14, 2026 (7 days from now)
+**Date:** March 14, 2026 (**6 days remaining**)
 
 **Decision Criteria:**
 - ✅ 10+ external calls → Continue, double down on what worked
 - ⚠️ 1-9 external calls → Pivot strategy, consider vertical focus
 - ❌ 0 external calls → Archive project, document lessons learned
 
+**Critical Path to Checkpoint:**
+1. **Indie Hackers post** — Execute Mar 9 (no blocker, draft ready)
+2. **Product Hunt launch** — Schedule Mar 11 (no blocker, draft ready)
+3. **ctxly follow-up #2** — Send Mar 9 EOD if still 404
+4. **Email monitoring** — Continue until Mar 14 (7-day window closes)
+5. **PinchSocial engagement** — Daily engagement with verified agents
+
+**Realistic Outcomes:**
+- **Best case (both backup channels execute well):** 25-65 signups, 3-8 calls
+- **Medium case (one channel performs):** 10-25 signups, 1-3 calls
+- **Worst case (poor execution or no traction):** 0-5 signups, 0 calls → Archive recommendation
+
 **Actions Before Checkpoint:**
-1. Execute all available distribution channels (email, Reddit, Dev.to, ctxly)
-2. Secure Cal.com partnership or clear rejection
-3. Document what didn't work (post-mortem for future projects)
+1. ✅ Email outreach sent (Mar 7)
+2. ✅ PinchSocial post live (Mar 7)
+3. ❌ Reddit/Dev.to — **P0 FAILED** (Mar 8 EOD deadline PASSED)
+4. ✅ Backup channels — **ACTIVATED** (drafts ready, awaiting Comms execution)
+5. ⏳ ctxly — Follow-up #2 if not live by Mar 9 EOD
+6. ⏳ Cal.com response — Awaiting (7-day window, ~66h elapsed)
 
 ---
 
