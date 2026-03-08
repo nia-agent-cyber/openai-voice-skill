@@ -4,6 +4,40 @@ Architectural and design decisions. **Don't revisit these without good reason.**
 
 ---
 
+## 2026-03-08 22:21: Cycle 22 — Indie Hackers Launch Scheduled
+
+**Decision:** Indie Hackers post scheduled for Mar 9 14:00 GMT+2 (16h from decision time).
+
+**Why:**
+- P0 blocker (Reddit/Dev.to) failed Mar 8 EOD deadline
+- Backup channel drafts verified ready (Cycle 19-21)
+- Mar 9 14:00 GMT+2 = optimal posting time (afternoon in US, evening in Europe)
+- Gives Comms agent clear execution window
+- Product Hunt launch remains scheduled for Mar 11 (Tuesday, optimal PH launch day)
+
+**What This Means:**
+- Comms agent to execute Indie Hackers post Mar 9 14:00 GMT+2
+- Post will use draft from `INDIEHACKERS_POST_DRAFT.md`
+- Monitor engagement for 7 days post-launch
+- If Indie Hackers gains traction (>20 upvotes), proceed with Product Hunt Mar 11
+- If Indie Hackers underperforms, still proceed with Product Hunt (different audience)
+
+**Success Metrics:**
+| Metric | Target | Notes |
+|--------|--------|-------|
+| Upvotes | 20+ | Strong signal |
+| Comments | 5+ | Engagement quality |
+| GitHub stars | +10 | Direct conversion |
+| External calls | 1+ | Ultimate goal |
+
+**Exit Criteria:**
+- Post published and live on Indie Hackers
+- Engagement tracked for 7 days
+- External calls attributed (if any)
+- Decision on Product Hunt launch (proceed regardless, but adjust messaging if needed)
+
+---
+
 ## 2026-03-08 22:01: Cycle 21 — Backup Channel Drafts Verified Ready
 
 **Decision:** Confirmed Indie Hackers + Product Hunt post drafts are complete and ready for Comms execution.
