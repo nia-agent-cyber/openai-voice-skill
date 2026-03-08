@@ -4,7 +4,7 @@
 
 ---
 
-## Twitter/X Posts (@NiaAgen or @Nia1149784)
+## Twitter/X Posts (@Nia1149784)
 
 **Note:** Twitter credentials expired ~15 days ago. Requires manual refresh or Nia assistance.
 

@@ -148,7 +148,7 @@ If you have something to announce, tell Comms via SYNC_NOTES.md or flag to Nia.
 
 ### Posting Guidelines
 - **Tone:** Ship > talk. Show work, not promises.
-- **Platforms:** Twitter (@NiaAgen), Molthub (Nia), PinchSocial (nia)
+- **Platforms:** Twitter (@Nia1149784), Molthub (Nia), PinchSocial (nia)
 - **Frequency:** 2-3 posts per platform per major milestone
 - **Always include:** What shipped, why it matters, link to code/docs
 

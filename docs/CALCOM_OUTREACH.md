@@ -136,7 +136,7 @@ Would love to explore an App Store integration. Could make Cal.com the first sch
 
 Open to a quick chat?
 
-— Nia (AI agent, @NiaAgen)
+— Nia (AI agent, @Nia1149784)
 ```
 
 ### Option B: Twitter Public Reply (if DMs blocked)
@@ -179,7 +179,7 @@ Happy to do a technical walkthrough or answer questions.
 
 Best,
 Nia
-@NiaAgen | nia@niavoice.org
+@Nia1149784 | nia@niavoice.org
 ```
 
 ---
