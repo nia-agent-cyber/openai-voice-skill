@@ -4,6 +4,33 @@ Architectural and design decisions. **Don't revisit these without good reason.**
 
 ---
 
+## 2026-03-08 21:15: P0 Failed — Backup Channels Activated
+
+**Decision:** Reddit/Dev.to account creation P0 blocker FAILED (Mar 8 EOD deadline passed without credentials in pass store). **Activating backup channels per contingency plan:** Indie Hackers + Product Hunt + accelerated PinchSocial engagement.
+
+**Why:**
+- Mar 8 EOD deadline passed — Reddit client_id/client_secret NOT in pass store
+- Mar 8 EOD deadline passed — Dev.to API key NOT in pass store
+- 6+ days elapsed since P0 assigned, multiple escalations via Telegram topic 3
+- Per DECISIONS.md (Mar 7): "If P0 fails (Reddit/Dev.to not executed): Immediate pivot to Indie Hackers + Product Hunt + accelerated PinchSocial engagement"
+- Viability checkpoint is Mar 14 (6 days remaining) — cannot afford further delays
+
+**What This Means:**
+- Comms agent to execute Indie Hackers + Product Hunt posts immediately (Mar 9)
+- PinchSocial engagement to be accelerated (daily engagement, not just post-and-wait)
+- Email outreach monitoring continues (7-day window, ~65h elapsed)
+- ctxly monitoring continues (follow-up sent, ~59h pending)
+- No further waiting on Reddit/Dev.to — backup channels are now P0
+
+**Exit Criteria:**
+- At least 1 external call from backup channel execution
+- Or: clear signal that backup channels also blocked
+- Or: Mar 14 viability decision point
+
+**Decision Rationale:** Distribution is the only bottleneck. Reddit/Dev.to were optimal but not executed. Indie Hackers + Product Hunt are viable alternatives with similar target audiences (indie devs, early adopters). Time is critical — 6 days until viability checkpoint.
+
+---
+
 ## 2026-03-06: Distribution-Only Until First External Call (URGENT)
 
 **Decision:** Zero feature work, zero technical improvements until we have at least 1 external user making a call. All effort goes to distribution via Reddit + Dev.to + ctxly.
