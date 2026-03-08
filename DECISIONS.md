@@ -31,6 +31,39 @@ Architectural and design decisions. **Don't revisit these without good reason.**
 
 ---
 
+## 2026-03-08 21:25: Cycle 19 — Backup Channel Drafts Prepared
+
+**Decision:** Indie Hackers + Product Hunt post drafts created and ready for execution.
+
+**Why:**
+- P0 failure confirmed (Reddit/Dev.to credentials not in pass store)
+- Per DECISIONS.md 21:15 decision: execute backup channels immediately
+- Drafts prepared to unblock Comms agent execution (Mar 9)
+- No credentials needed for these channels — browser-based posting only
+
+**What Was Created:**
+- `INDIEHACKERS_POST_DRAFT.md` — Product launch post for Indie Hackers forum (Products/Show & Tell)
+- `PRODUCTHUNT_POST_DRAFT.md` — Full Product Hunt launch draft (tagline, description, hunter comment, timing, assets checklist)
+
+**What This Means:**
+- Comms agent can execute posts immediately (no additional prep needed)
+- Indie Hackers: Sign up with GitHub OAuth, post to Products or Show & Tell
+- Product Hunt: Sign up, prepare thumbnail (1200x630px), schedule for Mar 11 (Tuesday, 12:01 AM PST optimal)
+- Both channels target same audience as Reddit/Dev.to (indie devs, early adopters)
+
+**Success Metrics:**
+| Channel | Upvotes/Points | Comments | GitHub Stars | External Calls |
+|---------|---------------|----------|--------------|----------------|
+| Indie Hackers | 20+ | 5+ | +10 | 1+ |
+| Product Hunt | 50+ | 10+ | +25 | 3+ |
+
+**Exit Criteria:**
+- Posts published and monitored for 7 days
+- Engagement tracked (upvotes, comments, GitHub stars)
+- External calls attributed to channel (via user feedback or analytics)
+
+---
+
 ## 2026-03-06: Distribution-Only Until First External Call (URGENT)
 
 **Decision:** Zero feature work, zero technical improvements until we have at least 1 external user making a call. All effort goes to distribution via Reddit + Dev.to + ctxly.
