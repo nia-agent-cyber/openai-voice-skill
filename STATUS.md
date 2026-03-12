@@ -5,6 +5,28 @@
 
 ---
 
+## 📣 COMMS RESET UPDATE (2026-03-12 16:39 EDT)
+
+**What changed:**
+- Replaced stale cadence with a new 7-day ship-first comms plan (`COMMS_PLAN.md`) focused on channels that are actually executable now.
+- Added a 12-item ready-to-send queue with platform-specific variants (X, PinchSocial, Indie Hackers, Product Hunt, Email).
+- Added daily/weekly operating cadence + KPI targets to prevent future stalls.
+
+**What is live now (executed this session):**
+- ✅ Sent follow-up email to Cal.com (`team@cal.com`) via AgentMail.
+- ✅ Sent follow-up email to Josh/Baremetrics (`josh@baremetrics.com`) via AgentMail.
+- ✅ Posted public progress update comment on Cal.com GitHub Discussion #28291.
+
+**Current blockers:**
+- ❌ Twitter/X posting blocked (missing `~/.config/bird/twitter-cookies.env`).
+- ❌ PinchSocial posting blocked (missing credentials/API key config).
+- ❌ Indie Hackers/Product Hunt direct posting blocked until browser session/login is available for this environment.
+
+**Next 24h:**
+1. Execute 2 new outbound tester/prospect emails.
+2. Post one additional public GitHub/discussion update if no inbound response.
+3. Trigger first queued social post immediately once X/PinchSocial credentials are restored.
+
 ## ❌ QA UPDATE (2026-03-12 16:34 EDT) — PR #43 CHANGES_REQUESTED
 
 **Verdict:** CHANGES_REQUESTED (not merge-ready)
