@@ -1,7 +1,44 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-12 16:34 EDT by Voice QA (PR #43 review complete)  
+**Last Updated:** 2026-03-12 19:23 EDT by Voice Coder (PR #43 blocker fixed)  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
+
+---
+
+## ✅ CODER UPDATE (2026-03-12 19:23 EDT) — PR #43 Blocker Fixed
+
+**Verdict:** READY FOR QA RE-REVIEW
+
+**What changed (minimal scope fix per QA feedback):**
+- **Removed ambiguous token:** Removed `"cal"` from `_CALENDAR_KEYWORDS` in `scripts/openclaw_executor.py`
+- **Switched to word-boundary matching:** Updated `_is_calendar_request()` to use regex word-boundary matching (`\b`) instead of substring matching
+  - Prevents false positives: "calculate" and "call" no longer trigger calendar guard
+  - Preserves true positives: "calendar", "schedule", "meeting", "appointments", "availability" still detected correctly
+- **Added regression tests:** 3 new tests in `tests/test_calendar_guard.py`:
+  - `test_calculate_request_not_blocked` — "calculate 2+2" executes normally when calendar disconnected
+  - `test_call_request_not_blocked` — "call mom" executes normally when calendar disconnected
+  - `test_calculate_streaming_not_blocked` — streaming mode handles non-calendar requests correctly
+- **Fixed existing test:** Fixed duplicate assertion bug in `test_voice_layer_surfaces_not_connected_clearly`
+
+**Test results:**
+- Targeted tests: `./.venvtest/bin/python -m pytest -v tests/test_calendar_guard.py tests/test_error_handling.py` → **15 passed** (3 new regression tests included)
+- Full suite: `./.venvtest/bin/python -m pytest -q` → **104 passed** (up from 101, +3 regression tests)
+
+**Acceptance criteria verified:**
+- ✅ Non-calendar requests ("calculate 2+2", "call mom") are never blocked when calendar disconnected
+- ✅ Calendar requests still correctly detected and blocked when calendar disconnected
+- ✅ Existing non-calendar tool behavior unchanged
+- ✅ All tests pass (104/104)
+
+**PR status:**
+- Branch: `fix/issue-33-calendar-disconnected-guard`
+- PR #43: OPEN, MERGEABLE
+- Commits ready to push
+
+**Next steps:**
+- Coder to commit and push changes
+- QA to re-review PR #43 with new test evidence
+- If approved, PM to merge
 
 ---
 

@@ -13,6 +13,7 @@ import asyncio
 import json
 import logging
 import os
+import re
 import subprocess
 from typing import AsyncGenerator, Optional, Dict, Any
 
@@ -34,7 +35,6 @@ _current_user_context: Optional[Dict[str, Any]] = None
 CALENDAR_NOT_CONNECTED_CODE = "CALENDAR_NOT_CONNECTED"
 _CALENDAR_KEYWORDS = (
     "calendar",
-    "cal",
     "schedule",
     "meeting",
     "meetings",
@@ -45,9 +45,18 @@ _CALENDAR_KEYWORDS = (
 
 
 def _is_calendar_request(request: str) -> bool:
-    """Best-effort calendar intent detector for trust-critical guardrails."""
+    """
+    Best-effort calendar intent detector for trust-critical guardrails.
+    
+    Uses word-boundary matching to avoid false positives (e.g., "calculate", "call").
+    """
     normalized = (request or "").lower()
-    return any(keyword in normalized for keyword in _CALENDAR_KEYWORDS)
+    # Use word-boundary regex to avoid partial matches
+    for keyword in _CALENDAR_KEYWORDS:
+        pattern = r'\b' + re.escape(keyword) + r'\b'
+        if re.search(pattern, normalized):
+            return True
+    return False
 
 
 def _is_calendar_connected() -> bool:

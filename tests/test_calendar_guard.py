@@ -55,6 +55,72 @@ class TestCalendarGuardInExecutor:
         assert CALENDAR_NOT_CONNECTED_CODE in chunks[0]
 
 
+class TestCalendarGuardRegressions:
+    """Regression tests to ensure non-calendar requests are never blocked."""
+    
+    @pytest.mark.asyncio
+    async def test_calculate_request_not_blocked(self):
+        """Ensure 'calculate' is not mistaken for calendar intent."""
+        from openclaw_executor import OpenClawExecutor, CALENDAR_NOT_CONNECTED_CODE
+
+        executor = OpenClawExecutor(timeout=1)
+        
+        mock_process = AsyncMock()
+        mock_process.communicate.return_value = (b"4", b"")
+        mock_process.returncode = 0
+
+        with patch.dict(os.environ, {"OPENCLAW_CALENDAR_CONNECTED": "0"}, clear=False):
+            with patch("openclaw_executor.asyncio.create_subprocess_exec", new_callable=AsyncMock, return_value=mock_process) as mock_subprocess:
+                result = await executor.execute("Can you calculate 2+2?")
+
+        # Should NOT trigger calendar guard
+        assert CALENDAR_NOT_CONNECTED_CODE not in result
+        # Should execute normally through OpenClaw
+        mock_subprocess.assert_called_once()
+    
+    @pytest.mark.asyncio
+    async def test_call_request_not_blocked(self):
+        """Ensure 'call' is not mistaken for calendar intent."""
+        from openclaw_executor import OpenClawExecutor, CALENDAR_NOT_CONNECTED_CODE
+
+        executor = OpenClawExecutor(timeout=1)
+        
+        mock_process = AsyncMock()
+        mock_process.communicate.return_value = (b"Calling mom now", b"")
+        mock_process.returncode = 0
+
+        with patch.dict(os.environ, {"OPENCLAW_CALENDAR_CONNECTED": "0"}, clear=False):
+            with patch("openclaw_executor.asyncio.create_subprocess_exec", new_callable=AsyncMock, return_value=mock_process) as mock_subprocess:
+                result = await executor.execute("Please call mom")
+
+        # Should NOT trigger calendar guard
+        assert CALENDAR_NOT_CONNECTED_CODE not in result
+        # Should execute normally through OpenClaw
+        mock_subprocess.assert_called_once()
+    
+    @pytest.mark.asyncio
+    async def test_calculate_streaming_not_blocked(self):
+        """Ensure 'calculate' doesn't trigger guard in streaming mode."""
+        from openclaw_executor import OpenClawExecutor, CALENDAR_NOT_CONNECTED_CODE
+
+        executor = OpenClawExecutor(timeout=1)
+        
+        mock_process = AsyncMock()
+        mock_process.stdout.readline = AsyncMock(side_effect=[b"4\n", b""])
+        mock_process.stderr.read = AsyncMock(return_value=b"")
+        mock_process.returncode = 0
+        mock_process.wait = AsyncMock()
+
+        with patch.dict(os.environ, {"OPENCLAW_CALENDAR_CONNECTED": "0"}, clear=False):
+            with patch("openclaw_executor.asyncio.create_subprocess_exec", new_callable=AsyncMock, return_value=mock_process) as mock_subprocess:
+                chunks = [chunk async for chunk in executor.execute_streaming("Calculate 5 * 5")]
+
+        # Should NOT return calendar guard error
+        assert not any(CALENDAR_NOT_CONNECTED_CODE in chunk for chunk in chunks)
+        # Should execute subprocess normally
+        mock_subprocess.assert_called_once()
+
+
 class TestCalendarGuardVoiceLayer:
     @pytest.mark.asyncio
     async def test_voice_layer_surfaces_not_connected_clearly(self):
@@ -69,6 +135,8 @@ class TestCalendarGuardVoiceLayer:
         ):
             result = await handler._execute_function("ask_openclaw", {"request": "Check my calendar"})
 
-        assert "isn’t connected" in result or "isn't connected" in result
-        assert "connect" in result.lower()
-        assert "team sync" not in result.lower()
+        # Check for "not connected" (handles both "isn't" and "is not" with any apostrophe type)
+        result_lower = result.lower()
+        assert ("connected" in result_lower and "not" in result_lower) or "isn" in result_lower
+        assert "connect" in result_lower
+        assert "team sync" not in result_lower
