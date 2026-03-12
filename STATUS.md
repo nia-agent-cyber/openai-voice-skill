@@ -1,7 +1,42 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-12 15:52 EDT by Voice PM (Sprint Re-Anchor Pass)  
+**Last Updated:** 2026-03-12 16:26 EDT by Voice Coder (Issue #33 fix implemented)  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
+
+---
+
+## ✅ CODER UPDATE (2026-03-12 16:26 EDT) — Issue #33 Trust-Critical Fix
+
+**What changed (minimal shippable scope):**
+- Reproduced disconnected calendar behavior path at voice layer boundary: calendar-intent requests currently depend on upstream OpenClaw behavior, allowing non-deterministic outputs.
+- Implemented explicit guard in `scripts/openclaw_executor.py`:
+  - Added calendar-intent detection for voice requests.
+  - Added explicit integration gate via `OPENCLAW_CALENDAR_CONNECTED` flag.
+  - If disconnected, short-circuits before CLI call and returns deterministic error contract:
+    - `CALENDAR_NOT_CONNECTED: ...connect your calendar first...`
+  - Applied to both non-streaming and streaming paths to prevent fabricated event output in either mode.
+- Updated voice response handling in `scripts/realtime_tool_handler.py`:
+  - Added deterministic error normalization so callers hear a clear message when calendar is not connected.
+  - Ensures not-connected state is communicated explicitly in spoken response.
+- Added regression tests in `tests/test_calendar_guard.py` for:
+  - disconnected calendar (deterministic not-connected error, no subprocess/tool execution)
+  - connected mock calendar path (normal OpenClaw execution still used)
+  - disconnected streaming path (single deterministic error chunk)
+  - voice response layer clarity for `CALENDAR_NOT_CONNECTED`
+
+**Test results:**
+- Targeted: `./.venvtest/bin/python -m pytest -q tests/test_calendar_guard.py tests/test_error_handling.py` → **12 passed**
+- Full suite: `./.venvtest/bin/python -m pytest -q` → **101 passed**
+
+**PR/branch status:**
+- Branch: `main` (coder changes committed for immediate QA pickup)
+- PR: to be opened from current branch if PM prefers review gate; code is shippable now.
+
+**Remaining risks / notes:**
+- Guard currently uses explicit env flag (`OPENCLAW_CALENDAR_CONNECTED`) to allow connected path; deployment must set this true only when calendar integration is genuinely configured.
+- Calendar intent detection is keyword-based by design (minimal scope). If future false positives appear, expand intent classifier in a follow-up without weakening guard.
+
+---
 
 ---
 

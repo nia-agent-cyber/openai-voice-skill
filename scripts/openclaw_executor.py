@@ -31,6 +31,38 @@ _current_call_id: Optional[str] = None
 # Global user context for the current call (set per-call)
 _current_user_context: Optional[Dict[str, Any]] = None
 
+CALENDAR_NOT_CONNECTED_CODE = "CALENDAR_NOT_CONNECTED"
+_CALENDAR_KEYWORDS = (
+    "calendar",
+    "cal",
+    "schedule",
+    "meeting",
+    "meetings",
+    "appointment",
+    "appointments",
+    "availability",
+)
+
+
+def _is_calendar_request(request: str) -> bool:
+    """Best-effort calendar intent detector for trust-critical guardrails."""
+    normalized = (request or "").lower()
+    return any(keyword in normalized for keyword in _CALENDAR_KEYWORDS)
+
+
+def _is_calendar_connected() -> bool:
+    """Calendar integration gate (explicit opt-in for voice path)."""
+    value = os.getenv("OPENCLAW_CALENDAR_CONNECTED", "").strip().lower()
+    return value in {"1", "true", "yes", "on"}
+
+
+def _calendar_not_connected_response() -> str:
+    """Deterministic response contract for disconnected calendar requests."""
+    return (
+        f"{CALENDAR_NOT_CONNECTED_CODE}: I can’t access your calendar because no calendar "
+        "integration is connected yet. Please connect your calendar first, then ask again."
+    )
+
 
 def set_call_id(call_id: str):
     """Set the current call_id for error tracking in logs."""
@@ -123,6 +155,12 @@ class OpenClawExecutor:
         if not request or not request.strip():
             logger.warning(f"[call_id={call_id}] Empty request received")
             return "I didn't receive a valid request. Could you repeat that?"
+
+        if _is_calendar_request(request) and not _is_calendar_connected():
+            logger.warning(
+                f"[call_id={call_id}] Calendar request blocked: integration not connected"
+            )
+            return _calendar_not_connected_response()
         
         # Use provided context or fall back to global context
         context = user_context or get_user_context()
@@ -213,6 +251,13 @@ class OpenClawExecutor:
         if not request or not request.strip():
             logger.warning(f"[call_id={call_id}] Empty streaming request received")
             yield "I didn't receive a valid request. Could you repeat that?"
+            return
+
+        if _is_calendar_request(request) and not _is_calendar_connected():
+            logger.warning(
+                f"[call_id={call_id}] Streaming calendar request blocked: integration not connected"
+            )
+            yield _calendar_not_connected_response()
             return
         
         # Use provided context or fall back to global context
