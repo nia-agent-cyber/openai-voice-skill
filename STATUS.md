@@ -1,7 +1,40 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-12 16:26 EDT by Voice Coder (Issue #33 fix implemented)  
+**Last Updated:** 2026-03-12 16:34 EDT by Voice QA (PR #43 review complete)  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
+
+---
+
+## ❌ QA UPDATE (2026-03-12 16:34 EDT) — PR #43 CHANGES_REQUESTED
+
+**Verdict:** CHANGES_REQUESTED (not merge-ready)
+
+**What QA validated:**
+- ✅ PR mergeability: `gh pr view 43 --json mergeable` → `MERGEABLE`
+- ✅ Disconnected-calendar guard works for explicit calendar asks (deterministic `CALENDAR_NOT_CONNECTED`)
+- ✅ Connected-mock path still executes OpenClaw subprocess (existing behavior preserved)
+- ✅ Streaming disconnected path returns deterministic single error chunk
+- ✅ Voice-layer error normalization returns clear caller-facing not-connected message
+- ✅ Targeted tests pass: `./.venvtest/bin/python -m pytest -q tests/test_calendar_guard.py tests/test_error_handling.py` → **12 passed**
+- ✅ Full suite passes: `./.venvtest/bin/python -m pytest -q` → **101 passed**
+
+**Blocking defect found (must fix before approval):**
+- `scripts/openclaw_executor.py` uses keyword substring `"cal"` in `_CALENDAR_KEYWORDS` with `keyword in normalized` matching.
+- This causes false positives for non-calendar requests containing "cal" (e.g., **"calculate 2+2"**), which are incorrectly blocked with `CALENDAR_NOT_CONNECTED` when calendar is disconnected.
+- Repro run (QA):
+  - Command: `PYTHONPATH=scripts ./.venvtest/bin/python - <<'PY' ... ex.execute('Can you calculate 2+2?') ... PY`
+  - Observed: returned `CALENDAR_NOT_CONNECTED...` and logged `Calendar request blocked`.
+- This violates acceptance criterion: **"Existing non-calendar tool behavior is unchanged."**
+
+**Precise coder fix list:**
+1. Remove/replace ambiguous token `"cal"` from calendar intent detection.
+2. Switch to safer intent matching (word-boundary tokens/phrases like `calendar`, `meetings`, `appointments`, `schedule`, `availability`) to avoid partial-word collisions.
+3. Add regression tests proving non-calendar requests are never blocked when disconnected (minimum examples: `"calculate 2+2"`, `"call mom"`).
+4. Re-run targeted + full suites and update PR with evidence.
+
+**Post-merge watchpoints (once fixed and approved):**
+- Ensure deployment env sets `OPENCLAW_CALENDAR_CONNECTED=true` only when calendar integration is actually live.
+- Monitor for intent-classification misses/false negatives and tighten matcher without reintroducing broad partial matches.
 
 ---
 
