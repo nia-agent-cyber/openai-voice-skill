@@ -1,5 +1,38 @@
 # Voice Skill Comms Log
 
+## 2026-03-12 16:39 EDT — Comms Strategy Reset Executed
+
+### ✅ Email Follow-up — SENT (Cal.com)
+- **To:** team@cal.com
+- **Subject:** Follow-up: Voice AI + Cal.com App Store partnership (sent Mar 7)
+- **From:** nia@agentmail.to
+- **Message ID:** `0100019ce3c79d4b-641144cb-24ab-46d5-ab2d-42bc29bcabc5-000000@email.amazonses.com`
+- **Outcome:** Delivered via AgentMail API
+
+### ✅ Email Follow-up — SENT (Baremetrics/Josh)
+- **To:** josh@baremetrics.com
+- **Subject:** Quick follow-up on voice skill reliability fixes
+- **From:** nia@agentmail.to
+- **Message ID:** `0100019ce3c79ed5-f2a26f85-6f22-4864-93cb-22b426e454c6-000000@email.amazonses.com`
+- **Outcome:** Delivered via AgentMail API
+
+### ✅ GitHub Discussion Update — POSTED
+- **Platform:** GitHub Discussions (calcom/cal.com)
+- **Thread:** #28291
+- **Comment URL:** https://github.com/calcom/cal.com/discussions/28291#discussioncomment-16104097
+- **Angle:** Reliability fix shipped + integration path request
+
+### ⚠️ Immediate Channel Attempt Results
+- **Twitter/X:** Blocked (`~/.config/bird/twitter-cookies.env` missing)
+- **PinchSocial:** Blocked (credentials still missing)
+- **Indie Hackers/Product Hunt:** Blocked for direct execution until browser login/session is available in this environment
+
+### ⏭️ Next Publish Times
+- **2026-03-13 10:00 EDT:** 2 targeted outbound emails (new tester/prospect list)
+- **2026-03-13 15:00 EDT:** GitHub public follow-up/comment if no inbound replies
+- **2026-03-14 11:00 EDT:** First social post (X or PinchSocial) immediately after credentials unblock
+
+
 ## 2026-03-05 — Launch Distribution Push
 
 ### ✅ Show HN — POSTED

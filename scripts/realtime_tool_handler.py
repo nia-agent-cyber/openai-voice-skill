@@ -106,6 +106,19 @@ class RealtimeToolHandler:
         
         # Resolve user context from phone number
         self.user_context = self._resolve_user_context()
+
+    def _format_voice_error_response(self, result: str) -> str:
+        """Normalize deterministic tool errors into caller-friendly voice text."""
+        if not isinstance(result, str):
+            return "I ran into an issue processing that request."
+
+        if "CALENDAR_NOT_CONNECTED" in result:
+            return (
+                "I can’t access your calendar right now because it isn’t connected. "
+                "Please connect your calendar integration first, then ask me again."
+            )
+
+        return result
     
     def _resolve_user_context(self) -> Dict[str, Any]:
         """
@@ -387,6 +400,7 @@ class RealtimeToolHandler:
                 
                 try:
                     result = await execute_openclaw_request(request)
+                    result = self._format_voice_error_response(result)
                     
                     # Validate result
                     if not result or not isinstance(result, str):
@@ -443,7 +457,7 @@ class RealtimeToolHandler:
                 if not chunk or not chunk.strip():
                     continue
                 
-                chunk = chunk.strip()
+                chunk = self._format_voice_error_response(chunk.strip())
                 chunk_count += 1
                 
                 logger.debug(f"[call_id={self.call_id}] Streaming chunk {chunk_count}: {len(chunk)} chars")
