@@ -1,6 +1,6 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-16 16:58 EDT by Voice PM (Post-viability checkpoint decision)  
+**Last Updated:** 2026-03-16 18:15 EDT by Voice PM (Archive complete — GitHub repo archived)  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 
 ---
@@ -131,7 +131,7 @@ All remaining issues are P3 (low priority):
 
 ## 🏁 FINAL STATUS
 
-**Repository:** Public, AGPLv3 licensed, archived on GitHub  
+**Repository:** Public, AGPLv3 licensed, **archived on GitHub (2026-03-16 18:15 EDT)**  
 **Code:** Production-ready, fully tested, documented  
 **Deployment:** webhook-server.py remains functional for existing users (if any)  
 **Future:** May be revisited if market conditions change or partnership opportunities emerge
