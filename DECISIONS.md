@@ -4,6 +4,96 @@ Architectural and design decisions. **Don't revisit these without good reason.**
 
 ---
 
+## 2026-03-16 16:58: PROJECT ARCHIVED — Viability Checkpoint Failed
+
+**Decision:** Archive openai-voice-skill project effective March 16, 2026.
+
+**Context:**
+- Viability checkpoint was March 14, 2026 (32 days post-Phase 2 launch)
+- Decision criteria (from Mar 6 decision): "0 external calls → Archive project"
+- Final count: **0 external calls** after 32+ days
+- Technical quality: Excellent (104 tests passing, sub-200ms latency, all P1 bugs resolved)
+- Market response: None (7 GitHub stars, 0 forks, no adoption signals)
+
+**Why Archive vs. Continue:**
+
+| Evidence | Assessment |
+|----------|------------|
+| **Technical:** 104 tests, sub-200ms latency, Issue #33 fixed | ✅ Product works |
+| **Distribution:** Indie Hackers failed, Product Hunt never executed, Reddit/Dev.to blocked | ❌ Can't reach users |
+| **Market signals:** Show HN failed (score 3, 0 comments), Cal.com stalled (8 emoji, 0 text) | ❌ No organic interest |
+| **Competitive:** ElevenLabs+Deloitte, Retell G2 award, Vapi 150M+ calls | ❌ Market consolidating |
+| **Time invested:** 32+ days, 129+ monitoring cycles, multiple agent sprints | ⚠️ Diminishing returns |
+
+**Root Cause Analysis:**
+
+The project failed due to **distribution execution gap**, not technical problems:
+
+1. **Coordination failure** — Planning (BA/PM) vs. execution (Comms) disconnect
+   - Indie Hackers scheduled Mar 9 → attempted Mar 13 → browser failed
+   - Product Hunt scheduled Mar 11 → never attempted
+   - Reddit/Dev.to scheduled Mar 1 → credentials never provided (6+ days)
+
+2. **Dependency blockers** — 8+ days waiting for credentials, 10+ days on ctxly approval
+   - Reddit client_id/client_secret never added to pass store
+   - Dev.to API key never created
+   - ctxly manual review never completed
+
+3. **Prioritization error** — Final week spent on Issue #33 (calendar bug) instead of forcing distribution
+   - Technical polish prioritized over user acquisition
+   - 129+ PM monitoring cycles waiting for distribution that never happened
+
+4. **Market timing** — Competitive landscape hardened while we debugged
+   - ElevenLabs+Deloitte partnership closed enterprise lane
+   - Retell won G2 award + daily content (SEO domination)
+   - Vapi Claude Skills launch (DX moat widening)
+
+**Decision Rationale:**
+
+Per Mar 6 decision criteria: "0 external calls → Archive project, document lessons learned."
+
+**Continuing would require:**
+- ✅ Clear distribution path (we don't have one — all channels blocked or failed)
+- ✅ Market signal of demand (we don't have it — 0 organic interest after 32 days)
+- ✅ Unique differentiation (competitors have closed gaps — enterprise, SEO, DX)
+
+**None of these conditions are met.**
+
+**What We Learned:**
+
+1. **Distribution > Product** — Technical excellence is necessary but insufficient
+2. **Speed matters** — 6-day credential delays are fatal in fast markets
+3. **Force execution** — Scheduled posts that never happen waste planning cycles
+4. **Test channels early** — Validate posting ability before building product
+5. **Market windows close** — Competitor moves can change landscape during your sprint
+
+**Reusable Assets:**
+
+- ✅ Technical foundation (OpenAI Realtime integration code)
+- ✅ Testing patterns (104 tests demonstrate good practices)
+- ✅ Agent workflows (PM/Coder/QA/BA coordination)
+- ✅ Documentation templates (PROTOCOL.md, STATUS.md, DECISIONS.md)
+
+**Potential Future Paths (If Revisited):**
+
+1. **Different distribution** — App Store integrations (Cal.com, n8n) as PRIMARY channel, not backup
+2. **Different audience** — Enterprise with direct sales, not indie devs with content marketing
+3. **Different positioning** — Accessibility niche (screen readers) less crowded
+4. **Different execution** — Human-led distribution first, then agent-led
+
+**Exit Actions:**
+
+1. ✅ Update STATUS.md with archive notice
+2. ✅ Update DECISIONS.md with decision rationale (this entry)
+3. ⏳ Post to Telegram topic 3 (Voice team notification)
+4. ⏳ Commit and push all changes
+5. ⏳ Archive GitHub repository
+6. ⏳ Write memory entry (2026-03-16.md)
+
+**This is not a failure of effort — it's an honest assessment per established criteria. The project demonstrated excellent technical execution but could not achieve market distribution. These lessons will inform future agent skill development.**
+
+---
+
 ## 2026-03-08 22:21: Cycle 22 — Indie Hackers Launch Scheduled
 
 **Decision:** Indie Hackers post scheduled for Mar 9 14:00 GMT+2 (16h from decision time).
