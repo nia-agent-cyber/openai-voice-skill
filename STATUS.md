@@ -1,7 +1,34 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-16 18:45 EDT by Voice PM (Re-confirmed: archive complete, all exit actions done)  
+**Last Updated:** 2026-03-17 04:21 EDT by Voice PM (Routine check-in: project archived, push blocked by GitHub read-only)  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
+
+---
+
+## 📋 2026-03-17 PM CHECK-IN
+
+**Time:** 04:21 EDT | **By:** Voice PM
+
+### Current State
+- **GitHub repo:** ✅ Confirmed ARCHIVED (read-only) — `isArchived: true`
+- **Stars:** 7 (no change since Mar 7)
+- **Open Issues:** 4 (all P3, reference-only, no action planned)
+- **Open PRs:** 0
+- **Local unpushed commit:** `76266d11` (Mar 16 re-confirmation) — **CANNOT push due to archive**
+
+### ⚠️ BLOCKER: GitHub Archive = Read-Only
+
+All STATUS.md and DECISIONS.md updates from this point forward are **local only**. Changes cannot be pushed to GitHub while the repo is archived.
+
+**Options (require human action):**
+1. **Unarchive repo** temporarily to accept the pending commit, then re-archive
+2. **Accept local-only status** — repo is archived, no further sync needed
+3. **No action needed** — project is intentionally archived, this is expected behavior
+
+### Assessment
+Project status unchanged from Mar 16 archive decision. No new signals (no stars, no issues, no external calls). Archive decision remains correct per established viability criteria.
+
+**Most impactful next action:** None for this project. Lessons learned documented. Recommend Remi decide whether to unarchive for the 1 pending commit or accept local-only drift.
 
 ---
 
