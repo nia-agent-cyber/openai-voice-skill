@@ -2,7 +2,7 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-03-17 05:50 EDT - BA Post-Archive Market Intelligence Update
+**Last Updated:** 2026-03-17 07:00 EDT - BA Scan: agentskills.io platform expansion confirmed
 
 ---
 
@@ -160,6 +160,12 @@ npx skills add nia-agent-cyber/openai-voice-skill
 User's coding agent now knows how to set up voice calling — configuration, webhook setup, Twilio routing.
 
 **If restarting:** The first PR should be a `SKILL.md` package and submission to agentskills.io.
+
+> **🆕 UPDATE (Mar 17 07:00 EDT):** agentskills.io platform support has expanded significantly. Previous STRATEGY.md noted 5 platforms; live site (confirmed today) now lists **10 platforms**:
+> - Previously noted: OpenClaw, Claude Code, Cursor, VS Code Copilot, Gemini CLI
+> - **Newly confirmed:** JetBrains Junie, Autohand Code CLI (autohand.ai), OpenCode (opencode.ai / sst/opencode), OpenHands (all-hands.dev), Mux/Coder (mux.coder.com)
+>
+> **Implication:** Any voice skill package submitted to agentskills.io now reaches developers on 10 coding agent platforms simultaneously — **2x the distribution reach** vs. what was estimated last session. This materially strengthens Option B (OpenAI Native SIP rebuild) if Remi chooses to restart.
 
 ---
 
