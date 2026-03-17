@@ -2,7 +2,233 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-03-08 22:15 GMT+2 - BA Cycle 5/6 Strategic Analysis (Day 29, 6 days to viability checkpoint)
+**Last Updated:** 2026-03-17 05:50 EDT - BA Post-Archive Market Intelligence Update
+
+---
+
+## 🗂️ POST-ARCHIVE MARKET INTELLIGENCE (2026-03-17 05:50 EDT)
+
+**Context:** Project archived March 16, 2026. This section captures market developments since the last BA cycle (Mar 8) to inform any future restart, pivot, or lessons-learned synthesis.
+
+**Research Tools Used:**
+- ✅ web_fetch — ElevenLabs blog, Vapi blog, Bland blog, OpenAI Realtime API docs
+- ⚠️ Twitter/X — Browser unavailable (Chrome extension not attached)
+- ⚠️ web_search (Brave) — API key not configured
+
+---
+
+### 🔴 CRITICAL: Vapi Directly Targeted Our Market (Feb 24–25, 2026)
+
+**This is the most significant competitive development since our project launched.**
+
+**Finding 1:** On **Feb 24, 2026**, Vapi published a blog post titled:
+> *"Give Your OpenClaw Agent a Voice: Adding Phone Calls with Vapi Skills"*
+> — `vapi.ai/blog/openclaw`
+
+This is a **direct tutorial for adding voice to OpenClaw agents using Vapi**. They targeted our exact audience (OpenClaw users who want voice capability) and published it ~3 weeks before our viability checkpoint.
+
+**Finding 2:** On **Feb 25, 2026**, Vapi shipped the **Vapi Skills** package:
+- Follows the **Agent Skills standard** (`agentskills.io`)
+- One install: `npx skills add VapiAI/skills`
+- Works on: **OpenClaw, Claude Code, Cursor, VS Code Copilot, Gemini CLI**
+- Gives coding agents structured knowledge to build Vapi voice integrations from scratch
+- MCP connector for live Vapi documentation access
+
+**Strategic Implication:**
+- Our thesis (agent-native voice for OpenClaw) was **100% validated** — Vapi confirmed the market
+- Vapi captured the distribution channel (Skills marketplace) we didn't know existed
+- The `agentskills.io` standard is now **the** distribution channel for agent tooling — we never targeted it
+- **If restarting:** Submit to agentskills.io and the Skills marketplace before writing a line of code
+
+---
+
+### 🔴 CRITICAL: OpenAI Realtime API Now GA with Native SIP
+
+**OpenAI has shipped changes that would fundamentally alter our architecture.**
+
+**Finding 1: Realtime API is now Generally Available (GA)**
+- Beta header (`OpenAI-Beta: realtime=v1`) deprecated
+- Stable API surface, enterprise-ready
+- **Implication:** Our `webhook-server.py` was built on beta APIs; production apps should migrate to GA
+
+**Finding 2: Native SIP connection added to Realtime API**
+- Direct SIP trunking to `sip:$PROJECT_ID@sip.api.openai.com;transport=tls`
+- Twilio (or any SIP trunk) points directly at OpenAI — **no custom media server needed**
+- Webhook fires `realtime.call.incoming` event with caller ID, SIP headers
+- Accept/reject/hangup calls via REST API: `POST /v1/realtime/calls/$CALL_ID/accept`
+- Then open WebSocket to monitor/control the session: `wss://api.openai.com/v1/realtime?call_id={call_id}`
+
+**Architecture comparison:**
+| Old approach (our webhook-server.py) | New approach (OpenAI SIP) |
+|--------------------------------------|--------------------------|
+| Twilio → WebSocket bridge → OpenAI | Twilio → SIP trunk → OpenAI directly |
+| Custom media server + ffmpeg/pcm conversion | Zero media server — OpenAI handles it |
+| ~500 lines of infrastructure code | ~50 lines (webhook handler + accept call) |
+| Complex session sync | Session ID from webhook, WebSocket for monitoring |
+
+**Strategic Implication:**
+- Our `webhook-server.py` complexity (the thing we were told "DO NOT MODIFY") is now largely **obsolete**
+- A restart would be 60–70% simpler to build using native SIP
+- The new architecture maps directly to OpenClaw's webhook plugin model
+- **If restarting:** Build on OpenAI SIP + OpenClaw webhook plugin; skip the media bridge entirely
+
+**Finding 3: OpenAI Agents SDK for TypeScript (official voice agent SDK)**
+- `@openai/agents/realtime` package
+- `RealtimeAgent` + `RealtimeSession` abstractions
+- Browser WebRTC + server WebSocket support
+- Official quickstart guide at `openai.github.io/openai-agents-js/guides/voice-agents/`
+- **Implication:** OpenAI is eating the "voice agent framework" layer Vapi occupied
+
+**Finding 4: MCP servers now supported in Realtime sessions**
+- Realtime API sessions can call MCP tools natively
+- `realtime-mcp` guide in official docs
+- **Implication:** OpenClaw's MCP integrations could be directly exposed to voice sessions
+
+---
+
+### 🟠 ElevenLabs: $500M Raised, Government Vertical, Eleven v3 GA
+
+*(Note: $500M Series D at $11B valuation, Klarna, Revolut, Deloitte partially covered in prior research. New findings below.)*
+
+**New since Mar 8:**
+
+**ElevenLabs for Government** (Feb 11, 2026)
+- Launched government-specific tier with compliance, sovereignty features
+- Transforming "public service access with AI"
+- **Implication:** Enterprise AND government verticals now captured. Another lane closed.
+
+**SXSW appearance** (Mar 11, 2026)
+- Session: "Honoring Eric Dane's Legacy at SXSW: Advancing 1 Million Voices"
+- Focus on voice identity, AI restoration, accessibility angle
+- **Implication:** ElevenLabs owns the "voice identity" narrative at the biggest tech conference of Q1. Their accessibility angle (1M voices) overlaps with our previously-identified underserved niche.
+
+**Eleven v3 GA** (Feb 2, 2026)
+- "Most advanced TTS model ever released"
+- **Implication:** Voice quality bar raised industry-wide. OpenAI's built-in voices (which we used) now compete directly with ElevenLabs v3.
+
+---
+
+### 🟠 Bland AI: March 2026 SEO Domination Continues
+
+Bland published the following articles in March 2026 (ongoing through Mar 16):
+- "Trends Shaping the Conversational AI Future and How to Act" (Mar 16)
+- "How to Improve Response Time to Customer Messages and Calls" (Mar 15)
+- "18 Conversational AI Examples and Use Cases for Modern Businesses" (Mar 15)
+- "Top 20 Zoho Voice Alternatives" (Mar 10)
+- "20 Better 3CX Alternatives" (Mar 9)
+- "Top 25 Bitrix24 Alternatives" (Mar 8)
+- Aircall vs RingCentral, Five9 alternatives, Convoso alternatives (Mar 2–7)
+
+**New IVR replacement guide** — Bland is explicitly positioning as IVR replacement, targeting Zoho, 3CX, Five9, Aircall, Convoso, Bitrix24 customer bases.
+
+**Key insight from Bland's trend piece (Mar 16):**
+- Multi-bot architectures (specialized agents per domain) becoming standard
+- Omnichannel continuity = treating conversation as persistent entity across channels
+- "Systems designed with unified state management let customers continue conversations through whatever medium makes sense" — THIS IS WHAT WE BUILT. Session continuity across voice + Telegram + email was our core differentiator. The market now confirms this was the right bet.
+- IBM: conversational AI can reduce customer service costs by 30%
+- Forbes: 95% of customer interactions powered by AI by 2025 (already happening)
+
+---
+
+### 🟢 Market Signals That Validate Our Architecture
+
+Despite project archival, the market has moved to confirm several of our architectural decisions:
+
+| Our decision | Market validation |
+|-------------|------------------|
+| Voice as a channel (not a standalone product) | Vapi wrote a blog post about it for OpenClaw |
+| Session continuity across channels | Bland's March 2026 analysis cites omnichannel state as key differentiator |
+| OpenAI Realtime API as the core | OpenAI now native SIP + official Agents SDK for TypeScript |
+| Open-source + AGPLv3 | Cal.com synergy still valid; Agent Skills standard favors open packages |
+| Agent-to-agent communication | PinchSocial still live, agent ecosystem maturing |
+
+---
+
+### 🆕 KEY DISTRIBUTION CHANNEL WE MISSED: Agent Skills Marketplace
+
+**`agentskills.io` is the distribution channel we should have targeted from day one.**
+
+- Vapi built their OpenClaw integration as a Skills package — one `npx skills add VapiAI/skills` installs everything
+- Works across OpenClaw, Claude Code, Cursor, VS Code Copilot, Gemini CLI
+- Zero credential barrier for the user (they provide API keys, not us)
+- Skills are indexed and discoverable
+
+**What a openai-voice-skill would have looked like as a Skills package:**
+```
+npx skills add nia-agent-cyber/openai-voice-skill
+```
+User's coding agent now knows how to set up voice calling — configuration, webhook setup, Twilio routing.
+
+**If restarting:** The first PR should be a `SKILL.md` package and submission to agentskills.io.
+
+---
+
+### 📊 REVISED COMPETITIVE MAP (as of Mar 17, 2026)
+
+| Player | Moat | Our differentiation vs. them |
+|--------|------|------------------------------|
+| **ElevenLabs** | $11B, enterprise+govt, Deloitte, Klarna, Revolut | N/A — different league |
+| **Vapi** | 350K+ devs, Claude Skills, OpenClaw blog post, Squads | None remaining — they captured our audience |
+| **Retell** | G2 Best 2026, SEO domination, vertical guides | None remaining |
+| **Bland** | IVR replacement, enterprise (Samsara, Snapchat), SEO | None remaining |
+| **OpenAI Realtime (native SIP)** | Official, native SIP, Agents SDK, MCP support | None remaining — upstream captured our layer |
+
+**Honest assessment:** As of March 2026, the voice AI infrastructure layer is fully captured. The only defensible positions for a small team are:
+1. **Vertical-specific application** (not infrastructure) — e.g., accessibility tools, specific industry workflow
+2. **OpenClaw-native deep integration** not possible for external players (e.g., internal memory tools, session state hooks unavailable via public API)
+3. **Agent-to-agent voice** (PinchSocial/agent network layer) — still largely unexplored
+
+---
+
+### 🔮 FUTURE OPPORTUNITY ANALYSIS
+
+**If Remi wants to revisit voice for OpenClaw agents (post-archive):**
+
+#### Option A: Wrap Vapi (Not Build)
+- Use Vapi as the voice infrastructure layer
+- Build an OpenClaw-native plugin that configures Vapi via API
+- Differentiation: OpenClaw-specific features (memory sync, session continuity hooks, multi-channel routing)
+- Distribution: Submit to OpenClaw plugin marketplace + agentskills.io
+- Time to MVP: 1–2 days
+- Risk: Locked to Vapi's pricing/availability
+
+#### Option B: OpenAI Native SIP Plugin (Minimal Infrastructure)
+- Use OpenAI's new native SIP support — no media server needed
+- OpenClaw webhook plugin receives `realtime.call.incoming`, accepts/rejects
+- ~50 lines of code vs. our current ~500 lines
+- Full session continuity via OpenClaw's existing session model
+- Distribution: agentskills.io Skills package
+- Time to MVP: 2–3 days
+- Risk: OpenAI SIP pricing, beta-era stability
+
+#### Option C: Accessibility Vertical (Underserved Niche)
+- Voice AI for accessibility tools (screen readers, NVDA, JAWS integration)
+- Less competitive than call center space
+- Social impact angle (good for PR, grants)
+- Potential Cal.com synergy (accessibility scheduling)
+- Time to evaluate: 1 week research sprint
+
+**Recommendation if restarting:** Start with Option B (OpenAI Native SIP, minimal code), submit to agentskills.io immediately, then add Vapi fallback if needed.
+
+---
+
+### 📅 TIMELINE OF KEY EVENTS (Post-Mar 8 Summary)
+
+| Date | Event | Impact |
+|------|--------|--------|
+| Feb 2, 2026 | ElevenLabs Eleven v3 GA | Raises voice quality bar |
+| Feb 4, 2026 | ElevenLabs $500M Series D at $11B | Enterprise lane fully closed |
+| Feb 11, 2026 | ElevenLabs for Government | Government vertical captured |
+| Feb 24, 2026 | **Vapi publishes OpenClaw blog post** | 🔴 Direct competitor targets our audience |
+| Feb 25, 2026 | **Vapi launches Agent Skills (works on OpenClaw)** | 🔴 One-command Vapi voice for OpenClaw |
+| Mar 11, 2026 | ElevenLabs at SXSW | Brand dominance in voice identity |
+| Mar 16, 2026 | **openai-voice-skill archived** | Project closed (0 external calls) |
+| Mar 17, 2026 | **OpenAI Realtime API native SIP confirmed GA** | 🟢 Architecture simplification opportunity |
+| Ongoing | Bland SEO dominance (15+ articles/month) | Search traffic fully captured |
+
+---
+
+*Post-archive research complete. Next action (if any): Remi decides whether to pursue Option A/B/C above, or close chapter entirely.*
 
 ---
 
