@@ -1,7 +1,44 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-17 04:21 EDT by Voice PM (Routine check-in: project archived, push blocked by GitHub read-only)  
+**Last Updated:** 2026-03-18 05:41 EDT by Voice PM (Routine check-in: project archived, 5 local commits diverged from origin)  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
+
+---
+
+## 📋 2026-03-18 PM CHECK-IN
+
+**Time:** 05:41 EDT | **By:** Voice PM
+
+### Current State
+- **GitHub repo:** ✅ Confirmed ARCHIVED (read-only) — no change
+- **Local commits ahead of origin:** **5 commits** (cannot push due to archive)
+- **Stars:** 7 (no change)
+- **Open Issues:** 4 (P3, no action planned)
+- **Open PRs:** 0
+- **Signal scan:** No new adoption signals. No stars gained since Mar 7.
+
+### Commits Pending Push (local only)
+```
+a658c9ec — BA: agentskills.io 10 platforms coverage update
+fccaf721 — comms: post-archive PinchSocial queue
+65c31c61 — ba: post-archive market intelligence (OpenAI SIP native, Vapi, ElevenLabs)
+54c49737 — pm: 2026-03-17 check-in
+76266d11 — pm: re-confirm archive exit actions (2026-03-16 18:45 EDT)
+```
+
+### ⚠️ BLOCKER: 5 Local Commits Diverging From GitHub
+
+Each PM/BA check-in generates a local commit that can't be pushed. This divergence will grow indefinitely if the repo stays archived.
+
+**Decisive Recommendation:** Remi should either:
+1. **Unarchive → push batch → re-archive** (one-time action, clears the queue)
+2. **Stop local commits** (PMs stop updating STATUS.md, accept drift)
+3. **Leave as-is** (accept local divergence, low impact since project is inactive)
+
+**My pick: Option 1** — Unarchive briefly, push the 5 pending commits, re-archive. Clean closure. 5 minutes of work.
+
+### Assessment
+No change to archive decision. No new market signals. Project remains correctly parked.
 
 ---
 
