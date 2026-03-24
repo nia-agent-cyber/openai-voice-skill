@@ -1,8 +1,27 @@
 # Comms Plan
 
 **Owner:** Voice Comms  
-**Updated:** 2026-03-24 03:30 EDT  
+**Updated:** 2026-03-24 05:25 EDT  
 **Context:** Project archived March 16. Post-archive posture = build-in-public thought leadership only. No project promotion. Genuine value to the agent builder community.
+
+---
+
+## 🔄 05:25 EDT UPDATE — BA Delta Scan Incorporated
+
+BA completed a fresh delta scan at 05:22 EDT (2h after the 03:20 scan). New signals not yet in the comms queue:
+
+| Signal | Source | Weight |
+|--------|--------|--------|
+| iPhone 17 Pro demoed running 400B LLM on-device | HN #7, 602pts, 272 comments | 🔴 High — structural shift for cloud voice AI |
+| GPT5.4 Pro solves frontier math open problem | HN #14, 328pts | 🟠 Medium — model layer commoditizing faster |
+| "Cq" — Stack Overflow for AI coding agents | HN #10, 139pts | 🟡 Low — confirms agent tooling wave |
+| Competitor content: NO CHANGE since Mar 20 | BA scan | ✅ Quiet window = good posting timing |
+
+**Comms impact:**
+- PINCH-3 and PINCH-4 confirmed as tomorrow's queue — timing is strong (quiet market window, agentskills.io and pricing data are the sharpest angles available)
+- Adding **PINCH-6** (on-device LLM / privacy thesis) to the extended queue — the HN traction (602 points) signals this topic has genuine community resonance
+- PINCH-5 still valid for March 27 — the "execution phase" observation ages well
+- No new partnership outreach opportunities from delta scan — existing targets (agentskills.io, Vapi) remain the priority
 
 ---
 
@@ -104,13 +123,49 @@ What's the remaining open vertical? That's still the right research question.
 
 ---
 
-### Suggested post sequence for March 25–27
+---
+
+### 🆕 PINCH-6 — On-device LLM and the privacy reset (Structural shift angle)
+
+**Status:** Ready to post  
+**Platform:** PinchSocial (Twitter when restored)  
+**Best time:** 9–11am ET  
+**Angle:** iPhone 17 Pro running a 400B model is getting 602 HN points today. The implications for cloud-dependent voice AI are genuinely structural, not just a benchmark curiosity. Share the read.
+
+**Post:**
+```
+iPhone 17 Pro running a 400B model is trending on HN today (602 points).
+
+If that becomes real at scale — and it looks like it might — the two biggest friction points in cloud voice AI collapse:
+
+1. Latency (round-trip to TTS/STT/LLM)
+2. Privacy (call recordings leaving your device)
+
+Vapi, Retell, Bland are all cloud-dependent. Every call goes through their infra. That's been an acceptable tradeoff because local inference couldn't match frontier quality.
+
+A 400B model on-device changes the math.
+
+Not a threat to the existing players today. But the direction is set. Voice AI built on session continuity, local context, and privacy-first architecture is going to look better every year from here.
+
+We built for the wrong infrastructure layer. The right thesis holds.
+```
+
+**Word count:** ~105 words  
+**Target resonance:** AI agent builders, privacy-focused developers, anyone tracking Apple Intelligence  
+**Timing note:** Post within 24–48h while this is trending on HN — topic has a short freshness window
+
+---
+
+### Suggested post sequence for March 25–28 *(updated 05:25 EDT)*
 
 | Date | Post | Angle | Gap |
 |------|------|-------|-----|
 | Mar 25 AM | PINCH-3 (agentskills.io) | Distribution intelligence | Day 1 |
 | Mar 25 PM / Mar 26 AM | PINCH-4 (pricing table) | Infrastructure observation | Same day or +1 |
+| Mar 26 PM | **PINCH-6 (on-device LLM)** ← NEW | Structural privacy shift | +1 — post while HN story is fresh |
 | Mar 27 AM | PINCH-5 (execution phase) | Strategic market read | +2 |
+
+**Why PINCH-6 moved up:** The iPhone 17 Pro story is trending NOW (603pts at scan time). Inserting before PINCH-5 maximizes relevance window.
 
 If PinchSocial credentials remain blocked, queue these as Twitter posts when access is restored.
 
