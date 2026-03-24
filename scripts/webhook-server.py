@@ -171,7 +171,7 @@ def build_call_prompt(caller_number: str = "") -> str:
         parts.append(f"# About {caller_name}\n{user_context}")
 
     # 4. Long-term memory
-    memory = read_file_safe(WORKSPACE_ROOT / "MEMORY.md", 2500)
+    memory = read_file_safe(WORKSPACE_ROOT / "MEMORY.md", 5000)
     if memory:
         parts.append(f"# Your Long-Term Memory\n{memory}")
 
@@ -179,7 +179,7 @@ def build_call_prompt(caller_number: str = "") -> str:
     today = datetime.now().strftime("%Y-%m-%d")
     yesterday = (datetime.now() - __import__('datetime').timedelta(days=1)).strftime("%Y-%m-%d")
     for date in [today, yesterday]:
-        daily = read_file_safe(WORKSPACE_ROOT / "memory" / f"{date}.md", 1000)
+        daily = read_file_safe(WORKSPACE_ROOT / "memory" / f"{date}.md", 2500)
         if daily:
             parts.append(f"# Recent Context ({date})\n{daily}")
             break
