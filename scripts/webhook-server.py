@@ -103,6 +103,438 @@ def _read_openclaw_token() -> str:
 
 OPENCLAW_TOKEN = os.getenv("OPENCLAW_TOKEN") or _read_openclaw_token()
 
+# ─── Tier 1 Voice Tools ───────────────────────────────────────────────────────
+
+# Tool definitions in OpenAI Realtime format
+VOICE_TOOLS = [
+    {
+        "type": "function",
+        "name": "memory_search",
+        "description": (
+            "Search Nia's memory files for information about a specific topic, person, or event. "
+            "Use this when Remi asks 'do you remember when...' or 'what do you know about...'. "
+            "Returns relevant excerpts from MEMORY.md and recent daily notes."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "What to search for (e.g. 'Bakkt project', 'last week', 'Remi's goal')"
+                }
+            },
+            "required": ["query"]
+        }
+    },
+    {
+        "type": "function",
+        "name": "read_file",
+        "description": (
+            "Read the contents of a file in Nia's workspace or repos. "
+            "Use this to read MEMORY.md, SOUL.md, project files, etc. "
+            "Path should be absolute or relative to workspace root."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "path": {
+                    "type": "string",
+                    "description": "Path to the file, e.g. 'MEMORY.md' or '/Users/nia/.openclaw/workspace/MEMORY.md'"
+                }
+            },
+            "required": ["path"]
+        }
+    },
+    {
+        "type": "function",
+        "name": "get_project_status",
+        "description": (
+            "Get the current status of a project by reading its STATUS.md file. "
+            "Use this when Remi asks 'what's the status of [project]?' or 'how is [project] going?'. "
+            "Known projects: voice (openai-voice-skill), trust (agent-trust), bakkt (bakkt-agent-app)."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "project": {
+                    "type": "string",
+                    "description": "Project name, e.g. 'voice', 'bakkt', 'trust', or repo name like 'openai-voice-skill'"
+                }
+            },
+            "required": ["project"]
+        }
+    },
+    {
+        "type": "function",
+        "name": "memory_get",
+        "description": (
+            "Get memory content for a specific date or topic from Nia's daily memory files. "
+            "Use this for 'what happened on [date]?' or 'what did we discuss last Tuesday?'."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "description": "Date in YYYY-MM-DD format, e.g. '2026-03-24'. Leave empty to get today."
+                },
+                "topic": {
+                    "type": "string",
+                    "description": "Topic keyword to search for within the date's memory. Optional."
+                }
+            },
+            "required": []
+        }
+    },
+    {
+        "type": "function",
+        "name": "cron_create",
+        "description": (
+            "Create a reminder or scheduled task. "
+            "Use this when Remi says 'remind me at 3pm', 'set a reminder for tomorrow morning', etc. "
+            "Sends a message to Remi at the specified time via Telegram."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "What to remind Remi about, e.g. 'Check the Bakkt deployment'"
+                },
+                "when": {
+                    "type": "string",
+                    "description": (
+                        "When to send the reminder. Use natural language: "
+                        "'in 30 minutes', 'at 3pm', 'tomorrow at 9am', '2026-03-24 15:00'"
+                    )
+                }
+            },
+            "required": ["message", "when"]
+        }
+    },
+    {
+        "type": "function",
+        "name": "message_send",
+        "description": (
+            "Send a Telegram message to Remi. "
+            "Use this when Remi asks you to 'send me that link', 'message me that', "
+            "'drop that in Telegram', etc. Sends immediately."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "The message text to send to Remi via Telegram"
+                }
+            },
+            "required": ["text"]
+        }
+    },
+    {
+        "type": "function",
+        "name": "sessions_send",
+        "description": (
+            "Send a note or message to Nia's main session (the OpenClaw agent). "
+            "Use this when Remi says 'note that for later', 'remind yourself about this', "
+            "'add that to your memory', etc. The note is injected into the main session."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "note": {
+                    "type": "string",
+                    "description": "The note or message to inject into the main session"
+                }
+            },
+            "required": ["note"]
+        }
+    }
+]
+
+# ─── Tool handlers ────────────────────────────────────────────────────────────
+
+async def tool_memory_search(query: str) -> str:
+    """Search Nia's memory files for relevant content."""
+    from datetime import timedelta
+    query_lower = query.lower()
+    results = []
+
+    # Search MEMORY.md
+    memory = read_file_safe(WORKSPACE_ROOT / "MEMORY.md", 8000)
+    if memory:
+        lines = memory.split('\n')
+        for i, line in enumerate(lines):
+            if query_lower in line.lower() and line.strip():
+                context_start = max(0, i - 1)
+                context_end = min(len(lines), i + 3)
+                snippet = '\n'.join(lines[context_start:context_end]).strip()
+                if snippet:
+                    results.append(snippet)
+
+    # Search last 7 days of daily memory
+    for days_ago in range(7):
+        date = (datetime.now() - timedelta(days=days_ago)).strftime("%Y-%m-%d")
+        daily = read_file_safe(WORKSPACE_ROOT / "memory" / f"{date}.md", 3000)
+        if daily:
+            lines = daily.split('\n')
+            for i, line in enumerate(lines):
+                if query_lower in line.lower() and line.strip():
+                    context_start = max(0, i - 1)
+                    context_end = min(len(lines), i + 3)
+                    snippet = '\n'.join(lines[context_start:context_end]).strip()
+                    if snippet:
+                        results.append(f"[{date}] {snippet}")
+
+    if not results:
+        return f"No memory found matching '{query}'."
+
+    # Return up to 3 results, truncated to 1000 chars total
+    combined = "\n---\n".join(results[:3])
+    return combined[:1000]
+
+
+async def tool_read_file(path: str) -> str:
+    """Read a file from the workspace or repos (restricted to safe paths)."""
+    allowed_prefixes = [
+        str(WORKSPACE_ROOT),
+        str(Path.home() / "repos"),
+    ]
+
+    p = Path(path)
+    if not p.is_absolute():
+        p = WORKSPACE_ROOT / path
+
+    resolved = str(p.resolve())
+    if not any(resolved.startswith(prefix) for prefix in allowed_prefixes):
+        return f"Access denied: '{path}' is outside allowed directories."
+
+    content = read_file_safe(p, 3000)
+    if not content:
+        return f"File not found or empty: {path}"
+    return content
+
+
+async def tool_get_project_status(project: str) -> str:
+    """Read a project's STATUS.md."""
+    project_map = {
+        "voice": "openai-voice-skill",
+        "voice skill": "openai-voice-skill",
+        "openai-voice-skill": "openai-voice-skill",
+        "trust": "agent-trust",
+        "trust skill": "agent-trust",
+        "agent-trust": "agent-trust",
+        "bakkt": "bakkt-agent-app",
+        "bakkt app": "bakkt-agent-app",
+        "bakkt-agent-app": "bakkt-agent-app",
+    }
+
+    repo_name = project_map.get(project.lower().strip(), project.lower().replace(" ", "-"))
+    status_path = Path.home() / "repos" / repo_name / "STATUS.md"
+    content = read_file_safe(status_path, 2000)
+
+    if not content:
+        # Try exact name
+        alt_path = Path.home() / "repos" / project / "STATUS.md"
+        content = read_file_safe(alt_path, 2000)
+
+    if not content:
+        return f"No STATUS.md found for project '{project}'."
+    return content
+
+
+async def tool_memory_get(date: str = "", topic: str = "") -> str:
+    """Get memory by date or topic."""
+    if date:
+        daily = read_file_safe(WORKSPACE_ROOT / "memory" / f"{date}.md", 3000)
+        if daily:
+            return daily
+        return f"No memory found for {date}."
+
+    if topic:
+        return await tool_memory_search(topic)
+
+    # Default: today
+    today = datetime.now().strftime("%Y-%m-%d")
+    content = read_file_safe(WORKSPACE_ROOT / "memory" / f"{today}.md", 2000)
+    if content:
+        return f"[{today}]\n{content}"
+    return "No memory notes for today yet."
+
+
+async def tool_cron_create(message: str, when: str) -> str:
+    """Create a cron reminder via the OpenClaw cron CLI."""
+    import shlex
+    import subprocess
+
+    # Build the openclaw cron command
+    # openclaw cron add --at "HH:MM" --message "..." --channel telegram --target +250794002033
+    # or openclaw cron add --in "30m" --message "..."
+    # We use the openiclaw cron 'at' style; parse 'when' best-effort
+
+    # Sanitize inputs
+    message_safe = message[:200].replace('"', "'")
+    when_safe = when[:100].replace('"', "'")
+
+    cmd = [
+        "openclaw", "cron", "add",
+        "--message", message_safe,
+        "--when", when_safe,
+        "--channel", "telegram",
+        "--target", "+250794002033",
+    ]
+
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=8.0)
+        stdout_text = stdout.decode().strip()
+        stderr_text = stderr.decode().strip()
+
+        if proc.returncode == 0:
+            return f"Reminder set for '{when}': {message}. You'll get a Telegram message."
+        else:
+            logger.warning(f"cron_create failed: {stderr_text}")
+            return f"Couldn't set reminder (scheduling error). Tell Remi manually."
+    except asyncio.TimeoutError:
+        return "Reminder creation timed out. Please try again."
+    except Exception as e:
+        logger.error(f"cron_create error: {e}")
+        return f"Error creating reminder: {str(e)}"
+
+
+async def tool_message_send(text: str) -> str:
+    """Send a Telegram message to Remi (+250794002033) via OpenClaw gateway."""
+    token = OPENCLAW_TOKEN
+    if not token:
+        return "Cannot send message: no gateway token configured."
+
+    payload = {
+        "channel": "telegram",
+        "target": "+250794002033",
+        "message": text[:2000]
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=8.0) as client:
+            resp = await client.post(
+                f"{OPENCLAW_GATEWAY_URL}/internal/message/send",
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Content-Type": "application/json"
+                },
+                json=payload
+            )
+            if resp.status_code < 300:
+                return f"Message sent to Remi on Telegram: '{text[:80]}...'" if len(text) > 80 else f"Message sent to Remi: '{text}'"
+            else:
+                logger.warning(f"message_send gateway returned {resp.status_code}: {resp.text[:100]}")
+                # Fallback: try openclaw CLI
+                return await _message_send_cli(text)
+    except Exception as e:
+        logger.error(f"message_send error: {e}")
+        return await _message_send_cli(text)
+
+
+async def _message_send_cli(text: str) -> str:
+    """Fallback: send message via openclaw CLI."""
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            "openclaw", "message", "send",
+            "--channel", "telegram",
+            "--target", "+250794002033",
+            "--message", text[:500],
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=8.0)
+        if proc.returncode == 0:
+            return f"Message sent to Remi on Telegram."
+        else:
+            return f"Couldn't send message (CLI error)."
+    except Exception as e:
+        return f"Message send failed: {str(e)}"
+
+
+async def tool_sessions_send(note: str) -> str:
+    """Inject a note into the main OpenClaw session via gateway wake event."""
+    token = OPENCLAW_TOKEN
+    if not token:
+        return "Cannot send note: no gateway token configured."
+
+    wake_text = f"[Note from voice call]: {note}"
+
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            resp = await client.post(
+                f"{OPENCLAW_GATEWAY_URL}/internal/events/wake",
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Content-Type": "application/json"
+                },
+                json={"text": wake_text, "mode": "now"}
+            )
+            if resp.status_code < 300:
+                return f"Note sent to your main session: '{note[:80]}'"
+            else:
+                logger.warning(f"sessions_send returned {resp.status_code}: {resp.text[:100]}")
+                return f"Couldn't reach main session (gateway error)."
+    except Exception as e:
+        logger.error(f"sessions_send error: {e}")
+        return f"Failed to send note: {str(e)}"
+
+
+# Tool registry: maps tool name → handler
+TOOL_REGISTRY: dict = {
+    "memory_search": tool_memory_search,
+    "read_file": tool_read_file,
+    "get_project_status": tool_get_project_status,
+    "memory_get": tool_memory_get,
+    "cron_create": tool_cron_create,
+    "message_send": tool_message_send,
+    "sessions_send": tool_sessions_send,
+}
+
+
+async def dispatch_tool_call(oai_ws, tool_name: str, tool_args: dict, call_id: str) -> None:
+    """Execute a tool call and inject the result back into the OpenAI conversation."""
+    logger.info(f"🔧 Tool call: {tool_name}({list(tool_args.keys())})")
+
+    # Execute with timeout (max 3s)
+    result = ""
+    try:
+        handler = TOOL_REGISTRY.get(tool_name)
+        if handler:
+            result = await asyncio.wait_for(handler(**tool_args), timeout=3.0)
+        else:
+            result = f"Unknown tool: '{tool_name}'"
+            logger.warning(f"Unknown tool requested: {tool_name}")
+    except asyncio.TimeoutError:
+        result = f"Tool '{tool_name}' timed out — try again."
+        logger.warning(f"Tool timeout: {tool_name}")
+    except Exception as e:
+        result = f"Tool error: {str(e)}"
+        logger.error(f"Tool error ({tool_name}): {e}", exc_info=True)
+
+    logger.info(f"🔧 Tool result ({tool_name}): {result[:100]}...")
+
+    # Inject result as function_call_output
+    await oai_ws.send(json.dumps({
+        "type": "conversation.item.create",
+        "item": {
+            "type": "function_call_output",
+            "call_id": call_id,
+            "output": result
+        }
+    }))
+
+    # Trigger Nia to respond with the result
+    await oai_ws.send(json.dumps({"type": "response.create"}))
+
+
 # ─── Twilio client ────────────────────────────────────────────────────────────
 
 twilio_client: Optional[TwilioClient] = None
@@ -156,6 +588,55 @@ def read_file_safe(path, max_chars=2000) -> str:
     except Exception:
         pass
     return ""
+
+
+def _get_recent_call_history(max_calls: int = 3, max_chars_each: int = 300) -> str:
+    """
+    Read recent call transcript files and return brief summaries for context.
+    Looks for JSON transcripts in workspace/memory/call-transcripts/.
+    Returns up to max_calls entries, each truncated to max_chars_each.
+    """
+    transcripts_dir = WORKSPACE_ROOT / "memory" / "call-transcripts"
+    if not transcripts_dir.exists():
+        return ""
+
+    try:
+        # Get transcript files, sorted newest first
+        files = sorted(
+            [f for f in transcripts_dir.glob("*.json")],
+            reverse=True
+        )[:max_calls]
+
+        if not files:
+            return ""
+
+        summaries = []
+        for f in files:
+            try:
+                data = json.loads(f.read_text())
+                recorded_at = data.get("recorded_at", "")[:16]  # YYYY-MM-DDTHH:MM
+                turns = data.get("turns", 0)
+                transcript = data.get("transcript", [])
+
+                # Build a brief excerpt: first Nia turn + last user turn
+                if transcript:
+                    nia_lines = [t["content"] for t in transcript if t.get("speaker") == "assistant"]
+                    user_lines = [t["content"] for t in transcript if t.get("speaker") == "user"]
+                    excerpt = ""
+                    if user_lines:
+                        excerpt += f"Remi: {user_lines[0][:80]}"
+                    if nia_lines:
+                        excerpt += f" | Nia: {nia_lines[0][:80]}"
+                    summary = f"[{recorded_at}, {turns} turns] {excerpt}"
+                    summaries.append(summary[:max_chars_each])
+            except Exception:
+                pass
+
+        return "\n".join(summaries) if summaries else ""
+
+    except Exception as e:
+        logger.debug(f"Could not read call history: {e}")
+        return ""
 
 
 def build_call_prompt(caller_number: str = "") -> str:
@@ -213,6 +694,23 @@ def build_call_prompt(caller_number: str = "") -> str:
     if project_statuses:
         parts.append("# Project Status\n" + "\n\n".join(project_statuses))
 
+    # 7. Recent call history (last 3 calls, max 300 chars each)
+    call_history = _get_recent_call_history(max_calls=3, max_chars_each=300)
+    if call_history:
+        parts.append(f"# Recent Call History\n{call_history}")
+
+    # 8. Heartbeat state (last check timestamps)
+    heartbeat = read_file_safe(WORKSPACE_ROOT / "memory" / "heartbeat-state.json", 500)
+    if heartbeat:
+        try:
+            hb = json.loads(heartbeat)
+            hb_summary = ", ".join(
+                f"{k}: {str(v)[:30]}" for k, v in list(hb.items())[:5]
+            )
+            parts.append(f"# Recent Activity\nLast heartbeat checks: {hb_summary}")
+        except Exception:
+            pass  # Not critical
+
     header = (
         "LANGUAGE RULE (non-negotiable): Always speak English. "
         "No matter what language the caller uses, no matter where they are calling from, "
@@ -221,6 +719,16 @@ def build_call_prompt(caller_number: str = "") -> str:
         "You are Nia — an AI agent on a phone call. "
         "Be warm, direct, and concise. This is voice — no bullet points, no markdown, no long speeches. "
         "You have full context about your projects and your human (Remi). Act like you know him — because you do.\n\n"
+        "TOOLS: You have live tools you can use during this call:\n"
+        "- memory_search: search your memory for anything Remi asks about ('do you remember...')\n"
+        "- read_file: read any file in your workspace\n"
+        "- get_project_status: get live STATUS.md for any project (voice, bakkt, trust, etc.)\n"
+        "- memory_get: get your memory notes for a specific date\n"
+        "- cron_create: set a reminder ('remind me at 3pm to...')\n"
+        "- message_send: send Remi a Telegram message during the call\n"
+        "- sessions_send: send a note to your main session for later\n"
+        "Use tools naturally. When using a tool, say 'let me check on that...' or "
+        "'I'll set that reminder...' before executing. Keep your final answer short.\n\n"
     )
 
     prompt = header + "\n\n---\n\n".join(parts)
@@ -331,6 +839,7 @@ async def media_stream_ws(websocket: WebSocket):
         "ratecv_state_out": None,  # resampling state: OpenAI→Twilio
         "openai_task": None,
         "nia_speaking": False,     # True while Nia is outputting audio (mutes mic input)
+        "tool_call_args": {},      # Accumulate partial tool call arguments: call_id → {name, args_str}
     }
 
     # ── OpenAI receiver coroutine ─────────────────────────────────────────────
@@ -415,6 +924,47 @@ async def media_stream_ws(websocket: WebSocket):
                         })
                         logger.info(f"[User] {text[:120]}")
 
+                elif event_type == "response.function_call_arguments.delta":
+                    # Accumulate partial tool call arguments (streaming)
+                    call_id = msg.get("call_id", "")
+                    delta = msg.get("delta", "")
+                    if call_id:
+                        ctx.setdefault("tool_call_args", {})
+                        ctx["tool_call_args"].setdefault(call_id, {"name": "", "args_str": ""})
+                        ctx["tool_call_args"][call_id]["args_str"] += delta
+                        # Capture name if present in this event
+                        if msg.get("name"):
+                            ctx["tool_call_args"][call_id]["name"] = msg["name"]
+
+                elif event_type == "response.function_call_arguments.done":
+                    # Tool call complete — execute it
+                    call_id = msg.get("call_id", "")
+                    tool_name = msg.get("name", "")
+                    args_str = msg.get("arguments", "{}")
+
+                    # Fallback: use accumulated args if event args is empty
+                    if not args_str or args_str == "{}":
+                        accumulated = ctx.get("tool_call_args", {}).get(call_id, {})
+                        args_str = accumulated.get("args_str", "{}")
+                    if not tool_name:
+                        accumulated = ctx.get("tool_call_args", {}).get(call_id, {})
+                        tool_name = accumulated.get("name", "")
+
+                    logger.info(f"🔧 Tool call complete: {tool_name} call_id={call_id}")
+
+                    try:
+                        tool_args = json.loads(args_str) if args_str else {}
+                    except json.JSONDecodeError:
+                        tool_args = {}
+
+                    # Dispatch tool call (non-blocking — runs in background)
+                    asyncio.create_task(
+                        dispatch_tool_call(oai_ws, tool_name, tool_args, call_id)
+                    )
+
+                    # Clean up accumulated args
+                    ctx.get("tool_call_args", {}).pop(call_id, None)
+
                 elif event_type == "response.done":
                     ctx["nia_speaking"] = False
                     # Clear any echo captured while Nia was speaking
@@ -481,8 +1031,8 @@ async def media_stream_ws(websocket: WebSocket):
                     logger.info("OpenAI Realtime WS connected")
 
                     # ── Send session.update with fresh per-call context ─────
-                    tools = AGENT_CONFIG.get("tools", [])
                     call_prompt = build_call_prompt(ctx.get("caller_number", ""))
+                    tools = VOICE_TOOLS  # Tier 1 + Tier 2 live tools
                     session_config = {
                         "type": "session.update",
                         "session": {
@@ -499,7 +1049,7 @@ async def media_stream_ws(websocket: WebSocket):
                                 "eagerness": "low"
                             },
                             "tools": tools,
-                            "tool_choice": "auto" if tools else "none"
+                            "tool_choice": "auto"
                         }
                     }
                     await oai_ws.send(json.dumps(session_config))
