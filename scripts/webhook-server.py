@@ -362,26 +362,72 @@ async def tool_memory_get(date: str = "", topic: str = "") -> str:
     return "No memory notes for today yet."
 
 
+def _parse_when_to_at(when: str) -> str:
+    """
+    Convert natural language time to openclaw cron --at format.
+    Supports: 'in N minutes', 'in N hours', 'at HH:MM', 'at Xpm', '+Nm', ISO strings.
+    Returns the --at value string.
+    """
+    import re
+    when_lower = when.strip().lower()
+
+    # Already in +duration format
+    if re.match(r'^\+\d+[mhsd]', when_lower):
+        return when
+
+    # "in N minutes" / "in N hours"
+    m = re.match(r'in\s+(\d+)\s*(minute|minutes|min|m)', when_lower)
+    if m:
+        return f"+{m.group(1)}m"
+
+    m = re.match(r'in\s+(\d+)\s*(hour|hours|hr|h)', when_lower)
+    if m:
+        return f"+{m.group(1)}h"
+
+    # "at HH:MM" (24h)
+    m = re.match(r'at\s+(\d{1,2}):(\d{2})', when_lower)
+    if m:
+        h, mn = int(m.group(1)), int(m.group(2))
+        now = datetime.now()
+        target = now.replace(hour=h, minute=mn, second=0, microsecond=0)
+        if target <= now:
+            from datetime import timedelta
+            target += timedelta(days=1)
+        return target.strftime("%Y-%m-%dT%H:%M:%S")
+
+    # "at Xpm" / "at Xam"
+    m = re.match(r'at\s+(\d{1,2})\s*(am|pm)', when_lower)
+    if m:
+        h = int(m.group(1))
+        if m.group(2) == 'pm' and h != 12:
+            h += 12
+        elif m.group(2) == 'am' and h == 12:
+            h = 0
+        now = datetime.now()
+        target = now.replace(hour=h, minute=0, second=0, microsecond=0)
+        if target <= now:
+            from datetime import timedelta
+            target += timedelta(days=1)
+        return target.strftime("%Y-%m-%dT%H:%M:%S")
+
+    # ISO or other — pass through as-is
+    return when
+
+
 async def tool_cron_create(message: str, when: str) -> str:
     """Create a cron reminder via the OpenClaw cron CLI."""
-    import shlex
-    import subprocess
-
-    # Build the openclaw cron command
-    # openclaw cron add --at "HH:MM" --message "..." --channel telegram --target +250794002033
-    # or openclaw cron add --in "30m" --message "..."
-    # We use the openiclaw cron 'at' style; parse 'when' best-effort
-
-    # Sanitize inputs
-    message_safe = message[:200].replace('"', "'")
-    when_safe = when[:100].replace('"', "'")
+    # Parse natural language time to --at format
+    at_value = _parse_when_to_at(when)
+    message_safe = message[:200]
 
     cmd = [
         "openclaw", "cron", "add",
-        "--message", message_safe,
-        "--when", when_safe,
+        "--at", at_value,
+        "--message", f"Reminder for Remi: {message_safe}",
+        "--announce",
         "--channel", "telegram",
-        "--target", "+250794002033",
+        "--to", "+250794002033",
+        "--delete-after-run",
     ]
 
     try:
@@ -395,10 +441,13 @@ async def tool_cron_create(message: str, when: str) -> str:
         stderr_text = stderr.decode().strip()
 
         if proc.returncode == 0:
-            return f"Reminder set for '{when}': {message}. You'll get a Telegram message."
+            return f"Reminder set for '{when}': '{message}'. Remi will get a Telegram message."
         else:
-            logger.warning(f"cron_create failed: {stderr_text}")
-            return f"Couldn't set reminder (scheduling error). Tell Remi manually."
+            logger.warning(f"cron_create failed (rc={proc.returncode}): {stderr_text}")
+            # Try to give a helpful error
+            if "parse" in stderr_text.lower() or "invalid" in stderr_text.lower():
+                return f"Couldn't parse time '{when}'. Try 'in 30 minutes' or 'at 3pm'."
+            return f"Couldn't set reminder. Error: {stderr_text[:80]}"
     except asyncio.TimeoutError:
         return "Reminder creation timed out. Please try again."
     except Exception as e:
@@ -450,11 +499,15 @@ async def _message_send_cli(text: str) -> str:
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE
         )
-        stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=8.0)
+        stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=10.0)
         if proc.returncode == 0:
-            return f"Message sent to Remi on Telegram."
+            return "Message sent to Remi on Telegram."
         else:
-            return f"Couldn't send message (CLI error)."
+            err = stderr.decode().strip()[:100]
+            logger.warning(f"message_send CLI error: {err}")
+            return f"Couldn't send message (error: {err})."
+    except asyncio.TimeoutError:
+        return "Message send timed out."
     except Exception as e:
         return f"Message send failed: {str(e)}"
 
