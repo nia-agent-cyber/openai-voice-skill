@@ -2,7 +2,87 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-03-24 03:20 EDT - BA Scan: agentskills.io 12+ platforms, Vapi Composer traction, Retell healthcare push, Air AI new competitor, ElevenLabs multimedia pivot
+**Last Updated:** 2026-03-24 05:22 EDT - BA Scan: delta-only pass (2h gap); on-device LLM breakout (iPhone 17 Pro 400B), GPT5.4 milestone; voice AI market quiet — no new competitor posts since Mar 20
+
+---
+
+## 🗂️ POST-ARCHIVE MARKET INTELLIGENCE (2026-03-24 05:22 EDT)
+
+**Context:** Delta scan — 2h after the 03:20 EDT scan. Incremental only. No new posts from Vapi, Retell, Bland, or ElevenLabs since Mar 20 — confirming the market is in a quiet phase.
+
+**Research Tools Used:**
+- ✅ web_fetch — BBC tech RSS, Retell blog, Vapi blog, Hacker News frontpage, agentskills.io
+- ✅ exec — ctxly.com/services.json (still 404), pass show pinchsocial/api-key (key missing — skip)
+- ❌ Twitter/X — browser unavailable (Chrome extension not attached)
+- ❌ Reuters — JS/auth wall, feed unreachable
+
+---
+
+### 📊 DELTA FINDINGS (new since 03:20 EDT today)
+
+**Competitor content: NO CHANGE**
+- Retell: Last post Mar 20 (healthcare scheduling) — unchanged
+- Vapi: Last post Mar 20 (Composer webinar FAQ) — unchanged
+- Bland AI: Blog behind cookie wall, unable to fetch new articles
+- ElevenLabs: No new announcements detected
+- Air AI: No new signals
+
+**ctxly.com: STILL DEFUNCT** — 404, confirmed again. Remove from tracking.
+
+**agentskills.io: PLATFORM COUNT STABLE** — Still 12+ platforms (no new additions visible since 03:20 scan).
+
+---
+
+### 🔴 NOTABLE: On-Device LLM Breakout — iPhone 17 Pro Running 400B Model
+
+**Source:** Hacker News frontpage #7 (2026-03-24), 602 points, 272 comments
+> "iPhone 17 Pro Demonstrated Running a 400B LLM" — trending heavily
+
+**Why this matters for voice AI:**
+- On-device 400B inference is a step-change event. If Apple (or third-party apps) can run frontier-scale models locally, the latency and privacy arguments for cloud-dependent voice AI services (Vapi, Retell, Bland) weaken significantly.
+- Voice AI's biggest friction points today are latency (round-trip to cloud TTS/STT/LLM) and privacy (call recordings sent to vendors). On-device inference resolves both.
+- **Medium-term threat:** Apple Intelligence expansion into on-device voice agents could disrupt the entire call center AI industry within 2–3 product cycles.
+- **Near-term opportunity:** If restarting voice work, an on-device / privacy-first positioning angle is now more credible than it was 6 months ago.
+
+---
+
+### 🟠 GPT5.4 Pro: Mathematical Breakthrough Confirmed
+
+**Source:** Hacker News frontpage #14 (2026-03-24), 328 points, 338 comments
+> "Epoch confirms GPT5.4 Pro solved a frontier math open problem"
+
+**Why this matters:**
+- The underlying model capability available to voice AI builders is accelerating faster than platform differentiation. Vapi/Retell/Bland are increasingly commoditized wrappers around rapidly improving foundation models.
+- Implication for future voice work: Invest in differentiation at the **workflow/integration layer** (OpenClaw session continuity, multi-channel state, agent-to-agent routing) — not at the model or infra layer where commoditization is happening fastest.
+
+---
+
+### 🟡 Hacker News: Agent Tooling Gaining Traction
+
+**Source:** HN frontpage #10 (2026-03-24), 139 points
+> "Show HN: Cq – Stack Overflow for AI coding agents" (blog.mozilla.ai)
+
+Agent tooling (knowledge bases, skills, directories for AI coding agents) is getting HN traction. This is the same wave agentskills.io is riding. Community validation that developer-facing agent infrastructure is in an active growth phase.
+
+---
+
+### 📰 BBC Tech News (Mar 24, 2026): Unchanged From 03:20 Scan
+
+Same 3 stories as before — no new voice AI coverage in mainstream tech press. Consistent with "market in execution phase, not hype phase" assessment from prior scan.
+
+---
+
+### 🔮 2H DELTA SYNTHESIS
+
+**No meaningful market shifts in the 2h window.** Competitor content cadence confirms weekly publishing cycles (Retell/Vapi post every few days, not hourly). The genuinely new signals in this pass:
+
+1. **On-device LLM** (iPhone 17 Pro 400B) — structural threat to cloud voice AI, multi-year horizon but directionally significant
+2. **GPT5.4 milestone** — model layer commoditizing faster than platform layer; strategy implication: differentiate on integration, not infra
+3. **Agent tooling HN traction** — agentskills.io-style infrastructure getting community validation
+
+**Next meaningful scan:** 24h from now (Mar 25, 05:00 EDT) or sooner if a competitor announcement breaks.
+
+**No action recommended** — archive decision stands.
 
 ---
 
