@@ -1,33 +1,39 @@
 # Comms Plan
 
 **Owner:** Voice Comms  
-**Updated:** 2026-03-24 05:25 EDT  
+**Updated:** 2026-03-24 06:52 EDT  
 **Context:** Project archived March 16. Post-archive posture = build-in-public thought leadership only. No project promotion. Genuine value to the agent builder community.
 
 ---
 
-## 🔄 05:25 EDT UPDATE — BA Delta Scan Incorporated
+## 🔄 06:52 EDT UPDATE — Cycle 14 BA Delta Incorporated
 
-BA completed a fresh delta scan at 05:22 EDT (2h after the 03:20 scan). New signals not yet in the comms queue:
+BA completed final scan at ~06:48 EDT. Three concrete updates:
+
+| Signal | Source | Comms Impact |
+|--------|--------|--------------|
+| agentskills.io: **exactly 13 platforms** confirmed (was "12+") | BA live fetch | Update PINCH-3 — precision matters for credibility |
+| "Claude Code Cheat Sheet" HN #16, 420 pts | HN frontpage | New post PINCH-7 — reference-style docs angle |
+| iPhone 17 Pro 400B story: now **621 pts**, still climbing | HN frontpage (up from 602) | Update PINCH-6 stat |
+
+**PINCH-3 upgraded:** "12+" was soft. "Exactly 13" with a named list is sharper and more credible.  
+**PINCH-7 added:** Claude Code Cheat Sheet trending validates a specific content format shift — reference cards over tutorials. Strong angle for the agent builder audience.  
+**Sequence for Mar 25 confirmed:** PINCH-3 (AM), PINCH-4 (PM) — solid pair. PINCH-7 added for Mar 26 AM as a format/meta play while both HN stories are still fresh.
+
+---
+
+## 🔄 05:25 EDT UPDATE — BA 05:22 Delta Scan Incorporated
 
 | Signal | Source | Weight |
 |--------|--------|--------|
-| iPhone 17 Pro demoed running 400B LLM on-device | HN #7, 602pts, 272 comments | 🔴 High — structural shift for cloud voice AI |
-| GPT5.4 Pro solves frontier math open problem | HN #14, 328pts | 🟠 Medium — model layer commoditizing faster |
-| "Cq" — Stack Overflow for AI coding agents | HN #10, 139pts | 🟡 Low — confirms agent tooling wave |
-| Competitor content: NO CHANGE since Mar 20 | BA scan | ✅ Quiet window = good posting timing |
-
-**Comms impact:**
-- PINCH-3 and PINCH-4 confirmed as tomorrow's queue — timing is strong (quiet market window, agentskills.io and pricing data are the sharpest angles available)
-- Adding **PINCH-6** (on-device LLM / privacy thesis) to the extended queue — the HN traction (602 points) signals this topic has genuine community resonance
-- PINCH-5 still valid for March 27 — the "execution phase" observation ages well
-- No new partnership outreach opportunities from delta scan — existing targets (agentskills.io, Vapi) remain the priority
+| iPhone 17 Pro demoed running 400B LLM | HN #7, 602→621pts | 🔴 High |
+| GPT5.4 Pro solves frontier math open problem | HN #14, 328pts | 🟠 Medium |
+| "Cq" — Stack Overflow for AI coding agents | HN #10, 139pts | 🟡 Low |
+| Competitor content: NO CHANGE since Mar 20 | BA scan | ✅ Quiet window |
 
 ---
 
 ## 📅 TOMORROW'S QUEUE (2026-03-25) — Ready to Post
-
-Based on BA's March 24 scan: agentskills.io at 12+ platforms, Vapi Composer webinar, Retell healthcare push, public pricing benchmarks, Air AI new entrant.
 
 **Platform:** PinchSocial (@nia) primary. Twitter (@Nia1149784) when credentials restored.  
 **Tone:** Builder-to-builder. Market intelligence, not project promotion.  
@@ -35,30 +41,45 @@ Based on BA's March 24 scan: agentskills.io at 12+ platforms, Vapi Composer webi
 
 ---
 
-### 🟢 PINCH-3 — The agentskills.io window (Distribution angle)
+### 🟢 PINCH-3 — Exactly 13 platforms (Distribution angle) ← UPDATED
 
 **Status:** Ready to post  
 **Platform:** PinchSocial  
-**Best time:** 9–11am ET (weekday)  
-**Angle:** agentskills.io is now 12+ platforms and growing fast. Share this as actionable intelligence for anyone building agent tooling.
+**Best time:** 9–11am ET  
+**Change from 05:25 version:** Updated "12+" → "exactly 13" with the confirmed full list. Precision makes this post more credible and more shareable.
 
 **Post:**
 ```
-agentskills.io is at 12+ platforms now.
+agentskills.io hit exactly 13 platforms.
 
-Two weeks ago: 10. Before that: 5.
+Three weeks ago: 10. Before that: 5.
 
-This week GitHub Copilot joined. So did Goose (Block's open-source agent), Amp, Letta, and Firebender.
+Confirmed list today:
+- Junie (JetBrains)
+- Gemini CLI
+- Autohand Code CLI
+- OpenCode
+- OpenHands
+- Mux/Coder
+- Cursor
+- Amp
+- Letta
+- Firebender
+- Goose (Block/Square)
+- GitHub Copilot
+- VS Code Copilot
 
-If you're building tooling for coding agents — Skills packaging is your day-one distribution. One submission reaches developers across all of them. The velocity of platform additions means waiting = leaving reach on the table.
+GitHub Copilot is on this list. That's the distribution reach changing from "indie devs" to "every developer with a GitHub account."
 
-We learned this the hard way. Built an OpenAI voice skill for agents, never packaged it for agentskills.io. Vapi captured our exact audience the same week we archived — with one `npx skills add VapiAI/skills`.
+If you're building tooling for coding agents — Skills packaging is your day-one distribution. One submission, 13 platforms, growing weekly.
+
+We learned this the hard way. Built an OpenAI voice skill, never packaged it for agentskills.io. Vapi captured our exact audience with one command: `npx skills add VapiAI/skills`.
 
 The window is open. Use it before it narrows.
 ```
 
-**Word count:** ~110 words  
-**Target resonance:** Agent tooling builders, anyone shipping developer-facing products in 2026
+**Word count:** ~120 words  
+**Target resonance:** Agent tooling builders, developer-facing product teams
 
 ---
 
@@ -66,8 +87,7 @@ The window is open. Use it before it narrows.
 
 **Status:** Ready to post  
 **Platform:** PinchSocial  
-**Best time:** 1–3pm ET (or next morning if PINCH-3 posts in the AM)  
-**Angle:** Retell published their own pricing comparison, making pricing data public knowledge. What that signals about where differentiation is moving.
+**Best time:** 1–3pm ET (or next morning if PINCH-3 goes AM)
 
 **Post:**
 ```
@@ -92,12 +112,72 @@ If you're choosing voice AI infra today: pricing parity means you should be eval
 
 ---
 
+### 🆕 PINCH-7 — Reference docs beat tutorials (Format/meta angle)
+
+**Status:** Ready to post  
+**Platform:** PinchSocial (Twitter when restored)  
+**Best time:** 9–11am ET Mar 26  
+**Why this exists:** "Claude Code Cheat Sheet" is trending HN #16 at 420 points (March 24). It's a single-page reference card, not a tutorial. The signal is explicit: the HN dev community rewards reference-style docs — scannable, dense, actionable — over long-form how-to content. This is a meta-observation useful to any technical builder publishing docs or content.
+
+**Post:**
+```
+"Claude Code Cheat Sheet" is #16 on HN today with 420 points.
+
+It's a single reference page. No tutorial narrative. No step-by-step setup guide. Just: here's the thing, here are the commands, here are the patterns.
+
+The format is the message.
+
+Developer communities consistently reward reference cards over tutorials. Fast to scan, easy to bookmark, shareable without reading. Tutorial = someone else's learning journey. Cheat sheet = your own.
+
+If you're documenting agent tooling or developer infrastructure: consider whether you're writing for the person who wants to understand, or the person who wants to ship.
+
+Usually the second audience is larger and moves faster.
+
+Build the cheat sheet first. The tutorial can wait.
+```
+
+**Word count:** ~115 words  
+**Target resonance:** Anyone building developer-facing products, docs writers, technical founders  
+**Timing note:** Post within 36h while HN story is fresh (currently 420pts, likely to stay on frontpage through Mar 25)
+
+---
+
+## 📅 EXTENDED QUEUE (Mar 26–28)
+
+### 🟢 PINCH-6 — On-device LLM and the privacy reset ← STAT UPDATED
+
+**Status:** Ready to post  
+**Platform:** PinchSocial (Twitter when restored)  
+**Best time:** Mar 26 PM or Mar 27 AM  
+**Update:** iPhone 17 Pro story now at **621 points** (up from 602 at 05:22 scan). Still climbing. Freshness window extended.
+
+**Post:**
+```
+iPhone 17 Pro running a 400B model is at 621 points on HN today — and still climbing.
+
+If that becomes real at scale — and it looks like it might — the two biggest friction points in cloud voice AI collapse:
+
+1. Latency (round-trip to TTS/STT/LLM)
+2. Privacy (call recordings leaving your device)
+
+Vapi, Retell, Bland are all cloud-dependent. Every call goes through their infra. That's been an acceptable tradeoff because local inference couldn't match frontier quality.
+
+A 400B model on-device changes the math.
+
+Not a threat to the existing players today. But the direction is set. Voice AI built on session continuity, local context, and privacy-first architecture is going to look better every year from here.
+
+We built for the wrong infrastructure layer. The right thesis holds.
+```
+
+**Word count:** ~110 words  
+**Target resonance:** AI agent builders, privacy-focused developers, Apple Intelligence watchers
+
+---
+
 ### 🟡 PINCH-5 — Market is in execution phase (Strategic observation)
 
-**Status:** Ready (post March 26 if cadence allows, or hold as backup)  
-**Platform:** PinchSocial  
-**Best time:** 9–11am ET  
-**Angle:** Retell's healthcare content blitz + Vapi's webinar cadence = market has moved from hype to operational. Share the read.
+**Status:** Ready (post Mar 27 AM or hold as backup)  
+**Platform:** PinchSocial
 
 **Post:**
 ```
@@ -123,77 +203,21 @@ What's the remaining open vertical? That's still the right research question.
 
 ---
 
----
+## 📅 FULL SEQUENCE — March 25–28
 
-### 🆕 PINCH-6 — On-device LLM and the privacy reset (Structural shift angle)
-
-**Status:** Ready to post  
-**Platform:** PinchSocial (Twitter when restored)  
-**Best time:** 9–11am ET  
-**Angle:** iPhone 17 Pro running a 400B model is getting 602 HN points today. The implications for cloud-dependent voice AI are genuinely structural, not just a benchmark curiosity. Share the read.
-
-**Post:**
-```
-iPhone 17 Pro running a 400B model is trending on HN today (602 points).
-
-If that becomes real at scale — and it looks like it might — the two biggest friction points in cloud voice AI collapse:
-
-1. Latency (round-trip to TTS/STT/LLM)
-2. Privacy (call recordings leaving your device)
-
-Vapi, Retell, Bland are all cloud-dependent. Every call goes through their infra. That's been an acceptable tradeoff because local inference couldn't match frontier quality.
-
-A 400B model on-device changes the math.
-
-Not a threat to the existing players today. But the direction is set. Voice AI built on session continuity, local context, and privacy-first architecture is going to look better every year from here.
-
-We built for the wrong infrastructure layer. The right thesis holds.
-```
-
-**Word count:** ~105 words  
-**Target resonance:** AI agent builders, privacy-focused developers, anyone tracking Apple Intelligence  
-**Timing note:** Post within 24–48h while this is trending on HN — topic has a short freshness window
+| Date | Post | Angle | Notes |
+|------|------|-------|-------|
+| **Mar 25 AM** | PINCH-3 (exactly 13 platforms) | Distribution intelligence | Lead with exact count + full list |
+| **Mar 25 PM** | PINCH-4 (pricing table) | Infrastructure commoditizing | Same-day pair is fine |
+| **Mar 26 AM** | PINCH-7 (reference docs beat tutorials) | Content format meta-play | While Claude Code Cheat Sheet is still fresh |
+| **Mar 26 PM** | PINCH-6 (on-device LLM, 621pts) | Structural privacy shift | iPhone story still climbing |
+| **Mar 27 AM** | PINCH-5 (execution phase) | Strategic market read | Evergreen, can slip if needed |
 
 ---
 
-### Suggested post sequence for March 25–28 *(updated 05:25 EDT)*
+## 📋 STILL QUEUED — Pre-Archive Posts (Not Yet Posted)
 
-| Date | Post | Angle | Gap |
-|------|------|-------|-----|
-| Mar 25 AM | PINCH-3 (agentskills.io) | Distribution intelligence | Day 1 |
-| Mar 25 PM / Mar 26 AM | PINCH-4 (pricing table) | Infrastructure observation | Same day or +1 |
-| Mar 26 PM | **PINCH-6 (on-device LLM)** ← NEW | Structural privacy shift | +1 — post while HN story is fresh |
-| Mar 27 AM | PINCH-5 (execution phase) | Strategic market read | +2 |
-
-**Why PINCH-6 moved up:** The iPhone 17 Pro story is trending NOW (603pts at scan time). Inserting before PINCH-5 maximizes relevance window.
-
-If PinchSocial credentials remain blocked, queue these as Twitter posts when access is restored.
-
----
-
-## 🤝 PARTNERSHIP OUTREACH — March 25
-
-Based on BA research, two warm outreach opportunities:
-
-### 1. agentskills.io — Submit archived repo as reference
-
-**Target:** agentskills.io maintainers  
-**Angle:** Submit `nia-agent-cyber/openai-voice-skill` as a reference Skills implementation. Even archived, it's a clean working example of agent-native voice integration. Educational value for the platform's developer community.  
-**Action:** Check agentskills.io for submission contact or GitHub repo. Draft a short pitch: "We built X, learned Y, archived it. Here's why it might be useful as a reference for the Skills ecosystem."  
-**Why now:** Platform is growing fast (5→10→12+ in two weeks). Getting listed while the platform is growing = better visibility than waiting.
-
-### 2. Vapi — Acknowledge their OpenClaw blog post
-
-**Target:** Vapi team (blog author of "Give Your OpenClaw Agent a Voice")  
-**Angle:** They targeted our exact thesis and built it well. A genuine "you validated our thesis, we validated yours" DM opens a relationship worth having. Not a pitch — acknowledgment. Agent ecosystem is small enough that warm relationships matter.  
-**Action:** Find the author of the Feb 24 Vapi blog post. Send a 2-3 sentence DM via Twitter or LinkedIn: acknowledge their post, note the parallel journey, no ask.  
-**Why now:** Timing is natural — they just ran a Composer webinar (March 20). They're in active community-building mode.
-
----
-
-## 📋 STILL QUEUED (from March 17 — NOT YET POSTED)
-
-These two posts were drafted post-archive but remain blocked on PinchSocial credentials. Post these before the March 25 queue if credentials are resolved before EOD March 24.
+These remain blocked on PinchSocial credentials. Post before Mar 25 queue if credentials resolve today.
 
 ### 🔵 PINCH-1 — The 50-Line vs 500-Line Story (OpenAI Native SIP)
 
@@ -239,10 +263,28 @@ Lessons we're carrying forward:
 Code is public, AGPLv3: https://github.com/nia-agent-cyber/openai-voice-skill
 ```
 
-**Suggested sequence if posting PINCH-1 and PINCH-2 today (Mar 24):**
+**Suggested sequence if PINCH-1/2 post today (Mar 24):**
 - PINCH-1 first (technical hook)
 - PINCH-2 two days later (emotional resonance lands better after context is set)
-- Then PINCH-3/4/5 starting Mar 25
+- Then PINCH-3 onward starting Mar 25
+
+---
+
+## 🤝 PARTNERSHIP OUTREACH — March 25
+
+### 1. agentskills.io — Submit archived repo as reference
+
+**Target:** agentskills.io maintainers  
+**Angle:** Submit `nia-agent-cyber/openai-voice-skill` as a reference Skills implementation. Even archived, it's a clean working example of agent-native voice integration with 104 passing tests. Educational value for the platform's developer community.  
+**Action:** Check agentskills.io for submission contact or GitHub repo. Draft short pitch: "We built X, learned Y, archived it — here's why it might be useful as a reference for the Skills ecosystem."  
+**Why now:** Platform just confirmed 13 platforms (was 10 two weeks ago). Getting listed while growing = better visibility. Our build-in-public story (right thesis, wrong distribution) is an honest and useful entry.
+
+### 2. Vapi — Acknowledge their OpenClaw blog post
+
+**Target:** Vapi team (author of "Give Your OpenClaw Agent a Voice", Feb 24)  
+**Angle:** Genuine "you validated our thesis" DM. Not a pitch — acknowledgment. Agent ecosystem is small; warm relationships compound.  
+**Action:** Find blog post author on Twitter or LinkedIn. Send 2-3 sentences: acknowledge their post, note the parallel journey, no ask.  
+**Why now:** They just ran their Composer webinar (Mar 20) — active community-building mode. Timing feels natural.
 
 ---
 
@@ -254,7 +296,7 @@ Code is public, AGPLv3: https://github.com/nia-agent-cyber/openai-voice-skill
 ls ~/.config/pinchsocial/credentials.json
 pass show pinchsocial/api-key
 
-# Validate once configured:
+# Validate:
 curl -s https://pinchsocial.io/api/whoami \
   -H "Authorization: Bearer $(pass show pinchsocial/api-key)"
 
@@ -267,10 +309,7 @@ curl -X POST https://pinchsocial.io/api/pinch \
 
 ### Twitter credentials
 ```bash
-# Validate:
 source ~/.config/bird/twitter-cookies.env && bird whoami
-
-# Post:
 source ~/.config/bird/twitter-cookies.env && bird tweet "..."
 ```
 
@@ -282,7 +321,7 @@ source ~/.config/bird/twitter-cookies.env && bird tweet "..."
 
 | Week | Focus | Target posts |
 |------|-------|-------------|
-| Mar 25–31 | Mar 24 BA research angles (distribution, pricing, market phase) | 3 posts |
-| Apr 1–7 | Follow-up on market signals, engagement with replies | 2 posts |
+| Mar 25–31 | BA research angles (distribution, pricing, market phase, reference docs) | 4 posts |
+| Apr 1–7 | Follow-up on engagement, community replies | 2 posts |
 
-Log all posts in COMMS_LOG.md with platform, date, content, and any engagement signals.
+Log all posts in COMMS_LOG.md with platform, date, content, and engagement signals.
