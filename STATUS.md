@@ -1,22 +1,39 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-24 by Voice Coder
-**Status:** ✅ ACTIVE — In production use by Remi
+**Last Updated:** 2026-03-24 by Voice PM (OC Integration)
+**Status:** ✅ ACTIVE — OC Integration deployed, awaiting test calls
 
-## Current State (2026-03-24)
+## Current State (2026-03-24) — OC Integration v1
+
+### ✅ Deployed (all 3 sprints, commit b7b89a13)
 - ✅ Voice calls working (Twilio Media Streams + OpenAI Realtime)
 - ✅ Server auto-starts via launchd (org.niavoice.voice-server)
-- ✅ Language defaults to English
-- ✅ stream_sid race condition fixed
-- ✅ All changes pushed to GitHub and repo re-archived
+- ✅ **Sprint 1**: Post-call handler — summarize transcript (GPT-4o-mini), write to `memory/YYYY-MM-DD.md`, wake OpenClaw main session
+- ✅ **Sprint 2**: Live tool framework — 4 Tier 1 tools (memory_search, read_file, get_project_status, memory_get) during calls
+- ✅ **Sprint 3**: Tier 2 tools (cron_create, message_send, sessions_send) + pre-call enrichment (last 3 call summaries, heartbeat state)
 - **Phone:** +1 440 291 5517 (call to talk to Nia)
 - **Server:** localhost:8080 via api.niavoice.org (Cloudflare tunnel)
 
-## Known Remaining Issues
-- None critical
+### 🧪 Awaiting Test Calls
+- `SPRINT_1_TEST_SCENARIOS.md` — post-call memory write + wake event
+- `SPRINT_2_TEST_SCENARIOS.md` — live tool usage (project status, memory)
+- `SPRINT_3_TEST_SCENARIOS.md` — reminders, Telegram send, session notes
+
+### Architecture (new)
+```
+Call → OpenAI Realtime → tool call → local handler (3s timeout) → result injected
+Call ends → summarize_and_remember() → memory/YYYY-MM-DD.md + OpenClaw wake event
+Pre-call → build_call_prompt() → last 3 calls + heartbeat state included
+```
+
+## Known Issues
+- None at deployment time
 
 ## Next Steps
-- Test a full call end-to-end to verify both fixes
+- Run Sprint 1 test call with Remi
+- Verify memory write + wake event
+- Run Sprint 2 test: "What's the status of Bakkt?"
+- Run Sprint 3 test: "Remind me in 10 minutes to..."
 
 ---
 
