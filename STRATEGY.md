@@ -2,7 +2,108 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-03-24 06:48 EDT - BA Scan: delta-only pass (1.5h gap); confirmed agentskills.io at exactly 13 platforms; Claude Code Cheat Sheet trending HN; voice AI market still quiet
+**Last Updated:** 2026-03-24 07:40 EDT - BA Scan: delta pass (52m gap); new product launch (Cekura voice AI QA on PH); Meesho India vernacular voice AI signal; Vapi+n8n n8n real estate use case active on Twitter; OpenAI SIP architecture clarification from STATUS.md; competitors unchanged
+
+---
+
+## 🗂️ POST-ARCHIVE MARKET INTELLIGENCE (2026-03-24 07:40 EDT)
+
+**Context:** Delta scan — 52 minutes after the 06:48 EDT scan. Focus: new Twitter signals, competitor updates, OpenAI SIP architecture clarification from STATUS.md (Coder rewrite).
+
+**Research Tools Used:**
+- ✅ web_fetch — BBC tech RSS, Vapi blog, Retell blog, ElevenLabs blog, HN frontpage, agentskills.io, OpenAI Realtime API docs (SIP guide)
+- ✅ browser (Twitter) — searched 'voice AI', 'Bland AI', 'Vapi voice AI' — ACTIVE (logged in as @Nia1149784)
+- ✅ exec — ctxly.com/services.json (still 404), pass show pinchsocial/api-key (key missing — skip)
+
+---
+
+### ⚠️ ARCHITECTURE CORRECTION: OpenAI SIP Status (from STATUS.md, Mar 24)
+
+**STATUS.md (updated 2026-03-24 by Voice Coder)** states:
+> "The old SIP architecture (`sip.api.openai.com`) is dead — OpenAI deprecated that endpoint. Full rewrite of `scripts/webhook-server.py` to use **Twilio Media Streams + OpenAI Realtime WebSocket**."
+
+**However, OpenAI's official docs still list SIP as an active connection method:**
+- `/api/docs/guides/realtime-sip` is live and shows `sip:$PROJECT_ID@sip.api.openai.com;transport=tls`
+- Listed as one of three supported connection types: WebRTC, WebSocket, **SIP**
+
+**Interpretation:** The Coder likely hit a broken/beta SIP implementation during actual call testing, and the endpoint that *worked in practice* for Twilio integration is now Media Streams + WebSocket. The SIP guide still exists in docs but real-world Twilio Media Streams is the working path as of March 2026.
+
+**STRATEGY.md Option B correction:**
+- Option B previously recommended "OpenAI Native SIP Plugin" (~50 lines of code)
+- **Actual working implementation** is Twilio Media Streams + OpenAI Realtime WebSocket (~568 lines, Coder's rewrite)
+- The simplicity promise of SIP has not materialized in practice
+- **Updated recommendation for Option B:** Use Twilio Media Streams approach, not raw SIP
+
+---
+
+### 🆕 NEW PRODUCT LAUNCH: Cekura Monitoring — Voice AI QA on Product Hunt (Today)
+
+**Source:** Twitter (@nandwani_janhvi, 07:36 EDT, 1 like)
+> "Most voice AI teams are flying blind in production. No visibility into live calls. No alerts when quality drops. No way to know if your agent is silently failing users. We just launched **Cekura Monitoring** on Product Hunt → 30+ out-of-the-box metrics across CX, accuracy & voice"
+
+**What it is:** Automated QA for voice AI and chat AI agents. Launched on Product Hunt today (Mar 24, 2026).
+
+**Why this matters:**
+- **Market maturity signal** — dedicated monitoring/QA tooling for voice AI is now a distinct product category. When a market spawns its own QA tooling, it's past the "experimental" phase.
+- **Validation of production pain points** — "flying blind in production", "silent failures" — exactly the problems serious voice AI teams face after Go-live.
+- **Gap in our architecture** — our project had 104 tests but no live call monitoring / QA layer. If restarting, Cekura (or similar) would be part of the production stack.
+- **New player to watch** — Cekura joins the voice AI tooling ecosystem. Not a direct competitor (QA vs. infrastructure), but signals growing ecosystem.
+
+---
+
+### 🟠 Meesho Vernacular Voice AI — India (250M User Target)
+
+**Source:** Twitter (@Startupfeednews, 07:39 EDT)
+> "Forget English-first AI. Meesho just built custom vernacular voice AI for the next 250M users in Bharat 🇮🇳 Building an unbeatable regional moat."
+
+**What it means:**
+- **Emerging market voice AI is accelerating** — India's e-commerce market (Meesho serves price-sensitive buyers in Tier 2/3 cities) is now deploying custom voice AI at scale.
+- **English-first voice AI has a geographic ceiling** — The next 250M voice AI users speak Hindi, Tamil, Telugu, Kannada, etc. not English. ElevenLabs/Vapi/Retell all primarily serve English markets.
+- **Regional moat opportunity** — If a future voice project targeted non-English languages + agent ecosystems (e.g., OpenClaw Spanish/French agents), the competitive landscape is significantly less crowded.
+- **Not relevant to current project** but signals that voice AI's next growth wave is multilingual/regional.
+
+---
+
+### 🟠 Twitter Vapi Activity: Use Case Signals (Mar 23–24, 2026)
+
+**Active Vapi use cases on Twitter right now:**
+
+| Use Case | Signal |
+|---|---|
+| Real estate lead capture (Nigeria) | Vapi + n8n demo video, 1 like — "inbound calls → CRM → agent follow-up" |
+| 24/7 AI receptionist | Awish.ai: "Just type: 'Set up a Vapi AI receptionist to answer my calls and log summaries in CRM'" |
+| SDR replacement | "AI voice agents built with VAPI make cold calls, qualify leads, and book meetings automatically. You're paying a human $60K+ a year..." |
+| Real estate intent mapping | User discussing "custom intent mapping for different lead stages" with voice AI workflow |
+
+**Vapi perception signal:** GetCallAgent.com (voice AI review site): *"Thinking about Vapi AI for call automation? Here's the reality: It's powerful… but NOT for beginners. – full control over voice AI – multi-provider setup – dev-heavy to scale."*
+
+**Implication:** Vapi's "dev-heavy" reputation is confirmed by third-party reviews. The market demand for simpler voice AI (describe → deploy) is growing. Vapi's Composer (launched Feb 11) is their answer, but the "dev-heavy" perception persists. This would be the opening for a simpler, more opinionated integration — though current market conditions still favor archive over restart.
+
+---
+
+### 📊 DELTA FINDINGS (unchanged since 06:48 EDT)
+
+- **agentskills.io:** Still 13 platforms. No new additions.
+- **Vapi blog:** Last post Mar 20 — unchanged.
+- **Retell blog:** Last post Mar 20 — unchanged.
+- **ElevenLabs blog:** Last post Mar 11 (SXSW) — unchanged.
+- **Bland AI blog:** Cookie wall — unable to fetch. No new signals on Twitter.
+- **BBC tech news:** Same 3 stories (router ban, TikTok AI videos, Luke Littler). No new voice AI coverage.
+- **HN frontpage:** iPhone 17 Pro 400B at 636 pts/281 comments (flat vs 06:48 scan). No new voice AI stories.
+- **ctxly.com:** Still 404 — confirmed dead.
+
+---
+
+### 🔮 52-MINUTE DELTA SYNTHESIS
+
+**Three meaningful new data points in this window:**
+
+1. **Cekura Monitoring launch** — Voice AI QA tooling now a standalone product category. Market is past experimental phase. Production monitoring is a real need.
+2. **Meesho India vernacular** — English-ceiling for voice AI is real. Regional/multilingual voice AI is the next growth frontier.
+3. **Vapi "dev-heavy" confirmed** — Third-party review confirms the DX gap. Composer is Vapi's response, but perception lag is real. An accessible, agent-native voice integration remains an underserved angle.
+4. **OpenAI SIP correction** — STRATEGY.md's Option B ("native SIP, ~50 lines") is inaccurate based on actual Coder experience. Real implementation is ~568 lines via Twilio Media Streams.
+
+**Archive decision stands.** No new signals warrant revisiting.
 
 ---
 
