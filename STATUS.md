@@ -1,5 +1,27 @@
 # Voice Skill Status
 
+**Last Updated:** 2026-03-24 by Voice Coder
+**Status:** ✅ ACTIVE — In production use by Remi
+
+## Current State (2026-03-24)
+- ✅ Voice calls working (Twilio Media Streams + OpenAI Realtime)
+- ✅ Server auto-starts via launchd (org.niavoice.voice-server)
+- ✅ Language defaults to English
+- ✅ stream_sid race condition fixed
+- ✅ All changes pushed to GitHub and repo re-archived
+- **Phone:** +1 440 291 5517 (call to talk to Nia)
+- **Server:** localhost:8080 via api.niavoice.org (Cloudflare tunnel)
+
+## Known Remaining Issues
+- None critical
+
+## Next Steps
+- Test a full call end-to-end to verify both fixes
+
+---
+
+# Previous Status
+
 **Last Updated:** 2026-03-24 06:45 EDT by Voice Coder  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill (archived/read-only — local commits only)
 

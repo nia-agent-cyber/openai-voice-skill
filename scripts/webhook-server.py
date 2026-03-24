@@ -161,7 +161,7 @@ def build_call_prompt(caller_number: str = "") -> str:
         f"({caller_number or 'unknown number'}). "
         f"You called them (or they called you). "
         f"Speak naturally and concisely — this is voice, not text. "
-        f"Always respond in English unless they explicitly switch language. "
+        f"Always respond in English by default, unless the caller explicitly and clearly requests another language. "
         f"Keep responses short (1-3 sentences). Don't use bullet points or markdown."
     )
 
@@ -343,25 +343,32 @@ async def media_stream_ws(websocket: WebSocket):
                     # PCM16 24kHz → mulaw 8kHz → Twilio
                     delta = msg.get("delta", "")
                     ctx.setdefault("audio_chunks_sent", 0)
-                    if delta and ctx["stream_sid"]:
-                        pcm24 = base64.b64decode(delta)
-                        # Resample 24kHz → 8kHz
-                        pcm8, ctx["ratecv_state_out"] = audioop.ratecv(
-                            pcm24, 2, 1, 24000, 8000, ctx["ratecv_state_out"]
-                        )
-                        # PCM16 → mulaw
-                        mulaw = audioop.lin2ulaw(pcm8, 2)
-                        payload = base64.b64encode(mulaw).decode()
-                        ctx["audio_chunks_sent"] += 1
-                        if ctx["audio_chunks_sent"] == 1:
-                            logger.info(f"🔊 First audio chunk → Twilio (streamSid={ctx['stream_sid']})")
-                        await websocket.send_text(json.dumps({
-                            "event": "media",
-                            "streamSid": ctx["stream_sid"],
-                            "media": {"payload": payload}
-                        }))
-                    elif delta and not ctx["stream_sid"]:
-                        logger.warning(f"⚠️ Audio delta received but stream_sid not set yet!")
+                    if delta:
+                        # Wait up to 2s for stream_sid if not yet set (race condition guard)
+                        if ctx.get("stream_sid") is None:
+                            waited = 0.0
+                            while ctx.get("stream_sid") is None and waited < 2.0:
+                                await asyncio.sleep(0.05)
+                                waited += 0.05
+                            if ctx.get("stream_sid") is None:
+                                logger.warning(f"⚠️ stream_sid still None after 2s wait — dropping audio chunk")
+                        if ctx.get("stream_sid"):
+                            pcm24 = base64.b64decode(delta)
+                            # Resample 24kHz → 8kHz
+                            pcm8, ctx["ratecv_state_out"] = audioop.ratecv(
+                                pcm24, 2, 1, 24000, 8000, ctx["ratecv_state_out"]
+                            )
+                            # PCM16 → mulaw
+                            mulaw = audioop.lin2ulaw(pcm8, 2)
+                            payload = base64.b64encode(mulaw).decode()
+                            ctx["audio_chunks_sent"] += 1
+                            if ctx["audio_chunks_sent"] == 1:
+                                logger.info(f"🔊 First audio chunk → Twilio (streamSid={ctx['stream_sid']})")
+                            await websocket.send_text(json.dumps({
+                                "event": "media",
+                                "streamSid": ctx["stream_sid"],
+                                "media": {"payload": payload}
+                            }))
 
                 elif event_type == "response.audio_transcript.done":
                     text = msg.get("transcript", "").strip()
