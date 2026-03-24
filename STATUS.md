@@ -1,5 +1,54 @@
 # Voice Skill Status
 
+**Last Updated:** 2026-03-24 06:45 EDT by Voice Coder  
+**Repo:** github.com/nia-agent-cyber/openai-voice-skill (archived/read-only — local commits only)
+
+---
+
+## 🔄 2026-03-24: MEDIA STREAMS MIGRATION COMPLETE
+
+**Status:** ✅ Implemented, tested, local commit pending  
+**By:** Voice Coder (subagent session voice-media-streams)
+
+### What Changed
+The old SIP architecture (`sip.api.openai.com`) is dead — OpenAI deprecated that endpoint.
+Full rewrite of `scripts/webhook-server.py` to use **Twilio Media Streams + OpenAI Realtime WebSocket**.
+
+### New Architecture
+```
+Inbound:  Phone → Twilio → POST /voice/incoming → TwiML <Connect><Stream>
+          → wss://api.niavoice.org/media-stream → OpenAI Realtime WS
+Outbound: POST /call → Twilio dials → on answer → same TwiML flow
+```
+
+### Verified Working
+- ✅ Server starts clean (no import errors)
+- ✅ `/health` returns 200 with all green indicators
+- ✅ `/voice/incoming` returns valid TwiML `<Connect><Stream url="wss://api.niavoice.org/media-stream"/>`
+- ✅ Twilio webhook auto-updated on startup: +14402915517 → https://api.niavoice.org/voice/incoming
+- ✅ audioop loaded (mulaw↔PCM16 conversion + 8kHz↔24kHz resampling ready)
+- ✅ Identity prompt built from SOUL.md + MEMORY.md (5247 chars)
+- ✅ Voice: `shimmer` (nova deprecated)
+- ✅ `audioop-lts` added to requirements.txt for Python 3.13+ compatibility
+
+### Files Changed
+- `scripts/webhook-server.py` — full rewrite (−1015/+568 lines, much cleaner)
+- `requirements.txt` — added `audioop-lts` and websockets version pin
+
+### Next Step
+**Deploy to api.niavoice.org and make a test call.**
+
+Server start command:
+```bash
+cd /Users/nia/repos/openai-voice-skill && source venv/bin/activate && set -a && source .env && set +a && python scripts/webhook-server.py
+```
+
+### Note on Repo Archive
+GitHub repo is still archived (read-only). Changes are committed locally only.
+Remi needs to either unarchive to push, or the team works locally.
+
+---
+
 **Last Updated:** 2026-03-18 07:50 EDT by Voice PM (2nd check-in of day: still archived, 6 local commits diverged from origin, no new signals)  
 **Repo:** github.com/nia-agent-cyber/openai-voice-skill
 

@@ -1,1176 +1,728 @@
 #!/usr/bin/env python3
 """
-OpenAI Realtime SIP Voice Server
+Nia Voice Server — Twilio Media Streams + OpenAI Realtime
 
-Handles incoming calls via OpenAI's native SIP integration.
-Much lower latency than multi-hop STT→LLM→TTS solutions.
+Architecture:
+  Inbound:  Phone → Twilio → POST /voice/incoming → TwiML <Connect><Stream>
+            → wss://api.niavoice.org/media-stream → OpenAI Realtime WS
+  Outbound: POST /call → Twilio dials person → on answer → same TwiML flow
 
-Usage:
-    python webhook-server.py
+Audio bridge:
+  Twilio sends:  mulaw 8kHz (base64)
+  OpenAI wants:  PCM16 24kHz (base64)
+  OpenAI sends:  PCM16 24kHz (base64)
+  Twilio wants:  mulaw 8kHz (base64)
+  Conversion via audioop (stdlib < 3.13) or audioop-lts (3.13+).
 
 Environment:
-    OPENAI_API_KEY - Your OpenAI API key
-    OPENAI_PROJECT_ID - Your OpenAI project ID
-    WEBHOOK_SECRET - Secret for validating webhook signatures (optional)
-    PORT - Server port (default: 8080)
+  OPENAI_API_KEY        - OpenAI API key
+  TWILIO_ACCOUNT_SID    - Twilio account SID
+  TWILIO_AUTH_TOKEN     - Twilio auth token
+  TWILIO_PHONE_NUMBER   - Your Twilio number (E.164)
+  PUBLIC_URL            - Public URL of this server (default: https://api.niavoice.org)
+  PORT                  - Server port (default: 8080)
+  ALLOW_INBOUND_CALLS   - Allow inbound calls (default: false)
 """
 
 import asyncio
-import hashlib
-import hmac
+import base64
 import json
 import logging
 import os
-import re
 import time
-import urllib.parse
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 
+# audioop: stdlib in Python < 3.13, audioop-lts on 3.13+
+try:
+    import audioop
+    _AUDIOOP_SOURCE = "stdlib"
+except ImportError:
+    try:
+        import audioop_lts as audioop
+        _AUDIOOP_SOURCE = "audioop-lts"
+    except ImportError:
+        audioop = None
+        _AUDIOOP_SOURCE = "UNAVAILABLE"
+
 import httpx
-from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Query, Depends, Header
-from fastapi.responses import JSONResponse, FileResponse, Response
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+import websockets
+import websockets.exceptions
+from fastapi import FastAPI, Request, HTTPException, WebSocket, WebSocketDisconnect, BackgroundTasks, Query
+from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel
 import uvicorn
 from twilio.rest import Client as TwilioClient
 from twilio.base.exceptions import TwilioException
-from twilio.request_validator import RequestValidator
 
-# Import call recording functionality
-from call_recording import recording_manager, CallRecord, TranscriptEntry
+# ─── Logging ──────────────────────────────────────────────────────────────────
 
-# Setup logging (must be before imports that use logger)
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
-# Import tool handler for OpenClaw integration
-try:
-    from realtime_tool_handler import start_tool_handler, stop_tool_handler, get_active_handlers
-    TOOL_HANDLER_AVAILABLE = True
-    logger.info("OpenClaw tool handler integration enabled")
-except ImportError as e:
-    logger.warning(f"Tool handler not available: {e}")
-    TOOL_HANDLER_AVAILABLE = False
-    
-    async def start_tool_handler(*args, **kwargs):
-        pass
-    async def stop_tool_handler(*args, **kwargs):
-        pass
-    def get_active_handlers():
-        return {}
+# ─── Environment ──────────────────────────────────────────────────────────────
 
-# Import call context store for user timezone/location (#34)
-try:
-    from call_context_store import store_call_context, clear_call_context
-    CALL_CONTEXT_STORE_AVAILABLE = True
-except ImportError:
-    CALL_CONTEXT_STORE_AVAILABLE = False
-    def store_call_context(*args, **kwargs): pass
-    def clear_call_context(*args, **kwargs): pass
-
-# Import security utilities
-from security_utils import (
-    validator, encryptor, error_sanitizer, api_auth,
-    ValidationError, SecurityValidator, DataEncryption, ErrorSanitizer
-)
-
-# Import session context extraction (purely additive - no call handling)
-try:
-    from session_context import create_context_extractor
-    context_extractor = create_context_extractor()
-    logger.info("Session context integration enabled")
-except ImportError as e:
-    logger.warning(f"Session context integration not available: {e}")
-    context_extractor = None
-
-# Load environment
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_PROJECT_ID = os.getenv("OPENAI_PROJECT_ID")
-WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
 PORT = int(os.getenv("PORT", "8080"))
-
-# Security configuration
-REQUIRE_WEBHOOK_SIGNATURE = os.getenv("REQUIRE_WEBHOOK_SIGNATURE", "true").lower() == "true"
-REQUIRE_API_KEY_AUTH = os.getenv("REQUIRE_API_KEY_AUTH", "true").lower() == "true"
-ENCRYPT_SESSION_DATA = os.getenv("ENCRYPT_SESSION_DATA", "true").lower() == "true"
-ENABLE_ERROR_SANITIZATION = os.getenv("ENABLE_ERROR_SANITIZATION", "true").lower() == "true"
-
-# Inbound call security - disabled by default (no authentication for inbound calls)
-# Set to "true" to allow inbound calls (future: implement whitelist)
+PUBLIC_URL = os.getenv("PUBLIC_URL", "https://api.niavoice.org").rstrip("/")
 ALLOW_INBOUND_CALLS = os.getenv("ALLOW_INBOUND_CALLS", "false").lower() == "true"
 
-# Twilio configuration for outbound calls
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
 
-# Initialize Twilio client if credentials are available
-twilio_client = None
-twilio_validator = None
+# OpenAI Realtime
+OPENAI_REALTIME_URL = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"
+OPENAI_VOICE = "shimmer"  # nova deprecated; shimmer is closest match
+
+# Workspace paths for Nia's identity
+WORKSPACE_ROOT = Path("/Users/nia/.openclaw/workspace")
+SOUL_PATH = WORKSPACE_ROOT / "SOUL.md"
+MEMORY_PATH = WORKSPACE_ROOT / "MEMORY.md"
+
+# ─── Twilio client ────────────────────────────────────────────────────────────
+
+twilio_client: Optional[TwilioClient] = None
 if TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN:
     try:
         twilio_client = TwilioClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-        twilio_validator = RequestValidator(TWILIO_AUTH_TOKEN)
-        logger.info("Twilio client and validator initialized for outbound calls")
+        logger.info("Twilio client initialized")
     except Exception as e:
         logger.warning(f"Failed to initialize Twilio client: {e}")
 else:
-    logger.info("Twilio credentials not configured - outbound calls disabled")
+    logger.info("Twilio credentials not configured — outbound calls disabled")
 
-# Load agent config
+# ─── Agent config ─────────────────────────────────────────────────────────────
+
 CONFIG_PATH = Path(__file__).parent.parent / "config" / "agent.json"
-DEFAULT_CONFIG = {
-    "name": "Assistant",
-    "instructions": "You are a helpful voice assistant. Be concise and conversational.",
-    "voice": "alloy",
-    "model": "gpt-realtime"
+DEFAULT_CONFIG: dict = {
+    "name": "Nia",
+    "instructions": "You are Nia, a helpful voice assistant. Be concise and conversational.",
+    "voice": OPENAI_VOICE,
+    "model": "gpt-4o-realtime-preview",
+    "tools": []
 }
 
-def load_agent_config():
-    """Load agent configuration from file or use defaults."""
+
+def load_agent_config() -> dict:
     if CONFIG_PATH.exists():
         try:
             with open(CONFIG_PATH) as f:
-                config = json.load(f)
-                return {**DEFAULT_CONFIG, **config}
+                return {**DEFAULT_CONFIG, **json.load(f)}
         except Exception as e:
             logger.warning(f"Failed to load config: {e}, using defaults")
     return DEFAULT_CONFIG
 
+
 AGENT_CONFIG = load_agent_config()
 
-# Track active calls with encryption support
+
+def load_identity_prompt() -> str:
+    """
+    Build Nia's system prompt from SOUL.md + MEMORY.md in the workspace.
+    Falls back to AGENT_CONFIG instructions if files aren't available.
+    """
+    parts: list[str] = []
+
+    try:
+        if SOUL_PATH.exists():
+            soul = SOUL_PATH.read_text().strip()
+            parts.append(f"# Your Core Identity\n{soul}")
+            logger.info(f"Loaded SOUL.md ({len(soul)} chars)")
+    except Exception as e:
+        logger.warning(f"Could not load SOUL.md: {e}")
+
+    try:
+        if MEMORY_PATH.exists():
+            memory = MEMORY_PATH.read_text().strip()
+            # Truncate to keep prompt manageable (~3k chars)
+            if len(memory) > 3000:
+                memory = memory[:3000] + "\n\n...[truncated — see full MEMORY.md for details]"
+            parts.append(f"# Your Memory and Context\n{memory}")
+            logger.info(f"Loaded MEMORY.md ({len(memory)} chars)")
+    except Exception as e:
+        logger.warning(f"Could not load MEMORY.md: {e}")
+
+    if parts:
+        header = (
+            "You are Nia — an AI agent having a voice conversation. "
+            "Be concise, natural, and warm. No long monologues. "
+            "Your identity and memory are below.\n\n"
+        )
+        return header + "\n\n---\n\n".join(parts)
+
+    # Fallback
+    return AGENT_CONFIG["instructions"]
+
+
+NIA_SYSTEM_PROMPT = load_identity_prompt()
+logger.info(f"Identity prompt ready ({len(NIA_SYSTEM_PROMPT)} chars)")
+
+# ─── Active call tracking ─────────────────────────────────────────────────────
+
 active_calls: dict[str, dict] = {}
 
-# Session context integration handled via context_extractor above
 
-# Security utilities
-security = HTTPBearer(auto_error=False)
-
-def create_secure_call_data(call_data: Dict[str, Any]) -> Dict[str, Any]:
-    """Create call data with sensitive information encrypted if enabled."""
-    if not ENCRYPT_SESSION_DATA:
-        return call_data
-    
-    # Identify sensitive fields
-    sensitive_fields = ['caller_number', 'callee_number', 'to', 'from', 'sip_headers', 'metadata']
-    secure_data = call_data.copy()
-    
-    for field in sensitive_fields:
-        if field in secure_data and secure_data[field]:
-            encrypted = encryptor.encrypt_data(secure_data[field])
-            if encrypted:
-                secure_data[f"{field}_encrypted"] = encrypted
-                # Keep only masked version for logging
-                if field in ['caller_number', 'callee_number', 'to', 'from']:
-                    secure_data[field] = validator.mask_sensitive_data(str(secure_data[field]))
-                else:
-                    del secure_data[field]
-    
-    return secure_data
-
-def get_decrypted_call_data(call_id: str, field: str) -> Optional[Any]:
-    """Get decrypted call data for a specific field."""
-    if call_id not in active_calls:
-        return None
-    
-    call_data = active_calls[call_id]
-    encrypted_field = f"{field}_encrypted"
-    
-    if encrypted_field in call_data:
-        return encryptor.decrypt_data(call_data[encrypted_field], return_json=True)
-    
-    return call_data.get(field)
-
-def sanitize_error_response(error: Exception, error_type: str = 'internal') -> str:
-    """Sanitize error message for API response."""
-    if not ENABLE_ERROR_SANITIZATION:
-        return str(error)
-    
-    return error_sanitizer.sanitize_error_message(str(error), error_type)
-
-async def verify_api_key(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> bool:
-    """Verify API key for service-to-service authentication."""
-    if not REQUIRE_API_KEY_AUTH:
-        return True
-    
-    if not credentials:
-        raise HTTPException(
-            status_code=401, 
-            detail="API key required",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
-    
-    if not api_auth.validate_api_key(credentials.credentials):
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid API key"
-        )
-    
-    return True
-
-# Pydantic models for API requests
-class OutboundCallRequest(BaseModel):
-    to: str  # Phone number to call
-    caller_id: Optional[str] = None  # Override default caller ID
-    message: Optional[str] = None  # Optional initial message
-    
-class OutboundCallResponse(BaseModel):
-    status: str
-    call_id: Optional[str] = None
-    message: str
-
-# Call history API models
-class CallHistoryRequest(BaseModel):
-    limit: int = 50
-    offset: int = 0
-    call_type: Optional[str] = None
-
-class CallRecordResponse(BaseModel):
-    call_id: str
-    call_type: str
-    caller_number: Optional[str]
-    callee_number: Optional[str]
-    started_at: str
-    ended_at: Optional[str]
-    duration_seconds: Optional[float]
-    status: str
-    has_audio: bool
-    has_transcript: bool
-    metadata: Optional[Dict[str, Any]]
-
-class TranscriptResponse(BaseModel):
-    transcript: List[Dict[str, Any]]
-    call_info: CallRecordResponse
-
-app = FastAPI(title="OpenAI Voice Server")
-
-
-def mask_phone_number(phone: str) -> str:
-    """Mask phone number for logging to protect PII."""
+def mask_phone(phone: str) -> str:
+    """Mask phone number for safe logging."""
     if not phone or len(phone) < 7:
         return "****"
     return f"{phone[:3]}****{phone[-4:]}"
 
 
-def validate_phone_number(phone: str) -> bool:
-    """Enhanced phone number validation using security utilities."""
-    return validator.validate_phone_number(phone, strict=True)
+def validate_phone(phone: str) -> bool:
+    """Validate E.164 format phone number."""
+    import re
+    return bool(re.match(r'^\+[1-9]\d{6,14}$', phone.strip()))
 
 
-def get_base_url() -> str:
-    """Get the base URL for this server."""
-    # Use PUBLIC_URL if set (for production deployments with cloudflare tunnel, etc.)
-    public_url = os.getenv("PUBLIC_URL")
-    if public_url:
-        # Remove trailing slash if present
-        return public_url.rstrip('/')
-    
-    # Fallback to localhost construction for local development
-    port = os.getenv("PORT", "8080")
-    host = os.getenv("HOST", "localhost")
-    protocol = os.getenv("PROTOCOL", "http")
-    return f"{protocol}://{host}:{port}"
+# ─── Derived URLs ─────────────────────────────────────────────────────────────
+
+# WebSocket URL for Twilio Media Streams
+MEDIA_STREAM_WS_URL = (
+    PUBLIC_URL
+    .replace("https://", "wss://")
+    .replace("http://", "ws://")
+) + "/media-stream"
+
+# ─── FastAPI app ──────────────────────────────────────────────────────────────
+
+app = FastAPI(title="Nia Voice Server — Twilio Media Streams")
 
 
-def verify_webhook_signature(request_body: bytes, signature: str, timestamp: str) -> bool:
-    """Enhanced webhook signature verification with security checks."""
-    # Enforce signature verification in production
-    if REQUIRE_WEBHOOK_SIGNATURE and not WEBHOOK_SECRET:
-        logger.error("Webhook signature verification required but WEBHOOK_SECRET not configured")
-        return False
-    
-    if not WEBHOOK_SECRET:
-        if REQUIRE_WEBHOOK_SIGNATURE:
-            return False
-        logger.warning("Webhook signature verification skipped - WEBHOOK_SECRET not configured")
-        return True
-    
-    if not signature or not timestamp:
-        if REQUIRE_WEBHOOK_SIGNATURE:
-            logger.warning("Missing signature or timestamp in webhook request")
-            return False
-        return True
-    
+# ─── Pydantic models ──────────────────────────────────────────────────────────
+
+class OutboundCallRequest(BaseModel):
+    to: str
+    caller_id: Optional[str] = None
+    message: Optional[str] = None
+
+
+class OutboundCallResponse(BaseModel):
+    status: str
+    call_id: Optional[str] = None
+    message: str
+
+
+# ─── /voice/incoming ─────────────────────────────────────────────────────────
+
+@app.post("/voice/incoming")
+async def voice_incoming(request: Request):
+    """
+    Twilio voice webhook for both inbound and answered outbound calls.
+    Returns TwiML that connects the call to our Media Stream WebSocket.
+    """
+    twiml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Connect>
+        <Stream url="{MEDIA_STREAM_WS_URL}"/>
+    </Connect>
+</Response>'''
+
+    logger.info(f"TwiML /voice/incoming → stream: {MEDIA_STREAM_WS_URL}")
+    return Response(content=twiml, media_type="application/xml")
+
+
+# ─── /media-stream WebSocket ──────────────────────────────────────────────────
+
+@app.websocket("/media-stream")
+async def media_stream_ws(websocket: WebSocket):
+    """
+    Bidirectional audio bridge: Twilio Media Streams ↔ OpenAI Realtime.
+
+    Twilio sends mulaw 8kHz → we convert to PCM16 24kHz → OpenAI
+    OpenAI sends PCM16 24kHz → we convert to mulaw 8kHz → Twilio
+    """
+    await websocket.accept()
+    logger.info("Twilio Media Stream WebSocket connected")
+
+    if not audioop:
+        logger.error("audioop unavailable — install audioop-lts. Closing stream.")
+        await websocket.close(code=1011, reason="audioop not available")
+        return
+
+    if not OPENAI_API_KEY:
+        logger.error("OPENAI_API_KEY not set. Closing stream.")
+        await websocket.close(code=1011, reason="OpenAI API key not configured")
+        return
+
+    # ── Shared mutable state (one dict = no closure capture issues) ──────────
+    ctx: dict = {
+        "stream_sid": None,
+        "call_sid": None,
+        "openai_ws": None,
+        "started_at": time.time(),
+        "transcript": [],
+        "ratecv_state_in": None,   # resampling state: Twilio→OpenAI
+        "ratecv_state_out": None,  # resampling state: OpenAI→Twilio
+        "openai_task": None,
+    }
+
+    # ── OpenAI receiver coroutine ─────────────────────────────────────────────
+
+    async def receive_from_openai():
+        """Forward OpenAI Realtime audio/events to Twilio."""
+        oai_ws = ctx["openai_ws"]
+        try:
+            async for raw_msg in oai_ws:
+                msg = json.loads(raw_msg)
+                event_type = msg.get("type", "")
+
+                if event_type == "session.created":
+                    logger.info("OpenAI session created")
+
+                elif event_type == "session.updated":
+                    logger.info("OpenAI session updated")
+
+                elif event_type == "response.audio.delta":
+                    # PCM16 24kHz → mulaw 8kHz → Twilio
+                    delta = msg.get("delta", "")
+                    if delta and ctx["stream_sid"]:
+                        pcm24 = base64.b64decode(delta)
+                        # Resample 24kHz → 8kHz
+                        pcm8, ctx["ratecv_state_out"] = audioop.ratecv(
+                            pcm24, 2, 1, 24000, 8000, ctx["ratecv_state_out"]
+                        )
+                        # PCM16 → mulaw
+                        mulaw = audioop.lin2ulaw(pcm8, 2)
+                        payload = base64.b64encode(mulaw).decode()
+
+                        await websocket.send_text(json.dumps({
+                            "event": "media",
+                            "streamSid": ctx["stream_sid"],
+                            "media": {"payload": payload}
+                        }))
+
+                elif event_type == "response.audio_transcript.done":
+                    text = msg.get("transcript", "").strip()
+                    if text:
+                        ctx["transcript"].append({
+                            "speaker": "assistant",
+                            "content": text,
+                            "timestamp": datetime.now().isoformat()
+                        })
+                        logger.info(f"[Nia] {text[:120]}")
+
+                elif event_type == "conversation.item.input_audio_transcription.completed":
+                    text = msg.get("transcript", "").strip()
+                    if text:
+                        ctx["transcript"].append({
+                            "speaker": "user",
+                            "content": text,
+                            "timestamp": datetime.now().isoformat()
+                        })
+                        logger.info(f"[User] {text[:120]}")
+
+                elif event_type == "response.done":
+                    logger.debug("OpenAI response turn complete")
+
+                elif event_type == "error":
+                    logger.error(f"OpenAI Realtime error: {msg.get('error', msg)}")
+
+                else:
+                    logger.debug(f"OpenAI event: {event_type}")
+
+        except websockets.exceptions.ConnectionClosed as e:
+            logger.info(f"OpenAI WS closed: {e}")
+        except asyncio.CancelledError:
+            pass
+        except Exception as e:
+            logger.error(f"OpenAI receiver error: {e}", exc_info=True)
+
+    # ── Main Twilio event loop ────────────────────────────────────────────────
+
     try:
-        # Validate timestamp to prevent replay attacks
-        timestamp_int = int(timestamp)
-        current_time = int(time.time())
-        time_diff = abs(current_time - timestamp_int)
-        
-        # Reject requests older than 5 minutes or from the future
-        if time_diff > 300:
-            logger.warning(f"Webhook timestamp too old or invalid: {time_diff}s difference")
-            return False
-        
-        # OpenAI uses: v1,base64(HMAC-SHA256(timestamp.body))
-        message = f"{timestamp}.{request_body.decode()}"
-        expected = hmac.new(
-            WEBHOOK_SECRET.encode(),
-            message.encode(),
-            hashlib.sha256
-        ).hexdigest()
-        
-        # Handle signature format
-        if signature.startswith("v1,"):
-            signature = signature[3:]
-        
-        # Use secure comparison to prevent timing attacks
-        is_valid = hmac.compare_digest(expected, signature)
-        
-        if not is_valid:
-            logger.warning("Invalid webhook signature detected")
-        
-        return is_valid
-        
-    except (ValueError, TypeError) as e:
-        logger.warning(f"Error validating webhook signature: {e}")
-        return False
+        while True:
+            raw = await websocket.receive_text()
+            msg = json.loads(raw)
+            event = msg.get("event")
 
+            if event == "connected":
+                logger.info("Twilio: stream connected")
 
-def verify_twilio_signature(url: str, params: dict, signature: str) -> bool:
-    """Verify Twilio webhook signature using RequestValidator."""
-    if not twilio_validator:
-        logger.warning("Twilio validator not configured - skipping signature validation")
-        return True  # Skip validation if no validator configured
-    
-    try:
-        return twilio_validator.validate(url, params, signature)
+            elif event == "start":
+                start_data = msg.get("start", {})
+                ctx["stream_sid"] = start_data.get("streamSid")
+                ctx["call_sid"] = start_data.get("callSid")
+                logger.info(
+                    f"Stream started — streamSid={ctx['stream_sid']}, "
+                    f"callSid={ctx['call_sid']}"
+                )
+
+                # Track the call
+                if ctx["call_sid"]:
+                    active_calls[ctx["call_sid"]] = {
+                        "type": "inbound",
+                        "stream_sid": ctx["stream_sid"],
+                        "started_at": ctx["started_at"],
+                        "status": "active"
+                    }
+
+                # ── Connect to OpenAI Realtime ──────────────────────────────
+                try:
+                    logger.info(f"Connecting to OpenAI Realtime: {OPENAI_REALTIME_URL}")
+                    oai_ws = await websockets.connect(
+                        OPENAI_REALTIME_URL,
+                        additional_headers={
+                            "Authorization": f"Bearer {OPENAI_API_KEY}",
+                            "OpenAI-Beta": "realtime=v1"
+                        }
+                    )
+                    ctx["openai_ws"] = oai_ws
+                    logger.info("OpenAI Realtime WS connected")
+
+                    # ── Send session.update ─────────────────────────────────
+                    tools = AGENT_CONFIG.get("tools", [])
+                    session_config = {
+                        "type": "session.update",
+                        "session": {
+                            "modalities": ["text", "audio"],
+                            "instructions": NIA_SYSTEM_PROMPT,
+                            "voice": OPENAI_VOICE,
+                            "input_audio_format": "pcm16",
+                            "output_audio_format": "pcm16",
+                            "input_audio_transcription": {
+                                "model": "whisper-1"
+                            },
+                            "turn_detection": {
+                                "type": "server_vad",
+                                "threshold": 0.5,
+                                "prefix_padding_ms": 300,
+                                "silence_duration_ms": 500
+                            },
+                            "tools": tools,
+                            "tool_choice": "auto" if tools else "none"
+                        }
+                    }
+                    await oai_ws.send(json.dumps(session_config))
+                    logger.info(
+                        f"session.update sent (voice={OPENAI_VOICE}, "
+                        f"tools={len(tools)}, prompt={len(NIA_SYSTEM_PROMPT)}c)"
+                    )
+
+                    # ── Start OpenAI receiver task ──────────────────────────
+                    ctx["openai_task"] = asyncio.create_task(receive_from_openai())
+
+                except Exception as e:
+                    logger.error(f"Failed to connect to OpenAI Realtime: {e}", exc_info=True)
+
+            elif event == "media":
+                # Twilio mulaw 8kHz → PCM16 24kHz → OpenAI
+                oai_ws = ctx["openai_ws"]
+                if oai_ws:
+                    mulaw_b64 = msg.get("media", {}).get("payload", "")
+                    if mulaw_b64:
+                        mulaw_bytes = base64.b64decode(mulaw_b64)
+                        # mulaw → linear PCM 8kHz
+                        linear8 = audioop.ulaw2lin(mulaw_bytes, 2)
+                        # resample 8kHz → 24kHz
+                        linear24, ctx["ratecv_state_in"] = audioop.ratecv(
+                            linear8, 2, 1, 8000, 24000, ctx["ratecv_state_in"]
+                        )
+                        # Forward to OpenAI
+                        await oai_ws.send(json.dumps({
+                            "type": "input_audio_buffer.append",
+                            "audio": base64.b64encode(linear24).decode()
+                        }))
+
+            elif event == "stop":
+                logger.info(f"Stream stopped: {ctx['stream_sid']}")
+                break
+
+            else:
+                logger.debug(f"Twilio event: {event}")
+
+    except WebSocketDisconnect:
+        logger.info("Twilio WebSocket disconnected")
     except Exception as e:
-        logger.error(f"Error validating Twilio signature: {e}")
-        return False
+        logger.error(f"Media stream error: {e}", exc_info=True)
 
+    finally:
+        # ── Cleanup ───────────────────────────────────────────────────────────
+
+        # Cancel OpenAI receiver task
+        task = ctx.get("openai_task")
+        if task and not task.done():
+            task.cancel()
+            try:
+                await task
+            except (asyncio.CancelledError, Exception):
+                pass
+
+        # Close OpenAI WebSocket
+        oai_ws = ctx.get("openai_ws")
+        if oai_ws:
+            try:
+                await oai_ws.close()
+                logger.info("OpenAI WS closed")
+            except Exception:
+                pass
+
+        # Save transcript
+        call_sid = ctx["call_sid"]
+        transcript = ctx["transcript"]
+        if call_sid and transcript:
+            _save_transcript(call_sid, transcript)
+
+        # Update active calls
+        if call_sid and call_sid in active_calls:
+            duration = time.time() - ctx["started_at"]
+            active_calls[call_sid]["status"] = "completed"
+            active_calls[call_sid]["duration"] = round(duration, 1)
+            logger.info(
+                f"Call {call_sid} done — "
+                f"duration={duration:.1f}s, turns={len(transcript)}"
+            )
+
+        logger.info("Media stream WebSocket closed and cleaned up")
+
+
+def _save_transcript(call_sid: str, transcript: list[dict]) -> None:
+    """Persist call transcript to workspace/memory/call-transcripts/."""
+    try:
+        transcripts_dir = WORKSPACE_ROOT / "memory" / "call-transcripts"
+        transcripts_dir.mkdir(parents=True, exist_ok=True)
+
+        ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        path = transcripts_dir / f"{ts}_{call_sid}.json"
+
+        data = {
+            "call_sid": call_sid,
+            "recorded_at": datetime.now().isoformat(),
+            "turns": len(transcript),
+            "transcript": transcript
+        }
+        path.write_text(json.dumps(data, indent=2))
+        logger.info(f"Transcript saved → {path}")
+
+    except Exception as e:
+        logger.error(f"Failed to save transcript for {call_sid}: {e}")
+
+
+# ─── Outbound calls ───────────────────────────────────────────────────────────
 
 @app.post("/call", response_model=OutboundCallResponse)
-async def initiate_outbound_call(request: OutboundCallRequest, background_tasks: BackgroundTasks):
+async def initiate_outbound_call(
+    request: OutboundCallRequest,
+    background_tasks: BackgroundTasks
+):
     """
-    Initiate an outbound call using Twilio to connect to OpenAI Realtime API.
-    
-    This endpoint:
-    1. Validates the phone number
-    2. Uses Twilio to place a call to the OpenAI SIP endpoint  
-    3. Returns the call ID for tracking
+    Initiate an outbound call via Twilio.
+    When the callee answers, Twilio hits /voice/incoming which spins up
+    the Media Stream bridge to OpenAI Realtime.
     """
-    # Validate Twilio is configured
     if not twilio_client:
         raise HTTPException(
-            status_code=503, 
-            detail="Outbound calling not configured - missing Twilio credentials"
+            status_code=503,
+            detail="Outbound calling not configured — missing Twilio credentials"
         )
-    
-    # Early input validation - reject malformed input immediately
+
     if not request.to or not isinstance(request.to, str):
+        raise HTTPException(status_code=400, detail="Phone number is required")
+
+    phone = (
+        request.to.strip()
+        .replace(' ', '')
+        .replace('-', '')
+        .replace('(', '')
+        .replace(')', '')
+    )
+
+    if not validate_phone(phone):
         raise HTTPException(
             status_code=400,
-            detail="Phone number is required and must be a string"
+            detail="Invalid phone number — use E.164 format (e.g. +1234567890)"
         )
-    
-    # Remove any whitespace or common formatting
-    phone_cleaned = request.to.strip().replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
-    request.to = phone_cleaned
-    
-    # Validate phone number format with enhanced validation
-    if not validate_phone_number(request.to):
+
+    if request.caller_id and not validate_phone(request.caller_id.strip()):
         raise HTTPException(
             status_code=400,
-            detail="Invalid phone number format - must be E.164 format with valid country code (e.g. +1234567890)"
+            detail="Invalid caller_id — use E.164 format"
         )
-    
-    # Additional validation for caller_id if provided
-    if request.caller_id and not validate_phone_number(request.caller_id.strip()):
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid caller_id format - must be E.164 format with valid country code"
-        )
-    
-    # Validate OpenAI configuration
-    if not OPENAI_PROJECT_ID:
+
+    from_number = request.caller_id or TWILIO_PHONE_NUMBER
+    if not from_number:
         raise HTTPException(
             status_code=500,
-            detail="OpenAI project ID not configured - required for SIP endpoint"
+            detail="No caller ID — set TWILIO_PHONE_NUMBER or provide caller_id"
         )
-    
+
+    # Point Twilio to /voice/incoming when call is answered
+    twiml_url = f"{PUBLIC_URL}/voice/incoming"
+    logger.info(
+        f"Initiating outbound: {mask_phone(phone)} from {mask_phone(from_number)} "
+        f"(TwiML: {twiml_url})"
+    )
+
     try:
-        # Use provided caller ID or default
-        from_number = request.caller_id or TWILIO_PHONE_NUMBER
-        if not from_number:
-            raise HTTPException(
-                status_code=500,
-                detail="No caller ID configured - set TWILIO_PHONE_NUMBER or provide caller_id"
-            )
-        
-        # Create OpenAI SIP URI
-        sip_uri = f"sip:{OPENAI_PROJECT_ID}@sip.api.openai.com;transport=tls"
-        
-        # Construct TwiML webhook URL
-        twiml_url = f"{get_base_url()}/twiml/outbound?sip_uri={urllib.parse.quote(sip_uri)}"
-        
-        logger.info(f"Initiating outbound call: {mask_phone_number(request.to)} via {sip_uri}")
-        logger.info(f"Using TwiML webhook URL: {twiml_url}")
-        
-        # Create Twilio call
         call = twilio_client.calls.create(
-            to=request.to,
+            to=phone,
             from_=from_number,
-            url=twiml_url,  # Use TwiML webhook URL instead of SIP URI
+            url=twiml_url,
             timeout=30,
-            record=False  # We'll handle recording separately if needed
         )
-        
-        # Track the call
-        call_data = {
+
+        active_calls[call.sid] = {
             "type": "outbound",
-            "to": request.to,
+            "to": phone,
             "from": from_number,
             "started_at": time.time(),
             "twilio_call_sid": call.sid,
-            "openai_project_id": OPENAI_PROJECT_ID,
             "status": "initiated"
         }
-        
-        active_calls[call.sid] = call_data
-        
-        logger.info(f"Outbound call initiated: {call.sid} to {mask_phone_number(request.to)}")
-        
-        # Start call recording for outbound call
-        background_tasks.add_task(
-            recording_manager.start_call_recording,
-            call.sid, "outbound", from_number, request.to,
-            {"initial_message": request.message, "twilio_call_sid": call.sid}
-        )
-        
-        # Store call context for tool handler (#34 - timezone/location fix)
-        if CALL_CONTEXT_STORE_AVAILABLE:
-            store_call_context(
-                call.sid,
-                caller_phone=from_number,
-                callee_phone=request.to,
-                call_type="outbound"
-            )
-        
-        # Set up OpenAI Realtime session in background
-        background_tasks.add_task(setup_outbound_realtime_session, call.sid, request.message)
-        
+
+        logger.info(f"Outbound call created: {call.sid} → {mask_phone(phone)}")
+
         return OutboundCallResponse(
-            status="initiated", 
+            status="initiated",
             call_id=call.sid,
-            message=f"Call initiated to {request.to}"
+            message=f"Call initiated to {phone}"
         )
-        
+
     except TwilioException as e:
-        logger.error(f"Twilio error initiating call: {e}")
+        logger.error(f"Twilio error: {e}")
         raise HTTPException(status_code=400, detail=f"Call failed: {str(e)}")
     except Exception as e:
         logger.error(f"Error initiating outbound call: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
-@app.post("/webhook")
-async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
-    """
-    Handle OpenAI webhook events.
-    
-    Primary event: realtime.call.incoming
-    """
-    body = await request.body()
-    
-    # Log raw webhook body for debugging
-    logger.debug(f"Raw webhook body: {body[:500] if body else 'empty'}")
-    
-    # Check if this is a Twilio webhook by looking for CallStatus or Twilio signature
-    twilio_signature = request.headers.get("X-Twilio-Signature")
-    is_twilio_webhook = twilio_signature is not None
-    
-    # Parse form data for Twilio webhooks, JSON for OpenAI
-    if is_twilio_webhook:
-        # Twilio sends form data
-        form_data = await request.form()
-        event = dict(form_data)
-        
-        # Validate Twilio signature
-        url = str(request.url)
-        if not verify_twilio_signature(url, event, twilio_signature):
-            logger.warning("Invalid Twilio webhook signature")
-            raise HTTPException(status_code=401, detail="Invalid Twilio signature")
-        
-        # Handle Twilio webhook events (for outbound calls)
-        return await handle_twilio_webhook(event)
-    else:
-        # Handle OpenAI webhooks
-        # Verify OpenAI signature if configured
-        signature = request.headers.get("webhook-signature", "")
-        timestamp = request.headers.get("webhook-timestamp", "")
-        
-        if WEBHOOK_SECRET and not verify_webhook_signature(body, signature, timestamp):
-            logger.warning("Invalid OpenAI webhook signature")
-            raise HTTPException(status_code=401, detail="Invalid OpenAI signature")
-        
-        try:
-            event = json.loads(body)
-        except json.JSONDecodeError:
-            raise HTTPException(status_code=400, detail="Invalid JSON")
-        
-        event_type = event.get("type")
-        event_id = event.get("id")
-        
-        logger.info(f"OpenAI webhook received: {event_type} (id: {event_id})")
-    
-    # Handle OpenAI webhook events (for both inbound and outbound)
-    
-    if event_type == "realtime.call.incoming":
-        # Handle incoming call
-        call_data = event.get("data", {})
-        call_id = call_data.get("call_id")
-        sip_headers = call_data.get("sip_headers", [])
-        
-        # Extract caller info from SIP headers
-        from_header = next((h["value"] for h in sip_headers if h["name"] == "From"), "unknown")
-        to_header = next((h["value"] for h in sip_headers if h["name"] == "To"), "unknown")
-        
-        logger.info(f"Incoming call: {call_id} from {mask_phone_number(from_header)} to {mask_phone_number(to_header)}")
-        
-        # Check for pre-prepared instructions (for outbound calls that arrive via OpenAI webhook)
-        enhanced_instructions = None
-        matched_call_id = None
-        
-        # Strategy 1: Match by destination number (most reliable)
-        caller_number = re.search(r'\+?[\d]+', from_header or "")
-        caller_number = caller_number.group() if caller_number else None
-        
-        if caller_number:
-            for stored_call_id, stored_data in active_calls.items():
-                if (stored_data.get("enhanced_instructions") and 
-                    stored_data.get("status") == "realtime_ready" and
-                    stored_data.get("to") == caller_number):
-                    enhanced_instructions = stored_data.get("enhanced_instructions")
-                    matched_call_id = stored_call_id
-                    logger.info(f"Matched call {call_id} to outbound call {stored_call_id} by destination number")
-                    break
-        
-        # Strategy 2: Fallback to time window (most recent call within 60 seconds)
-        if not enhanced_instructions:
-            best_call_id = None
-            best_time_diff = float('inf')
-            
-            for stored_call_id, stored_data in active_calls.items():
-                if stored_data.get("enhanced_instructions") and stored_data.get("status") == "realtime_ready":
-                    time_diff = time.time() - stored_data.get("started_at", 0)
-                    if time_diff < 60 and time_diff < best_time_diff:
-                        enhanced_instructions = stored_data.get("enhanced_instructions")
-                        matched_call_id = stored_call_id
-                        best_time_diff = time_diff
-            
-            if enhanced_instructions:
-                logger.info(f"Matched call {call_id} to outbound call {matched_call_id} by time window ({best_time_diff:.1f}s ago)")
-        
-        # SECURITY: Reject true inbound calls if not allowed
-        # Outbound calls that connect via OpenAI webhook will have matched_call_id
-        is_true_inbound = matched_call_id is None
-        
-        if is_true_inbound and not ALLOW_INBOUND_CALLS:
-            logger.warning(f"Inbound call rejected - disabled for security: {call_id} from {mask_phone_number(from_header)}")
-            background_tasks.add_task(reject_call, call_id, "unavailable")
-            return JSONResponse({"status": "rejected", "call_id": call_id, "reason": "inbound_disabled"})
-        
-        # Start call recording (only for accepted calls)
-        background_tasks.add_task(
-            recording_manager.start_call_recording,
-            call_id, "inbound", from_header, to_header,
-            {"sip_headers": sip_headers}
-        )
-        
-        # Store call context for tool handler (#34 - timezone/location fix)
-        # For inbound calls, the user is the caller (from_header)
-        if CALL_CONTEXT_STORE_AVAILABLE:
-            store_call_context(
-                call_id,
-                caller_phone=caller_number,  # Extracted phone number
-                callee_phone=to_header,
-                call_type="inbound"
-            )
-        
-        # Link OpenAI call ID to matched outbound call
-        if matched_call_id and enhanced_instructions:
-            active_calls[matched_call_id]["openai_call_id"] = call_id
-        
-        # Accept the call in background (don't block webhook response)
-        background_tasks.add_task(accept_call, call_id, from_header, enhanced_instructions)
-        
-        return JSONResponse({"status": "accepted", "call_id": call_id})
-    
-    elif event_type == "realtime.call.ended":
-        call_data = event.get("data", {})
-        call_id = call_data.get("call_id")
-        
-        # End call recording
-        background_tasks.add_task(
-            recording_manager.end_call_recording,
-            call_id, "completed"
-        )
-        
-        # Stop tool handler for this call
-        if TOOL_HANDLER_AVAILABLE:
-            background_tasks.add_task(stop_tool_handler, call_id)
-        
-        # Clear call context store (#34)
-        if CALL_CONTEXT_STORE_AVAILABLE:
-            clear_call_context(call_id)
-        
-        # Finalize OpenClaw session context
-        if call_id in active_calls:
-            call_info = active_calls[call_id]
-            duration = time.time() - call_info.get("started_at", time.time())
-            
-            # Log call completion
-            caller_name = call_info.get("caller", call_info.get("to", "Unknown"))
-            
-            logger.info(f"Call ended: {call_id} (duration: {duration:.1f}s)")
-            del active_calls[call_id]
-        
-        return JSONResponse({"status": "noted"})
-    
-    else:
-        logger.debug(f"Unhandled event type: {event_type}")
-        return JSONResponse({"status": "ignored"})
-
-
-async def accept_call(call_id: str, caller: str, enhanced_instructions: str = None):
-    """
-    Accept an incoming call with agent configuration and session context.
-    
-    This calls OpenAI's accept endpoint to bridge the SIP call
-    to a Realtime session with our custom instructions enhanced with
-    OpenClaw session context.
-    
-    For outbound calls, enhanced_instructions should be pre-prepared.
-    For inbound calls, context will be generated from caller info.
-    """
-    if not OPENAI_API_KEY:
-        logger.error("OPENAI_API_KEY not set - cannot accept call")
-        return
-    
-    url = f"https://api.openai.com/v1/realtime/calls/{call_id}/accept"
-    
-    # CONTEXT INJECTION: Use pre-prepared instructions for outbound calls,
-    # or enhance instructions with session context for inbound calls
-    instructions = AGENT_CONFIG["instructions"]
-    
-    if enhanced_instructions:
-        # Use pre-prepared instructions (for outbound calls)
-        instructions = enhanced_instructions
-        logger.info(f"Using pre-prepared instructions for call {call_id} ({len(instructions)} chars)")
-    elif context_extractor:
-        # Generate instructions for inbound calls
-        try:
-            instructions = context_extractor.get_enhanced_instructions(
-                caller, AGENT_CONFIG["instructions"], "inbound"
-            )
-            logger.info(f"Generated enhanced instructions for inbound call {call_id} ({len(instructions)} chars)")
-        except Exception as e:
-            logger.warning(f"Context enhancement failed, using base instructions: {e}")
-            instructions = AGENT_CONFIG["instructions"]
-    
-    payload = {
-        "type": "realtime",
-        "model": AGENT_CONFIG["model"],
-        "instructions": instructions,
-        # Note: voice parameter not supported in accept endpoint
-    }
-    
-    # Add tools if configured
-    if AGENT_CONFIG.get("tools"):
-        payload["tools"] = AGENT_CONFIG["tools"]
-        payload["tool_choice"] = "auto"
-        logger.info(f"Session configured with {len(AGENT_CONFIG['tools'])} tool(s)")
-    
-    headers = {
-        "Authorization": f"Bearer {OPENAI_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(url, json=payload, headers=headers, timeout=10)
-            
-            if response.status_code == 200:
-                logger.info(f"Call {call_id} accepted successfully with enhanced instructions ({len(instructions)} chars)")
-                
-                # Store call data (only if not already stored for outbound calls)
-                if call_id not in active_calls:
-                    active_calls[call_id] = {
-                        "caller": caller,
-                        "started_at": time.time(),
-                        "config": AGENT_CONFIG["name"],
-                        "type": "inbound" if not enhanced_instructions else "outbound",
-                        "instructions_length": len(instructions)
-                    }
-                else:
-                    # Update existing call data for outbound calls
-                    active_calls[call_id].update({
-                        "openai_call_id": call_id,
-                        "realtime_accepted": True,
-                        "instructions_length": len(instructions)
-                    })
-                
-                # Start tool handler if tools are configured
-                if TOOL_HANDLER_AVAILABLE and AGENT_CONFIG.get("tools"):
-                    try:
-                        # Extract session ID from response if available
-                        session_id = call_id  # Default to call_id
-                        try:
-                            if response.text:
-                                response_data = response.json()
-                                session_id = response_data.get("session_id", call_id)
-                        except Exception:
-                            pass  # Use call_id as session_id
-                        
-                        # Start handler in background
-                        # Pass caller for user context (timezone/location) - #34 fix
-                        asyncio.create_task(start_tool_handler(
-                            call_id=call_id,
-                            session_id=session_id,
-                            model=AGENT_CONFIG["model"],
-                            caller_phone=caller  # For timezone/location resolution
-                        ))
-                        logger.info(f"Tool handler started for call {call_id} (caller: {mask_phone_number(caller)})")
-                    except Exception as e:
-                        logger.warning(f"Failed to start tool handler: {e}")
-                
-            else:
-                logger.error(f"Failed to accept call: {response.status_code} - {response.text}")
-    
-    except Exception as e:
-        logger.error(f"Error accepting call {call_id}: {e}")
-
-
-async def handle_twilio_webhook(event: dict):
-    """Handle Twilio webhook events for outbound calls."""
-    call_sid = event.get("CallSid")
-    call_status = event.get("CallStatus")
-    
-    if not call_sid or not call_status:
-        return JSONResponse({"status": "ignored", "reason": "missing call data"})
-    
-    logger.info(f"Twilio webhook: {call_sid} status = {call_status}")
-    
-    # Update call tracking
-    if call_sid in active_calls:
-        active_calls[call_sid]["twilio_status"] = call_status
-        active_calls[call_sid]["last_updated"] = time.time()
-    
-    # Handle different call statuses
-    if call_status == "answered":
-        logger.info(f"Outbound call answered: {call_sid}")
-        # Set up OpenAI Realtime session now that call is answered
-        await setup_outbound_realtime_session(call_sid)
-        
-    elif call_status in ["completed", "busy", "no-answer", "canceled", "failed"]:
-        logger.info(f"Outbound call ended: {call_sid} ({call_status})")
-        if call_sid in active_calls:
-            duration = time.time() - active_calls[call_sid].get("started_at", time.time())
-            logger.info(f"Call {call_sid} duration: {duration:.1f}s")
-            del active_calls[call_sid]
-    
-    return JSONResponse({"status": "processed"})
-
-
-async def setup_outbound_realtime_session(call_id: str, initial_message: Optional[str] = None):
-    """
-    Set up OpenAI Realtime session for outbound call with session context.
-    
-    For outbound calls, we need to wait for the call to be answered
-    before setting up the Realtime session. This includes injecting
-    OpenClaw session context for the person being called.
-    """
-    if not OPENAI_API_KEY:
-        logger.error("OPENAI_API_KEY not set - cannot setup Realtime session")
-        return
-    
-    try:
-        # Update call status
-        if call_id in active_calls:
-            active_calls[call_id]["status"] = "setting_up_realtime"
-        
-        # CONTEXT INJECTION: Enhance instructions for outbound call
-        callee_phone = active_calls.get(call_id, {}).get("to", "unknown")
-        instructions = AGENT_CONFIG["instructions"]
-        
-        if context_extractor:
-            try:
-                instructions = context_extractor.get_enhanced_instructions(
-                    callee_phone, AGENT_CONFIG["instructions"], "outbound", initial_message
-                )
-            except Exception as e:
-                logger.warning(f"Outbound context enhancement failed, using base: {e}")
-                if initial_message:
-                    instructions += f"\n\nStart the conversation by saying: {initial_message}"
-        else:
-            # Fallback: original logic
-            if initial_message:
-                instructions += f"\n\nStart the conversation by saying: {initial_message}"
-        
-        logger.info(f"Setting up outbound realtime session for {mask_phone_number(callee_phone)}")
-        
-        # Store enhanced call information
-        if call_id in active_calls:
-            active_calls[call_id].update({
-                "instructions_ready": True,
-                "enhanced_instructions": instructions,
-                "status": "realtime_ready",
-                "instructions_length": len(instructions)
-            })
-        
-        logger.info(f"Outbound realtime session prepared ({len(instructions)} chars) - ready for call answer event")
-            
-    except Exception as e:
-        logger.error(f"Error setting up outbound Realtime session for call {call_id}: {e}")
-        
-        # Fallback: prepare basic instructions
-        try:
-            basic_instructions = AGENT_CONFIG["instructions"]
-            if initial_message:
-                basic_instructions += f"\n\nStart the conversation by saying: {initial_message}"
-            
-            if call_id in active_calls:
-                active_calls[call_id].update({
-                    "enhanced_instructions": basic_instructions,
-                    "status": "realtime_ready",
-                    "fallback_mode": True
-                })
-                
-            logger.info(f"Outbound call {call_id} prepared with fallback instructions")
-            
-        except Exception as fallback_error:
-            logger.error(f"Fallback outbound setup also failed: {fallback_error}")
-            if call_id in active_calls:
-                active_calls[call_id]["status"] = "realtime_failed"
-
-
-async def reject_call(call_id: str, reason: str = "busy"):
-    """Reject an incoming call."""
-    if not OPENAI_API_KEY:
-        return
-    
-    url = f"https://api.openai.com/v1/realtime/calls/{call_id}/reject"
-    
-    # Map reason to SIP status code
-    status_codes = {
-        "busy": 486,
-        "unavailable": 480,
-        "declined": 603
-    }
-    
-    payload = {"status_code": status_codes.get(reason, 603)}
-    headers = {
-        "Authorization": f"Bearer {OPENAI_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    
-    try:
-        async with httpx.AsyncClient() as client:
-            await client.post(url, json=payload, headers=headers, timeout=10)
-            logger.info(f"Call {call_id} rejected ({reason})")
-    except Exception as e:
-        logger.error(f"Error rejecting call {call_id}: {e}")
-
-
 @app.delete("/call/{call_id}")
 async def cancel_outbound_call(call_id: str):
     """Cancel an active outbound call."""
     if not twilio_client:
-        raise HTTPException(
-            status_code=503,
-            detail="Twilio not configured - cannot cancel calls"
-        )
-    
+        raise HTTPException(status_code=503, detail="Twilio not configured")
+
     if call_id not in active_calls:
         raise HTTPException(status_code=404, detail="Call not found")
-    
+
     call_data = active_calls[call_id]
     if call_data.get("type") != "outbound":
         raise HTTPException(status_code=400, detail="Can only cancel outbound calls")
-    
+
     try:
-        # Cancel the Twilio call
-        twilio_call_sid = call_data.get("twilio_call_sid", call_id)
-        call = twilio_client.calls(twilio_call_sid).update(status='canceled')
-        
-        logger.info(f"Canceled outbound call: {call_id}")
-        
-        # Remove from active calls
-        if call_id in active_calls:
-            del active_calls[call_id]
-        
+        twilio_client.calls(call_id).update(status='canceled')
+        del active_calls[call_id]
+        logger.info(f"Call {call_id} canceled")
         return {"status": "canceled", "call_id": call_id}
-        
     except TwilioException as e:
-        logger.error(f"Error canceling call {call_id}: {e}")
         raise HTTPException(status_code=400, detail=f"Failed to cancel: {str(e)}")
 
+
+# ─── Standard endpoints ───────────────────────────────────────────────────────
 
 @app.get("/calls")
 async def list_calls():
     """List active calls."""
-    call_list = []
-    
-    for call_id, data in active_calls.items():
-        call_info = {
-            "call_id": call_id,
-            "type": data.get("type", "inbound"),
-            "duration": time.time() - data.get("started_at", time.time()),
-            "status": data.get("status", "unknown"),
-            "agent": data.get("config", AGENT_CONFIG["name"])
-        }
-        
-        # Add type-specific fields
-        if data.get("type") == "outbound":
-            call_info.update({
-                "to": data.get("to", "unknown"),
-                "from": data.get("from", "unknown"),
-                "twilio_status": data.get("twilio_status", "unknown")
-            })
-        else:
-            call_info["caller"] = data.get("caller", "unknown")
-        
-        call_list.append(call_info)
-    
     return {
         "active_calls": len(active_calls),
-        "calls": call_list
+        "calls": [
+            {
+                "call_id": cid,
+                "type": d.get("type", "unknown"),
+                "status": d.get("status", "unknown"),
+                "duration": round(time.time() - d.get("started_at", time.time()), 1),
+                "to": d.get("to"),
+                "from": d.get("from"),
+            }
+            for cid, d in active_calls.items()
+        ]
     }
-
-
-@app.get("/twiml/outbound")
-@app.post("/twiml/outbound")
-async def outbound_twiml(request: Request, sip_uri: Optional[str] = Query(None)):
-    """
-    TwiML endpoint for outbound calls.
-    Returns XML instructions for Twilio to dial the SIP URI.
-    """
-    # Get SIP URI from query parameters
-    if not sip_uri:
-        raise HTTPException(
-            status_code=400,
-            detail="Missing required parameter: sip_uri"
-        )
-    
-    # Generate TwiML XML for dialing the SIP URI
-    twiml = f'''<?xml version="1.0" encoding="UTF-8"?>
-<Response>
-    <Dial>
-        <Sip>{sip_uri}</Sip>
-    </Dial>
-</Response>'''
-    
-    logger.info(f"Generated TwiML for SIP URI: {sip_uri}")
-    return Response(content=twiml, media_type="application/xml")
 
 
 @app.get("/health")
 async def health():
-    """Health check endpoint."""
+    """Health check."""
     return {
         "status": "ok",
+        "architecture": "twilio-media-streams + openai-realtime",
         "agent": AGENT_CONFIG["name"],
+        "voice": OPENAI_VOICE,
         "active_calls": len(active_calls),
-        "config_loaded": CONFIG_PATH.exists(),
-        "tools_enabled": TOOL_HANDLER_AVAILABLE and bool(AGENT_CONFIG.get("tools")),
-        "tool_count": len(AGENT_CONFIG.get("tools", []))
+        "audioop": _AUDIOOP_SOURCE,
+        "twilio_configured": twilio_client is not None,
+        "openai_configured": bool(OPENAI_API_KEY),
+        "stream_url": MEDIA_STREAM_WS_URL,
+        "inbound_calls_enabled": ALLOW_INBOUND_CALLS,
     }
 
-
-@app.get("/tools/status")
-async def tool_handlers_status():
-    """Get status of active tool handlers."""
-    handlers = get_active_handlers()
-    tools = AGENT_CONFIG.get("tools", [])
-    
-    return {
-        "tool_handler_available": TOOL_HANDLER_AVAILABLE,
-        "configured_tools": [t.get("name") for t in tools],
-        "active_handlers": len(handlers),
-        "handlers": handlers
-    }
-
-
-# Call History API Endpoints
-
-@app.get("/history", response_model=List[CallRecordResponse])
-async def get_call_history(
-    limit: int = Query(50, le=100),
-    offset: int = Query(0, ge=0),
-    call_type: Optional[str] = Query(None, regex="^(inbound|outbound)$")
-):
-    """Get call history with pagination."""
-    calls = await recording_manager.list_calls(limit, offset, call_type)
-    
-    return [CallRecordResponse(
-        call_id=call.call_id,
-        call_type=call.call_type,
-        caller_number=call.caller_number,
-        callee_number=call.callee_number,
-        started_at=call.started_at.isoformat(),
-        ended_at=call.ended_at.isoformat() if call.ended_at else None,
-        duration_seconds=call.duration_seconds,
-        status=call.status,
-        has_audio=call.has_audio,
-        has_transcript=call.has_transcript,
-        metadata=call.metadata
-    ) for call in calls]
-
-@app.get("/history/{call_id}", response_model=CallRecordResponse)
-async def get_call_details(call_id: str):
-    """Get details for a specific call."""
-    call = await recording_manager.get_call_record(call_id)
-    
-    if not call:
-        raise HTTPException(status_code=404, detail="Call not found")
-    
-    return CallRecordResponse(
-        call_id=call.call_id,
-        call_type=call.call_type,
-        caller_number=call.caller_number,
-        callee_number=call.callee_number,
-        started_at=call.started_at.isoformat(),
-        ended_at=call.ended_at.isoformat() if call.ended_at else None,
-        duration_seconds=call.duration_seconds,
-        status=call.status,
-        has_audio=call.has_audio,
-        has_transcript=call.has_transcript,
-        metadata=call.metadata
-    )
-
-@app.get("/history/{call_id}/transcript", response_model=TranscriptResponse)
-async def get_call_transcript(call_id: str):
-    """Get transcript for a specific call."""
-    call = await recording_manager.get_call_record(call_id)
-    if not call:
-        raise HTTPException(status_code=404, detail="Call not found")
-    
-    transcript_entries = await recording_manager.get_call_transcript(call_id)
-    
-    transcript_data = [{
-        "timestamp": entry.timestamp.isoformat(),
-        "speaker": entry.speaker,
-        "content": entry.content,
-        "event_type": entry.event_type,
-        "metadata": entry.metadata
-    } for entry in transcript_entries]
-    
-    return TranscriptResponse(
-        transcript=transcript_data,
-        call_info=CallRecordResponse(
-            call_id=call.call_id,
-            call_type=call.call_type,
-            caller_number=call.caller_number,
-            callee_number=call.callee_number,
-            started_at=call.started_at.isoformat(),
-            ended_at=call.ended_at.isoformat() if call.ended_at else None,
-            duration_seconds=call.duration_seconds,
-            status=call.status,
-            has_audio=call.has_audio,
-            has_transcript=call.has_transcript,
-            metadata=call.metadata
-        )
-    )
-
-@app.get("/history/{call_id}/audio")
-async def get_call_audio(call_id: str):
-    """Download audio recording for a specific call."""
-    call = await recording_manager.get_call_record(call_id)
-    
-    if not call:
-        raise HTTPException(status_code=404, detail="Call not found")
-    
-    if not call.recording_path:
-        raise HTTPException(status_code=404, detail="No audio recording available")
-    
-    recording_path = Path(call.recording_path)
-    if not recording_path.exists():
-        raise HTTPException(status_code=404, detail="Audio file not found")
-    
-    return FileResponse(
-        recording_path,
-        media_type="audio/wav",
-        filename=f"call_{call_id}_audio.wav"
-    )
-
-@app.delete("/history/{call_id}")
-async def delete_call_record(call_id: str, delete_files: bool = Query(False)):
-    """Delete a call record and optionally its files."""
-    success = await recording_manager.delete_call_record(call_id, delete_files)
-    
-    if not success:
-        raise HTTPException(status_code=404, detail="Call not found")
-    
-    return {"status": "deleted", "call_id": call_id}
-
-@app.get("/storage/stats")
-async def get_storage_stats():
-    """Get storage statistics for recordings."""
-    return recording_manager.get_storage_stats()
 
 @app.get("/")
 async def root():
-    """Root endpoint with basic info."""
-    endpoints = {
-        "webhook": "POST /webhook - Handle OpenAI/Twilio webhooks",
-        "calls": "GET /calls - List active calls",
-        "health": "GET /health - Health check",
-        "history": "GET /history - Get call history",
-        "call_details": "GET /history/{call_id} - Get call details",
-        "transcript": "GET /history/{call_id}/transcript - Get call transcript",
-        "audio": "GET /history/{call_id}/audio - Download call audio"
-    }
-    
-    # Add outbound call endpoints if Twilio is configured
-    if twilio_client:
-        endpoints.update({
-            "initiate_call": "POST /call - Initiate outbound call",
-            "cancel_call": "DELETE /call/{call_id} - Cancel outbound call"
-        })
-    
-    storage_stats = recording_manager.get_storage_stats()
-    
+    """Root endpoint."""
     return {
-        "service": "OpenAI Voice Server",
+        "service": "Nia Voice Server",
+        "architecture": "Twilio Media Streams + OpenAI Realtime",
         "agent": AGENT_CONFIG["name"],
-        "outbound_calls_enabled": twilio_client is not None,
-        "recording_enabled": storage_stats["recording_enabled"],
-        "transcription_enabled": storage_stats["transcription_enabled"],
-        "total_recorded_calls": storage_stats["total_calls"],
-        "endpoints": endpoints
+        "voice": OPENAI_VOICE,
+        "stream_url": MEDIA_STREAM_WS_URL,
+        "endpoints": {
+            "voice_incoming":  "POST /voice/incoming — Twilio voice webhook (TwiML)",
+            "media_stream":    f"WS   {MEDIA_STREAM_WS_URL} — audio bridge",
+            "outbound_call":   "POST /call — initiate outbound call",
+            "cancel_call":     "DELETE /call/{id} — cancel outbound call",
+            "calls":           "GET  /calls — list active calls",
+            "health":          "GET  /health — health check",
+        }
     }
 
+
+# ─── Startup hook ─────────────────────────────────────────────────────────────
+
+@app.on_event("startup")
+async def on_startup():
+    if not OPENAI_API_KEY:
+        logger.warning("⚠️  OPENAI_API_KEY not set — calls will fail")
+    if audioop is None:
+        logger.error("❌  audioop not available — run: pip install audioop-lts")
+    else:
+        logger.info(f"✅  audioop loaded from: {_AUDIOOP_SOURCE}")
+
+    # Update Twilio phone number webhook
+    asyncio.create_task(_update_twilio_webhook())
+
+    logger.info(f"🎙️  Nia Voice Server ready (Twilio Media Streams)")
+    logger.info(f"   Voice:      {OPENAI_VOICE}")
+    logger.info(f"   Stream URL: {MEDIA_STREAM_WS_URL}")
+    logger.info(f"   Port:       {PORT}")
+    logger.info(f"   Inbound:    {'enabled' if ALLOW_INBOUND_CALLS else 'disabled'}")
+
+
+async def _update_twilio_webhook():
+    """Update the Twilio phone number webhook to /voice/incoming."""
+    if not twilio_client or not TWILIO_PHONE_NUMBER:
+        logger.info("Skipping Twilio webhook update (no client or phone number)")
+        return
+
+    try:
+        numbers = twilio_client.incoming_phone_numbers.list(
+            phone_number=TWILIO_PHONE_NUMBER,
+            limit=1
+        )
+        if not numbers:
+            logger.warning(f"Phone {TWILIO_PHONE_NUMBER} not found in Twilio account")
+            return
+
+        voice_url = f"{PUBLIC_URL}/voice/incoming"
+        twilio_client.incoming_phone_numbers(numbers[0].sid).update(
+            voice_url=voice_url,
+            voice_method="POST"
+        )
+        logger.info(f"✅  Twilio webhook updated: {TWILIO_PHONE_NUMBER} → {voice_url}")
+
+    except Exception as e:
+        logger.warning(f"Could not update Twilio webhook: {e}")
+
+
+# ─── Entry point ──────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    # Startup checks
-    if not OPENAI_API_KEY:
-        logger.warning("⚠️  OPENAI_API_KEY not set - calls will fail")
-    if not OPENAI_PROJECT_ID:
-        logger.warning("⚠️  OPENAI_PROJECT_ID not set - needed for SIP config")
-    
-    logger.info(f"🎙️  Starting OpenAI Voice Server")
-    logger.info(f"   Agent: {AGENT_CONFIG['name']}")
-    logger.info(f"   Voice: {AGENT_CONFIG['voice']}")
-    logger.info(f"   Port: {PORT}")
-    
-    if OPENAI_PROJECT_ID:
-        logger.info(f"   SIP URI: sip:{OPENAI_PROJECT_ID}@sip.api.openai.com;transport=tls")
-    
-    # Outbound calling status
-    if twilio_client:
-        logger.info(f"📞 Outbound calling: ENABLED")
-        if TWILIO_PHONE_NUMBER:
-            logger.info(f"   Default caller ID: {TWILIO_PHONE_NUMBER}")
-        else:
-            logger.warning("⚠️  TWILIO_PHONE_NUMBER not set - caller ID required per call")
-    else:
-        logger.info(f"📞 Outbound calling: DISABLED (configure Twilio to enable)")
-    
+    logger.info("🎙️  Starting Nia Voice Server (Twilio Media Streams + OpenAI Realtime)")
+    logger.info(f"   Voice:      {OPENAI_VOICE}")
+    logger.info(f"   Stream URL: {MEDIA_STREAM_WS_URL}")
+    logger.info(f"   Port:       {PORT}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
