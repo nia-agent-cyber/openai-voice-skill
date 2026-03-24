@@ -311,6 +311,7 @@ async def media_stream_ws(websocket: WebSocket):
         "ratecv_state_in": None,   # resampling state: Twilio→OpenAI
         "ratecv_state_out": None,  # resampling state: OpenAI→Twilio
         "openai_task": None,
+        "nia_speaking": False,     # True while Nia is outputting audio (mutes mic input)
     }
 
     # ── OpenAI receiver coroutine ─────────────────────────────────────────────
@@ -345,6 +346,7 @@ async def media_stream_ws(websocket: WebSocket):
 
                 elif event_type == "response.audio.delta":
                     # PCM16 24kHz → mulaw 8kHz → Twilio
+                    ctx["nia_speaking"] = True
                     delta = msg.get("delta", "")
                     ctx.setdefault("audio_chunks_sent", 0)
                     if delta:
@@ -395,7 +397,10 @@ async def media_stream_ws(websocket: WebSocket):
                         logger.info(f"[User] {text[:120]}")
 
                 elif event_type == "response.done":
-                    logger.debug("OpenAI response turn complete")
+                    ctx["nia_speaking"] = False
+                    # Clear any echo captured while Nia was speaking
+                    await oai_ws.send(json.dumps({"type": "input_audio_buffer.clear"}))
+                    logger.debug("OpenAI response turn complete — mic unmuted")
 
                 elif event_type == "error":
                     logger.error(f"OpenAI Realtime error: {msg.get('error', msg)}")
@@ -433,14 +438,15 @@ async def media_stream_ws(websocket: WebSocket):
                     f"callSid={ctx['call_sid']}, caller={caller_name}"
                 )
 
-                # Track the call
+                # Track the call — merge into existing entry to preserve initial_message etc.
                 if ctx["call_sid"]:
-                    active_calls[ctx["call_sid"]] = {
-                        "type": "inbound",
+                    existing = active_calls.get(ctx["call_sid"], {})
+                    existing.update({
                         "stream_sid": ctx["stream_sid"],
                         "started_at": ctx["started_at"],
                         "status": "active"
-                    }
+                    })
+                    active_calls[ctx["call_sid"]] = existing
 
                 # ── Connect to OpenAI Realtime ──────────────────────────────
                 try:
@@ -471,9 +477,7 @@ async def media_stream_ws(websocket: WebSocket):
                             },
                             "turn_detection": {
                                 "type": "semantic_vad",
-                                "eagerness": "low",
-                                "prefix_padding_ms": 300,
-                                "silence_duration_ms": 800
+                                "eagerness": "low"
                             },
                             "tools": tools,
                             "tool_choice": "auto" if tools else "none"
@@ -495,7 +499,7 @@ async def media_stream_ws(websocket: WebSocket):
             elif event == "media":
                 # Twilio mulaw 8kHz → PCM16 24kHz → OpenAI
                 oai_ws = ctx["openai_ws"]
-                if oai_ws:
+                if oai_ws and not ctx.get("nia_speaking"):
                     mulaw_b64 = msg.get("media", {}).get("payload", "")
                     if mulaw_b64:
                         mulaw_bytes = base64.b64decode(mulaw_b64)
