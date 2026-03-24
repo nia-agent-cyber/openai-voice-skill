@@ -121,45 +121,92 @@ def load_agent_config() -> dict:
 AGENT_CONFIG = load_agent_config()
 
 
-def load_identity_prompt() -> str:
+# Known callers — maps phone number to name
+KNOWN_CALLERS = {
+    "+250794002033": "Remi",
+}
+
+
+def read_file_safe(path, max_chars=2000) -> str:
+    """Read a file safely, returning empty string on error."""
+    try:
+        p = Path(path)
+        if p.exists():
+            text = p.read_text().strip()
+            return text[:max_chars] if len(text) > max_chars else text
+    except Exception:
+        pass
+    return ""
+
+
+def build_call_prompt(caller_number: str = "") -> str:
     """
-    Build Nia's system prompt from SOUL.md + MEMORY.md in the workspace.
-    Falls back to AGENT_CONFIG instructions if files aren't available.
+    Build a rich, per-call system prompt with full OpenClaw context.
+    Called fresh on each incoming call so context is always current.
     """
     parts: list[str] = []
 
-    try:
-        if SOUL_PATH.exists():
-            soul = SOUL_PATH.read_text().strip()
-            parts.append(f"# Your Core Identity\n{soul}")
-            logger.info(f"Loaded SOUL.md ({len(soul)} chars)")
-    except Exception as e:
-        logger.warning(f"Could not load SOUL.md: {e}")
+    # 1. Core identity
+    soul = read_file_safe(WORKSPACE_ROOT / "SOUL.md", 2000)
+    identity = read_file_safe(WORKSPACE_ROOT / "IDENTITY.md", 800)
+    if soul:
+        parts.append(f"# Who You Are\n{soul}")
+    if identity:
+        parts.append(f"# Your Identity Details\n{identity}")
 
-    try:
-        if MEMORY_PATH.exists():
-            memory = MEMORY_PATH.read_text().strip()
-            # Truncate to keep prompt manageable (~3k chars)
-            if len(memory) > 3000:
-                memory = memory[:3000] + "\n\n...[truncated — see full MEMORY.md for details]"
-            parts.append(f"# Your Memory and Context\n{memory}")
-            logger.info(f"Loaded MEMORY.md ({len(memory)} chars)")
-    except Exception as e:
-        logger.warning(f"Could not load MEMORY.md: {e}")
+    # 2. Who you're talking to
+    caller_name = KNOWN_CALLERS.get(caller_number, "someone")
+    parts.append(
+        f"# This Call\nYou are on a phone call with {caller_name} "
+        f"({caller_number or 'unknown number'}). "
+        f"You called them (or they called you). "
+        f"Speak naturally and concisely — this is voice, not text. "
+        f"Always respond in English unless they explicitly switch language. "
+        f"Keep responses short (1-3 sentences). Don't use bullet points or markdown."
+    )
 
-    if parts:
-        header = (
-            "You are Nia — an AI agent having a voice conversation. "
-            "Be concise, natural, and warm. No long monologues. "
-            "Your identity and memory are below.\n\n"
-        )
-        return header + "\n\n---\n\n".join(parts)
+    # 3. Who Remi is
+    user_context = read_file_safe(WORKSPACE_ROOT / "USER.md", 1500)
+    if user_context:
+        parts.append(f"# About {caller_name}\n{user_context}")
 
-    # Fallback
-    return AGENT_CONFIG["instructions"]
+    # 4. Long-term memory
+    memory = read_file_safe(WORKSPACE_ROOT / "MEMORY.md", 2500)
+    if memory:
+        parts.append(f"# Your Long-Term Memory\n{memory}")
+
+    # 5. Today's recent context
+    today = datetime.now().strftime("%Y-%m-%d")
+    yesterday = (datetime.now() - __import__('datetime').timedelta(days=1)).strftime("%Y-%m-%d")
+    for date in [today, yesterday]:
+        daily = read_file_safe(WORKSPACE_ROOT / "memory" / f"{date}.md", 1000)
+        if daily:
+            parts.append(f"# Recent Context ({date})\n{daily}")
+            break
+
+    # 6. Project pulse (brief status summaries)
+    project_statuses = []
+    for proj, repo in [("Voice skill", "openai-voice-skill"), ("Trust skill", "agent-trust"), ("Bakkt app", "bakkt-agent-app")]:
+        status = read_file_safe(Path.home() / "repos" / repo / "STATUS.md", 400)
+        if status:
+            # Just first 400 chars — enough for a pulse
+            project_statuses.append(f"**{proj}:** {status[:300]}")
+    if project_statuses:
+        parts.append("# Project Status\n" + "\n\n".join(project_statuses))
+
+    header = (
+        "You are Nia — an AI agent on a phone call. "
+        "Be warm, direct, and concise. This is voice — no bullet points, no markdown, no long speeches. "
+        "You have full context about your projects and your human (Remi). Act like you know him — because you do.\n\n"
+    )
+
+    prompt = header + "\n\n---\n\n".join(parts)
+    logger.info(f"Built call prompt: {len(prompt)} chars, caller={caller_name} ({caller_number})")
+    return prompt
 
 
-NIA_SYSTEM_PROMPT = load_identity_prompt()
+# Static fallback prompt (used before first call)
+NIA_SYSTEM_PROMPT = build_call_prompt()
 logger.info(f"Identity prompt ready ({len(NIA_SYSTEM_PROMPT)} chars)")
 
 # ─── Active call tracking ─────────────────────────────────────────────────────
@@ -277,10 +324,25 @@ async def media_stream_ws(websocket: WebSocket):
 
                 elif event_type == "session.updated":
                     logger.info("OpenAI session updated")
+                    # Trigger initial greeting for outbound calls
+                    call_sid = ctx.get("call_sid")
+                    initial_msg = active_calls.get(call_sid, {}).get("initial_message")
+                    if initial_msg:
+                        await oai_ws.send(json.dumps({
+                            "type": "conversation.item.create",
+                            "item": {
+                                "type": "message",
+                                "role": "user",
+                                "content": [{"type": "input_text", "text": f"[Start the call by saying this naturally]: {initial_msg}"}]
+                            }
+                        }))
+                        await oai_ws.send(json.dumps({"type": "response.create"}))
+                        logger.info(f"Triggered initial greeting for {call_sid}")
 
                 elif event_type == "response.audio.delta":
                     # PCM16 24kHz → mulaw 8kHz → Twilio
                     delta = msg.get("delta", "")
+                    ctx.setdefault("audio_chunks_sent", 0)
                     if delta and ctx["stream_sid"]:
                         pcm24 = base64.b64decode(delta)
                         # Resample 24kHz → 8kHz
@@ -290,12 +352,16 @@ async def media_stream_ws(websocket: WebSocket):
                         # PCM16 → mulaw
                         mulaw = audioop.lin2ulaw(pcm8, 2)
                         payload = base64.b64encode(mulaw).decode()
-
+                        ctx["audio_chunks_sent"] += 1
+                        if ctx["audio_chunks_sent"] == 1:
+                            logger.info(f"🔊 First audio chunk → Twilio (streamSid={ctx['stream_sid']})")
                         await websocket.send_text(json.dumps({
                             "event": "media",
                             "streamSid": ctx["stream_sid"],
                             "media": {"payload": payload}
                         }))
+                    elif delta and not ctx["stream_sid"]:
+                        logger.warning(f"⚠️ Audio delta received but stream_sid not set yet!")
 
                 elif event_type == "response.audio_transcript.done":
                     text = msg.get("transcript", "").strip()
@@ -348,9 +414,12 @@ async def media_stream_ws(websocket: WebSocket):
                 start_data = msg.get("start", {})
                 ctx["stream_sid"] = start_data.get("streamSid")
                 ctx["call_sid"] = start_data.get("callSid")
+                # Resolve caller number: for outbound calls it's stored in active_calls
+                ctx["caller_number"] = active_calls.get(ctx["call_sid"], {}).get("to", "")
+                caller_name = KNOWN_CALLERS.get(ctx["caller_number"], ctx["caller_number"] or "unknown")
                 logger.info(
                     f"Stream started — streamSid={ctx['stream_sid']}, "
-                    f"callSid={ctx['call_sid']}"
+                    f"callSid={ctx['call_sid']}, caller={caller_name}"
                 )
 
                 # Track the call
@@ -375,13 +444,14 @@ async def media_stream_ws(websocket: WebSocket):
                     ctx["openai_ws"] = oai_ws
                     logger.info("OpenAI Realtime WS connected")
 
-                    # ── Send session.update ─────────────────────────────────
+                    # ── Send session.update with fresh per-call context ─────
                     tools = AGENT_CONFIG.get("tools", [])
+                    call_prompt = build_call_prompt(ctx.get("caller_number", ""))
                     session_config = {
                         "type": "session.update",
                         "session": {
                             "modalities": ["text", "audio"],
-                            "instructions": NIA_SYSTEM_PROMPT,
+                            "instructions": call_prompt,
                             "voice": OPENAI_VOICE,
                             "input_audio_format": "pcm16",
                             "output_audio_format": "pcm16",
@@ -401,7 +471,8 @@ async def media_stream_ws(websocket: WebSocket):
                     await oai_ws.send(json.dumps(session_config))
                     logger.info(
                         f"session.update sent (voice={OPENAI_VOICE}, "
-                        f"tools={len(tools)}, prompt={len(NIA_SYSTEM_PROMPT)}c)"
+                        f"tools={len(tools)}, prompt={len(call_prompt)}c, "
+                        f"caller={KNOWN_CALLERS.get(ctx.get('caller_number',''), 'unknown')})"
                     )
 
                     # ── Start OpenAI receiver task ──────────────────────────
@@ -572,7 +643,8 @@ async def initiate_outbound_call(
             "from": from_number,
             "started_at": time.time(),
             "twilio_call_sid": call.sid,
-            "status": "initiated"
+            "status": "initiated",
+            "initial_message": request.message or None
         }
 
         logger.info(f"Outbound call created: {call.sid} → {mask_phone(phone)}")
