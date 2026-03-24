@@ -84,6 +84,25 @@ WORKSPACE_ROOT = Path("/Users/nia/.openclaw/workspace")
 SOUL_PATH = WORKSPACE_ROOT / "SOUL.md"
 MEMORY_PATH = WORKSPACE_ROOT / "MEMORY.md"
 
+# ─── OpenClaw gateway ─────────────────────────────────────────────────────────
+
+OPENCLAW_GATEWAY_URL = "http://localhost:18789"
+
+
+def _read_openclaw_token() -> str:
+    """Read gateway auth token from ~/.openclaw/openclaw.json"""
+    try:
+        p = Path.home() / ".openclaw" / "openclaw.json"
+        if p.exists():
+            data = json.loads(p.read_text())
+            return data.get("gateway", {}).get("auth", {}).get("token", "")
+    except Exception:
+        pass
+    return ""
+
+
+OPENCLAW_TOKEN = os.getenv("OPENCLAW_TOKEN") or _read_openclaw_token()
+
 # ─── Twilio client ────────────────────────────────────────────────────────────
 
 twilio_client: Optional[TwilioClient] = None
@@ -554,6 +573,15 @@ async def media_stream_ws(websocket: WebSocket):
         if call_sid and transcript:
             _save_transcript(call_sid, transcript)
 
+        # Post-call handler: summarize, write memory, wake OpenClaw (async, non-blocking)
+        if call_sid and transcript:
+            call_duration = time.time() - ctx["started_at"]
+            caller_number = ctx.get("caller_number", "")
+            asyncio.create_task(
+                summarize_and_remember(call_sid, transcript, caller_number, call_duration)
+            )
+            logger.info("Post-call handler dispatched (async)")
+
         # Update active calls
         if call_sid and call_sid in active_calls:
             duration = time.time() - ctx["started_at"]
@@ -565,6 +593,126 @@ async def media_stream_ws(websocket: WebSocket):
             )
 
         logger.info("Media stream WebSocket closed and cleaned up")
+
+
+async def summarize_and_remember(
+    call_sid: str,
+    transcript: list[dict],
+    caller_number: str = "",
+    duration_s: float = 0.0
+) -> None:
+    """
+    Post-call handler: summarize transcript, write to daily memory, wake OpenClaw.
+    Called async/non-blocking from the cleanup block via asyncio.create_task().
+    """
+    if not transcript:
+        logger.info("Post-call: no transcript to summarize")
+        return
+
+    if not OPENAI_API_KEY:
+        logger.warning("Post-call: no OpenAI key, skipping summary")
+        return
+
+    caller_name = KNOWN_CALLERS.get(caller_number, caller_number or "unknown")
+    now = datetime.now()
+    date_str = now.strftime("%Y-%m-%d")
+    time_str = now.strftime("%H:%M")
+
+    # Build transcript text for summarization
+    transcript_text = "\n".join(
+        f"{t['speaker'].capitalize()}: {t['content']}"
+        for t in transcript
+    )
+
+    # ── Step 1: Summarize with GPT-4o-mini ────────────────────────────────────
+    summary = ""
+    try:
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            resp = await client.post(
+                "https://api.openai.com/v1/chat/completions",
+                headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
+                json={
+                    "model": "gpt-4o-mini",
+                    "messages": [
+                        {
+                            "role": "system",
+                            "content": (
+                                "Summarize this voice call transcript in 2-4 sentences. "
+                                "Focus on: what was discussed, any decisions made, any action items. "
+                                "Be concise and factual. Write in third person "
+                                "(e.g. 'Remi asked about...')."
+                            )
+                        },
+                        {
+                            "role": "user",
+                            "content": (
+                                f"Call with {caller_name} on {date_str} at {time_str} "
+                                f"({int(duration_s)}s, {len(transcript)} turns):\n\n"
+                                f"{transcript_text}"
+                            )
+                        }
+                    ],
+                    "max_tokens": 200,
+                    "temperature": 0.3
+                }
+            )
+            resp.raise_for_status()
+            summary = resp.json()["choices"][0]["message"]["content"].strip()
+            logger.info(f"Post-call summary generated: {summary[:100]}...")
+    except Exception as e:
+        logger.error(f"Post-call summarization failed: {e}")
+        # Fallback: raw excerpt
+        summary = f"[Auto-summary unavailable] Transcript excerpt: {transcript_text[:300]}"
+
+    # ── Step 2: Append to daily memory file ───────────────────────────────────
+    try:
+        memory_dir = WORKSPACE_ROOT / "memory"
+        memory_dir.mkdir(parents=True, exist_ok=True)
+        daily_file = memory_dir / f"{date_str}.md"
+
+        call_entry = (
+            f"\n## 📞 Call with {caller_name} at {time_str} "
+            f"({int(duration_s)}s, {len(transcript)} turns)\n"
+            f"{summary}\n"
+        )
+
+        with open(daily_file, "a") as f:
+            f.write(call_entry)
+
+        logger.info(f"Post-call: summary written to {daily_file}")
+    except Exception as e:
+        logger.error(f"Post-call: failed to write memory: {e}")
+
+    # ── Step 3: Wake OpenClaw gateway ─────────────────────────────────────────
+    token = OPENCLAW_TOKEN
+    if not token:
+        logger.warning("Post-call: no OPENCLAW_TOKEN, skipping wake event")
+        return
+
+    wake_text = (
+        f"Phone call with {caller_name} just ended ({int(duration_s)}s, "
+        f"{len(transcript)} turns). Summary: {summary}"
+    )
+
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            resp = await client.post(
+                f"{OPENCLAW_GATEWAY_URL}/internal/events/wake",
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Content-Type": "application/json"
+                },
+                json={"text": wake_text, "mode": "now"}
+            )
+            if resp.status_code < 300:
+                logger.info("Post-call: OpenClaw wake event sent ✅")
+            else:
+                logger.warning(
+                    f"Post-call: wake event returned {resp.status_code}: "
+                    f"{resp.text[:100]}"
+                )
+    except Exception as e:
+        logger.error(f"Post-call: failed to send wake event: {e}")
 
 
 def _save_transcript(call_sid: str, transcript: list[dict]) -> None:
