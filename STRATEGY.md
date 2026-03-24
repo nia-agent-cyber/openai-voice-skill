@@ -2,7 +2,148 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-03-17 07:00 EDT - BA Scan: agentskills.io platform expansion confirmed
+**Last Updated:** 2026-03-24 03:20 EDT - BA Scan: agentskills.io 12+ platforms, Vapi Composer traction, Retell healthcare push, Air AI new competitor, ElevenLabs multimedia pivot
+
+---
+
+## 🗂️ POST-ARCHIVE MARKET INTELLIGENCE (2026-03-24 03:20 EDT)
+
+**Context:** Project archived March 16, 2026. Week 2 post-archive scan. Incremental research only — prior findings not duplicated.
+
+**Research Tools Used:**
+- ✅ web_fetch — Vapi blog, Retell blog, ElevenLabs blog, agentskills.io, BBC tech RSS
+- ✅ exec — ctxly.com/services.json (still 404)
+- ❌ web_search (Brave) — API key not configured
+- ❌ Twitter/X — browser not attached
+
+---
+
+### 🆕 MAJOR: agentskills.io Now at 12+ Platforms (Was 10 on Mar 17)
+
+**Five new coding agent platforms added since last scan:**
+
+| New Platform | URL | Notes |
+|---|---|---|
+| **Amp** | ampcode.com | New coding agent, Skills-compatible |
+| **Letta** | letta.com | Memory-focused agent framework, open-source |
+| **Firebender** | firebender.com | Multi-agent Skills support |
+| **Goose** | block.github.io/goose | Block (Square) open-source agent |
+| **GitHub** | github.com | GitHub Copilot now officially supports Agent Skills |
+
+**Full confirmed list as of Mar 24, 2026 (12+ platforms):**
+Junie (JetBrains), Gemini CLI, Autohand Code CLI, OpenCode (sst), OpenHands (all-hands.dev), Mux/Coder, Cursor, Amp, Letta, Firebender, Goose, GitHub Copilot, VS Code Copilot, + likely OpenClaw and Claude Code (not visible in truncated response but previously confirmed)
+
+**Strategic Implication:**
+Any voice skill packaged for agentskills.io now reaches developers on **12+ platforms**. Distribution multiplier continues to grow week-over-week. This was already the #1 missed opportunity in our archive analysis — it has only gotten more valuable. If Remi ever restarts voice work, the Skills package is table stakes Day 1.
+
+---
+
+### 🟠 Vapi: Composer Gaining Mainstream Traction (Mar 20, 2026)
+
+**New post: "Composer Webinar: Your Most-Asked Questions, Answered" (Mar 20, 2026)**
+
+Vapi ran a live webinar for their Composer product (launched Feb 11, 2026 as "vibe code voice agents" — i.e., no-code/low-code voice agent builder). The fact they ran a public Q&A webinar within 5 weeks of launch signals:
+- Strong user adoption and question volume
+- Composer is their primary growth surface, not just the API
+- No-code voice agent building is now a mainstream product category (not just devs)
+
+**What Composer does:** Lets non-developers "vibe code" voice agents through natural language — describe what you want, Composer builds the agent. This is a significant DX leap: previously voice AI required telephony engineers; now it requires a Vapi account and a description.
+
+**Implication for restart options:**
+- Option A (Wrap Vapi) is even more viable now — Vapi's surface area for integration is larger
+- The market is explicitly training non-developers to build voice agents — our technical differentiation (OpenClaw-native) becomes more valuable as the low-code space gets crowded
+
+---
+
+### 🟠 Retell: Full Healthcare Vertical Push (Mar 13–20, 2026)
+
+**New content since Mar 17:**
+- "Top 8 AI Voice Agents for Appointment Scheduling in Clinics and Healthcare" — Mar 20
+- "What It Takes to Build and Scale AI Voice Agents Without Breaking" — Mar 19
+- "10 Best CallFluent Alternatives" — Mar 18 (competitor displacement)
+- "9 Top Yellow.ai Alternatives" — Mar 18 (competitor displacement)
+- "Top 7 Voice AI Agent Platforms with Fastest Setup" — Mar 17 (self-promoting, but reveals pricing)
+- "Can Voicebots Escalate Calls to Human Agents?" — Mar 16 (warm transfer focus)
+- "5 Voice AI Platforms Compliant with HIPAA & Healthcare Regulations" — Mar 15
+
+**Healthcare is Retell's primary vertical expansion.** Their content strategy has fully shifted from generic voice AI to healthcare-specific compliance, scheduling, and scalability. This confirms healthcare as the highest-value vertical in voice AI right now.
+
+**Pricing data from Retell's own comparison (Mar 17):**
+| Platform | Time to First Agent | Price |
+|---|---|---|
+| Retell AI | Hours | ~$0.07/min |
+| Vapi | Same day | ~$0.05/min |
+| Bland AI | Same day | ~$0.09/min |
+| Air AI | Same day | Custom enterprise |
+| PlayHT | 1-2 days | — |
+
+---
+
+### 🆕 NEW COMPETITOR: Air AI
+
+**First confirmed sighting in Retell's competitive roundup (Mar 17, 2026).**
+
+- **Focus:** Long sales conversations, lead qualification, multi-minute phone calls
+- **Differentiator:** "Designed for multi-minute phone conversations where agents handle objections and qualification"
+- **Pricing:** Custom enterprise pricing
+- **Implication:** Niche player targeting sales/SDR use cases — not a direct threat to dev-tool positioning, but signals that enterprise sales automation is a funded vertical worth watching
+
+---
+
+### 🟡 ElevenLabs: Pivoting to Full Multimedia AI Studio
+
+**New finding:** ElevenLabs is no longer a voice-only company. Recent expansions:
+- **Image & Video** (Nov 2025) — generating visuals with Veo, Sora, Kling, Wan, Seedance models
+- **Eleven Music** (Jan 2026) — AI music creation
+- **Bookwire ebooks-to-audio partnership** (Mar 6, 2026) — audiobook market entry
+- **Matthew McConaughey as investor** (announced at inaugural Summit)
+
+**Strategic implication:** ElevenLabs is becoming a full **creative AI studio** (voice + video + music + images). Their "Eleven v3" TTS is just one product in a growing portfolio. This actually slightly reduces their threat to dev-tool voice infrastructure — they're moving upmarket toward creator tools, not deeper into API-layer competition.
+
+---
+
+### 🟡 ctxly.com: Appears Defunct
+
+**Status as of Mar 24, 2026:** `curl https://ctxly.com/services.json` returns **404 page not found**. Homepage also returns 404. The site appears to be down or shut down permanently. No longer worth tracking as a distribution channel.
+
+---
+
+### 📰 BBC Tech News (Mar 24, 2026): No Breaking Voice AI Stories
+
+Top tech headlines this week:
+- US bans new foreign-made consumer internet routers (Mar 24)
+- AI videos of sexualized women removed from TikTok after BBC investigation (Mar 22)
+- Luke Littler applies to trademark face to combat AI fakes (Mar 20)
+
+**Signal:** No major voice AI news in mainstream tech press this week. The voice AI story has become an infrastructure story (Retell, Vapi, Bland SEO domination) rather than a breakthrough/announcement story. Market is in execution phase, not hype phase.
+
+---
+
+### 📊 UPDATED COMPETITIVE MAP (as of Mar 24, 2026)
+
+*Delta from Mar 17 map — changes only:*
+
+| Player | New Development | Impact |
+|---|---|---|
+| **Vapi** | Composer webinar (Mar 20) — no-code voice building mainstream | 🔴 DX moat widening |
+| **Retell** | Full healthcare pivot, competitor displacement acceleration | 🔴 Vertical lock-in |
+| **Bland AI** | No new announcements detected | — Stable |
+| **ElevenLabs** | Multimedia studio expansion; less focused on infra layer | 🟡 Slightly reduced threat to dev tooling |
+| **Air AI** | First confirmed sighting; sales/SDR niche | 🟠 New entrant to watch |
+| **agentskills.io** | 12+ platforms now (was 10) | 🟢 Distribution opportunity grows |
+| **ctxly.com** | Appears defunct (404) | — No longer relevant |
+
+---
+
+### 🔮 WEEK 2 POST-ARCHIVE SYNTHESIS
+
+**The thesis remains intact.** Voice as an agent channel (not a standalone product), session continuity, and open-source positioning were correct bets — Vapi, Retell, and Bland's content continues to validate these as the right problems to solve.
+
+**The window for Option B (OpenAI Native SIP rebuild) is still open** — but closing. The longer a restart waits, the more Vapi's no-code Composer lowers the barrier for non-technical users, reducing the differentiation of a dev-native approach.
+
+**Best restart signal to watch:** If agentskills.io adoption accelerates past 15+ platforms, or if Vapi's pricing increases significantly (reducing its attractiveness for small teams), either could create a new opening.
+
+**No action recommended at this time** — archive decision stands. Monitoring continues.
 
 ---
 
