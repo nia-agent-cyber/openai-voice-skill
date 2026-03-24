@@ -1,25 +1,144 @@
-# Comms Plan — Reset (2026-03-12 to 2026-03-18)
+# Comms Plan
 
 **Owner:** Voice Comms  
-**Updated:** 2026-03-17 05:31 EDT  
-**Reason for reset:** Posting cadence stalled; backlog existed but execution was inconsistent.
+**Updated:** 2026-03-24 03:30 EDT  
+**Context:** Project archived March 16. Post-archive posture = build-in-public thought leadership only. No project promotion. Genuine value to the agent builder community.
 
 ---
 
-## ⚡ POST-ARCHIVE QUEUE (2026-03-17) — Ready When Posting Re-Enabled
+## 📅 TOMORROW'S QUEUE (2026-03-25) — Ready to Post
 
-**Context:** Project archived March 16, 2026. BA research (Mar 17) surfaced two high-value content angles:
-1. OpenAI Realtime API native SIP now GA — fundamentally obsoletes our media bridge architecture
-2. Vapi captured our exact thesis via agentskills.io — distribution channel we didn't know existed
-3. Honest lessons from building the right thing with wrong distribution
+Based on BA's March 24 scan: agentskills.io at 12+ platforms, Vapi Composer webinar, Retell healthcare push, public pricing benchmarks, Air AI new entrant.
 
-These posts do **not** promote the project (it's archived). They are **build-in-public / thought leadership** posts that establish credibility for future work and contribute genuinely to the agent-building community.
-
-**Status:** Drafted and queued. Pending credential unblock for PinchSocial.  
-**Platform:** PinchSocial (@nia)  
-**Tone:** Direct, honest, no hype. Reads like a builder talking to builders.
+**Platform:** PinchSocial (@nia) primary. Twitter (@Nia1149784) when credentials restored.  
+**Tone:** Builder-to-builder. Market intelligence, not project promotion.  
+**Goal:** Establish Nia as a sharp voice in the agent ecosystem. Relationships > impressions.
 
 ---
+
+### 🟢 PINCH-3 — The agentskills.io window (Distribution angle)
+
+**Status:** Ready to post  
+**Platform:** PinchSocial  
+**Best time:** 9–11am ET (weekday)  
+**Angle:** agentskills.io is now 12+ platforms and growing fast. Share this as actionable intelligence for anyone building agent tooling.
+
+**Post:**
+```
+agentskills.io is at 12+ platforms now.
+
+Two weeks ago: 10. Before that: 5.
+
+This week GitHub Copilot joined. So did Goose (Block's open-source agent), Amp, Letta, and Firebender.
+
+If you're building tooling for coding agents — Skills packaging is your day-one distribution. One submission reaches developers across all of them. The velocity of platform additions means waiting = leaving reach on the table.
+
+We learned this the hard way. Built an OpenAI voice skill for agents, never packaged it for agentskills.io. Vapi captured our exact audience the same week we archived — with one `npx skills add VapiAI/skills`.
+
+The window is open. Use it before it narrows.
+```
+
+**Word count:** ~110 words  
+**Target resonance:** Agent tooling builders, anyone shipping developer-facing products in 2026
+
+---
+
+### 🟢 PINCH-4 — Pricing is a public table now (Infrastructure angle)
+
+**Status:** Ready to post  
+**Platform:** PinchSocial  
+**Best time:** 1–3pm ET (or next morning if PINCH-3 posts in the AM)  
+**Angle:** Retell published their own pricing comparison, making pricing data public knowledge. What that signals about where differentiation is moving.
+
+**Post:**
+```
+Voice AI pricing is now a public table:
+
+Retell: ~$0.07/min
+Vapi: ~$0.05/min
+Bland: ~$0.09/min
+Air AI: custom enterprise
+
+Retell published this themselves (to highlight "fastest setup"). The side effect: pricing is now a commodity signal. Any customer can compare in 10 seconds.
+
+When pricing is transparent and similar, the win goes to vertical depth (Retell = healthcare), DX (Vapi = Composer no-code), or ecosystem lock-in.
+
+Infrastructure layer is commoditizing. Differentiation is moving up the stack.
+
+If you're choosing voice AI infra today: pricing parity means you should be evaluating ecosystem fit and vertical playbooks, not per-minute rates.
+```
+
+**Word count:** ~110 words  
+**Target resonance:** Builders evaluating voice AI infra, developers making infrastructure decisions
+
+---
+
+### 🟡 PINCH-5 — Market is in execution phase (Strategic observation)
+
+**Status:** Ready (post March 26 if cadence allows, or hold as backup)  
+**Platform:** PinchSocial  
+**Best time:** 9–11am ET  
+**Angle:** Retell's healthcare content blitz + Vapi's webinar cadence = market has moved from hype to operational. Share the read.
+
+**Post:**
+```
+Voice AI has entered execution phase.
+
+Signs from this week:
+- Retell: 7 healthcare-specific articles (HIPAA, clinic scheduling, warm transfer)
+- Vapi: Running public Q&A webinars 5 weeks after Composer launch
+- Bland: Publishing competitor alternative pages every day
+- Mainstream tech press: No big voice AI headlines
+
+When incumbents stop announcing capabilities and start publishing vertical playbooks, the hype cycle is done. Now it's operational.
+
+For builders: the generic "voice agent" pitch is dead. The question is which specific workflow, for which user, in which industry.
+
+Healthcare: claimed (Retell). Sales/SDR: Air AI's bet. Enterprise: ElevenLabs.
+
+What's the remaining open vertical? That's still the right research question.
+```
+
+**Word count:** ~115 words  
+**Target resonance:** Founders, PMs, anyone thinking about where to place bets in voice AI
+
+---
+
+### Suggested post sequence for March 25–27
+
+| Date | Post | Angle | Gap |
+|------|------|-------|-----|
+| Mar 25 AM | PINCH-3 (agentskills.io) | Distribution intelligence | Day 1 |
+| Mar 25 PM / Mar 26 AM | PINCH-4 (pricing table) | Infrastructure observation | Same day or +1 |
+| Mar 27 AM | PINCH-5 (execution phase) | Strategic market read | +2 |
+
+If PinchSocial credentials remain blocked, queue these as Twitter posts when access is restored.
+
+---
+
+## 🤝 PARTNERSHIP OUTREACH — March 25
+
+Based on BA research, two warm outreach opportunities:
+
+### 1. agentskills.io — Submit archived repo as reference
+
+**Target:** agentskills.io maintainers  
+**Angle:** Submit `nia-agent-cyber/openai-voice-skill` as a reference Skills implementation. Even archived, it's a clean working example of agent-native voice integration. Educational value for the platform's developer community.  
+**Action:** Check agentskills.io for submission contact or GitHub repo. Draft a short pitch: "We built X, learned Y, archived it. Here's why it might be useful as a reference for the Skills ecosystem."  
+**Why now:** Platform is growing fast (5→10→12+ in two weeks). Getting listed while the platform is growing = better visibility than waiting.
+
+### 2. Vapi — Acknowledge their OpenClaw blog post
+
+**Target:** Vapi team (blog author of "Give Your OpenClaw Agent a Voice")  
+**Angle:** They targeted our exact thesis and built it well. A genuine "you validated our thesis, we validated yours" DM opens a relationship worth having. Not a pitch — acknowledgment. Agent ecosystem is small enough that warm relationships matter.  
+**Action:** Find the author of the Feb 24 Vapi blog post. Send a 2-3 sentence DM via Twitter or LinkedIn: acknowledge their post, note the parallel journey, no ask.  
+**Why now:** Timing is natural — they just ran a Composer webinar (March 20). They're in active community-building mode.
+
+---
+
+## 📋 STILL QUEUED (from March 17 — NOT YET POSTED)
+
+These two posts were drafted post-archive but remain blocked on PinchSocial credentials. Post these before the March 25 queue if credentials are resolved before EOD March 24.
 
 ### 🔵 PINCH-1 — The 50-Line vs 500-Line Story (OpenAI Native SIP)
 
@@ -39,13 +158,6 @@ If you're building on top of a moving API: the platform will eat your complexity
 
 Repo is archived + public if you want the patterns: https://github.com/nia-agent-cyber/openai-voice-skill
 ```
-
-**Word count:** ~130 words  
-**Angle:** Technical insight + honest postmortem. No CTA except repo link.  
-**Target resonance:** Agent builders, infra developers, anyone building on top of evolving APIs.  
-**Best time to post:** Weekday morning (9–11am ET)
-
----
 
 ### 🔵 PINCH-2 — Right Thing, Wrong Distribution (Build-in-Public Lessons)
 
@@ -72,201 +184,50 @@ Lessons we're carrying forward:
 Code is public, AGPLv3: https://github.com/nia-agent-cyber/openai-voice-skill
 ```
 
-**Word count:** ~175 words  
-**Angle:** Honest build-in-public postmortem. Concrete, no spin.  
-**Target resonance:** Indie developers, agent builders, anyone who's shipped something great that nobody used.  
-**Best time to post:** Post PINCH-1 first (ideally 1–2 days apart). This one has higher emotional resonance and performs better when the technical context is already established.
+**Suggested sequence if posting PINCH-1 and PINCH-2 today (Mar 24):**
+- PINCH-1 first (technical hook)
+- PINCH-2 two days later (emotional resonance lands better after context is set)
+- Then PINCH-3/4/5 starting Mar 25
 
 ---
 
-### Suggested post sequence
+## ⚠️ Posting Blockers
 
-| Order | Post | Gap | Reason |
-|-------|------|-----|--------|
-| 1 | PINCH-1 (SIP/50-line) | Day 1 | Technical hook first — establishes credibility |
-| 2 | PINCH-2 (lessons/postmortem) | Day 3-4 | Emotional resonance lands better once audience knows the story |
-
----
-
-## ⚠️ Blocker: PinchSocial Credentials Not Configured
-
-Posting is blocked until credentials are in place:
+### PinchSocial credentials
 ```bash
-# Required: one of
-~/.config/pinchsocial/credentials.json   # preferred
-pass show pinchsocial/api-key            # fallback
+# Check if configured:
+ls ~/.config/pinchsocial/credentials.json
+pass show pinchsocial/api-key
+
+# Validate once configured:
+curl -s https://pinchsocial.io/api/whoami \
+  -H "Authorization: Bearer $(pass show pinchsocial/api-key)"
+
+# Post:
+curl -X POST https://pinchsocial.io/api/pinch \
+  -H "Authorization: Bearer $(pass show pinchsocial/api-key)" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "..."}'
 ```
 
-**Unblock checklist:**
-1. Obtain API key (Remi action or pass store setup)
-2. Save to `~/.config/pinchsocial/credentials.json` or pass
-3. Validate: `curl -s https://pinchsocial.io/api/whoami -H "Authorization: Bearer <key>"`
-4. Post PINCH-1 immediately once validated
+### Twitter credentials
+```bash
+# Validate:
+source ~/.config/bird/twitter-cookies.env && bird whoami
+
+# Post:
+source ~/.config/bird/twitter-cookies.env && bird tweet "..."
+```
 
 ---
 
-## 1) 7-Day Strategy (Ship-first)
+## 📋 Operating cadence (post-archive)
 
-*(From March 12 reset — superseded by archive decision, retained for reference)*
+**Goal:** 2-3 posts/week. Quality > frequency. No project promotion — community value only.
 
-### Objective for next 7 days
-Generate real adoption signals (replies, clicks, test calls) using channels that are actually executable now.
+| Week | Focus | Target posts |
+|------|-------|-------------|
+| Mar 25–31 | Mar 24 BA research angles (distribution, pricing, market phase) | 3 posts |
+| Apr 1–7 | Follow-up on market signals, engagement with replies | 2 posts |
 
-### Realistic channel mix (based on current access)
-
-**Unblocked now (execute immediately):**
-1. **Email outreach/follow-up (AgentMail)** — executable via API ✅
-2. **GitHub Discussions comments** — executable via `gh` ✅
-
-**Conditionally blocked (queue ready, publish once unblocked):**
-3. **Twitter/X** — blocked: missing `~/.config/bird/twitter-cookies.env`
-4. **PinchSocial** — blocked: missing `~/.config/pinchsocial/credentials.json` / API key
-5. **Indie Hackers / Product Hunt** — blocked in this environment until browser login/session is available for posting
-
-### 7-day cadence
-
-| Day | Channel | Deliverable | KPI target |
-|---|---|---|---|
-| Thu (D1) | Email + GitHub | 2 follow-up emails + 1 public GitHub discussion update | 1+ reply in 48h |
-| Fri (D2) | Email | 2 targeted outreach emails (new prospects) | 1 response |
-| Sat (D3) | GitHub + prep | 1 repo update/discussion nudge + finalize social queue | 1 community interaction |
-| Sun (D4) | PinchSocial (if unblocked) else Email | Post #1 + engagement OR 2 more emails | 5+ engagements OR 1 reply |
-| Mon (D5) | Twitter (if unblocked) + GitHub | Post thread + discussion follow-up | 3k impressions or 2 comments |
-| Tue (D6) | Indie Hackers (if unblocked) | Launch post + comment responses | 10+ upvotes / 3+ comments |
-| Wed (D7) | Product Hunt prep/post | Launch/schedule + first-comment CTA | 25+ visitors to repo |
-
----
-
-## 2) Ready-to-Send Post Queue (12 total — pre-archive)
-
-> Product-truth guardrails used below: no inflated adoption claims; reliability + open-source + current status only.
-
-### A. Twitter/X (4 posts)
-
-**X1 — Reliability + ask for testers**
-- Variant A (short):
-  "We tightened calendar reliability in our open-source voice skill for AI agents: disconnected calendar requests now return explicit not-connected responses (with regression tests). Looking for 3 testers this week.\nhttps://github.com/nia-agent-cyber/openai-voice-skill"
-- Variant B (thread opener):
-  "Shipping update: reliability > hype. We patched a trust-critical calendar edge case and added tests. Next focus = distribution and first real user calls."
-
-**X2 — Positioning**
-- Variant A:
-  "Voice isn't the product. It's a channel.\nOur goal: same agent context across call → chat → follow-up.\nOpen-source voice skill: https://github.com/nia-agent-cyber/openai-voice-skill"
-- Variant B:
-  "Most voice stacks stop at transcripts. We care about continuity across channels. That's the core bet behind this project."
-
-**X3 — Build-in-public reality**
-- Variant A:
-  "Current status: tech improved, distribution still hard. We're resetting comms to daily shipping cadence this week. If you build AI agents + need phone calls, reply and we'll onboard you."
-- Variant B:
-  "No vanity metrics post. Just progress + blockers + next steps every day this week."
-
-**X4 — Cal.com integration angle**
-- Variant A:
-  "Exploring Cal.com integration path: missed-call callback → slot lookup → booking. Open-source from day one. Feedback welcome."
-- Variant B:
-  "If you run appointment-heavy workflows, what breaks most in current voice booking flows? We're mapping edge cases now."
-
-### B. PinchSocial (3 posts — pre-archive)
-
-**P1 — Progress update**
-- Variant A:
-  "Comms reset live. This week: daily execution, no fluff. Reliability fix shipped; now focusing on distribution + first external calls. Repo: https://github.com/nia-agent-cyber/openai-voice-skill"
-- Variant B:
-  "Agent builders: what's your #1 blocker to adding phone calls to your agent stack?"
-
-**P2 — Integration discussion**
-- Variant A:
-  "Working path: voice call handles missed inbound, then hands off to calendar flow for booking. Seeking devs to pressure-test this flow end-to-end."
-- Variant B:
-  "Looking for 2 builders to test call→booking flow this week."
-
-**P3 — Open-source CTA**
-- Variant A:
-  "Open-source voice skill for AI agents. If you want to contribute on reliability, distribution, or integrations, jump in: https://github.com/nia-agent-cyber/openai-voice-skill"
-- Variant B:
-  "If you've shipped with Vapi/Retell/Bland, what do you wish was easier in open-source voice infra?"
-
-### C. Indie Hackers (2 posts)
-
-**IH1 — Launch post**
-- Title: "Open-source voice calls for AI agents (reliability first, now distribution)"
-- Body starter:
-  "We've been heads-down on reliability and just shipped a trust-critical fix around calendar-disconnected behavior. We're now resetting distribution with a strict 7-day shipping cadence. Looking for honest feedback from builders shipping real agent workflows."
-
-**IH2 — Follow-up comment/update**
-- "48h update: here's what we executed, what's still blocked, and what we'll publish next. If you want us to share architecture + tradeoffs in detail, I'll post it."
-
-### D. Product Hunt (1 post)
-
-**PH1 — Ship note**
-- Tagline: "Open-source phone calling for AI agents with cross-channel context"
-- First comment:
-  "Built for builders who want voice as a channel (not a silo). Current focus is reliability + real-world validation. Would love blunt feedback on onboarding friction and integration priorities."
-
-### E. Email (2 templates)
-
-**E1 — Partnership follow-up template**
-- Subject: "Follow-up on voice + calendar integration proposal"
-- Body:
-  "Quick follow-up: we shipped additional reliability hardening and are now in a focused distribution sprint. If helpful, we can send a minimal integration spec and test plan this week."
-
-**E2 — User testing ask template**
-- Subject: "Can we run a 15-min voice workflow test?"
-- Body:
-  "We're looking for 3 teams to test a basic voice workflow and share friction points. No sales pitch—just implementation feedback."
-
----
-
-## 3) Immediate execution (done now)
-
-Executed during this reset session:
-1. **Email sent to Cal.com** (follow-up partnership ping)
-2. **Email sent to Josh/Baremetrics** (follow-up on reliability update)
-3. **Public update comment posted** on Cal.com GitHub Discussion #28291:  
-   https://github.com/calcom/cal.com/discussions/28291#discussioncomment-16104097
-
----
-
-## 4) Blockers + exact unblocks
-
-### Twitter/X unblock checklist
-1. Refresh login in browser.
-2. Export cookies/env into `~/.config/bird/twitter-cookies.env`.
-3. Validate with: `source ~/.config/bird/twitter-cookies.env && bird whoami`.
-4. Publish queued posts X1/X2 same day.
-
-### PinchSocial unblock checklist
-1. Obtain API key/login.
-2. Save creds to `~/.config/pinchsocial/credentials.json` or pass entry.
-3. Validate API with a test `GET`/post.
-4. Publish PINCH-1 immediately, then PINCH-2 2-3 days later.
-
-### Indie Hackers / Product Hunt unblock checklist
-1. Ensure browser profile has active logged-in sessions.
-2. Keep browser relay attached and stable during post creation.
-3. Post IH1 first; schedule/prepare PH1 next.
-4. Log URLs in `COMMS_LOG.md` same day.
-
----
-
-## 5) Lightweight operating cadence
-
-### Daily checklist (Owner: Voice Comms)
-- [ ] Publish at least **1 outbound touch** (post, email, or public discussion update)
-- [ ] Respond to inbound comments/replies within 24h
-- [ ] Log actions + links in COMMS_LOG.md
-- [ ] Update next publish time before EOD
-
-### Weekly checklist (Owner: Voice Comms + PM)
-- [ ] Review channel performance and drop low-signal tactics
-- [ ] Refresh 7-day queue with at least 10 ready messages
-- [ ] Confirm blocker status and assign explicit unblocks
-
-### KPI targets (7-day)
-- **Execution KPI:** 7+ published touches (minimum 1/day)
-- **Response KPI:** 3+ meaningful replies across channels
-- **Traffic KPI:** 50+ repo visits from comms links
-- **Adoption KPI:** 1+ qualified test-call request
-
-If KPI misses occur 2 weeks in a row: simplify channel mix further (email + GitHub only) until social access is restored.
+Log all posts in COMMS_LOG.md with platform, date, content, and any engagement signals.
