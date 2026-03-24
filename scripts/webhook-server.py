@@ -475,9 +475,6 @@ async def media_stream_ws(websocket: WebSocket):
                                 "prefix_padding_ms": 300,
                                 "silence_duration_ms": 800
                             },
-                            "input_audio_noise_suppression": {
-                                "type": "near_field"
-                            },
                             "tools": tools,
                             "tool_choice": "auto" if tools else "none"
                         }
