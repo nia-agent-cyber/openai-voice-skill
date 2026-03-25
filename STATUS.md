@@ -1,16 +1,26 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-25 by Voice Coder (VAD + temperature + thinking tone)
-**Status:** ✅ ACTIVE — Server live, 3 UX improvements deployed
+**Last Updated:** 2026-03-25 by Voice Coder (language hardening + session.updated gate)
+**Status:** ✅ ACTIVE — Server live, PID 8800
 
-## Current State (2026-03-25) — VAD + Temperature + Thinking Tone
+## Current State (2026-03-25) — Language Rule Hardened + Audio Gating
 
-### ✅ Just Deployed (commit f8ee88f0)
+### ✅ Just Deployed (commit 4fab21d0)
+- ✅ **Language rule**: Replaced soft "LANGUAGE RULE" header with hard "ABSOLUTE RULE #1" at the very top of system prompt — strongest possible instruction placement
+- ✅ **Temperature**: `0.8` → `0.6` — reduces model drift from hard instructions
+- ✅ **session_ready gate**: Audio forwarding to OpenAI is now blocked until `session.updated` is confirmed — prevents VAD firing before instructions land
+- ✅ **Timeout guard**: 3s timeout on session_ready wait so calls don't hang if session.updated is delayed
+
+**Server:** PID 8800, health check green at `http://localhost:8080/health`
+
+---
+
+## Previous (2026-03-25) — VAD + Temperature + Thinking Tone
+
+### ✅ Deployed (commit f8ee88f0)
 - ✅ **VAD eagerness**: `"low"` → `"balanced"` — faster turn detection, less dead air between turns
 - ✅ **Temperature**: `0.8` added to session.update — more natural/varied responses
 - ✅ **Thinking tone**: 600ms 440Hz sine wave played to Twilio during tool calls — eliminates 2-3s silence
-
-**Server:** PID 4380 (launchd-managed), health check green at `http://localhost:8080/health`
 
 ---
 
