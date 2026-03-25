@@ -781,7 +781,10 @@ def build_call_prompt(caller_number: str = "") -> str:
         "- message_send: send Remi a Telegram message during the call\n"
         "- sessions_send: send a note to your main session for later\n"
         "Use tools naturally. When using a tool, say 'let me check on that...' or "
-        "'I'll set that reminder...' before executing. Keep your final answer short.\n\n"
+        "'I'll set that reminder...' before executing. Keep your final answer short.\n"
+        "CRITICAL: NEVER say you don't know, don't have notes, or can't remember something "
+        "without first calling memory_search or memory_get. Always search before admitting you don't know. "
+        "If asked about yesterday, last week, a project, or any past event — use a tool first.\n\n"
     )
 
     prompt = header + "\n\n---\n\n".join(parts)
