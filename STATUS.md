@@ -1,7 +1,18 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-24 by Voice PM (OC Integration)
-**Status:** ✅ ACTIVE — OC Integration deployed, awaiting test calls
+**Last Updated:** 2026-03-25 by Voice Coder (VAD + temperature + thinking tone)
+**Status:** ✅ ACTIVE — Server live, 3 UX improvements deployed
+
+## Current State (2026-03-25) — VAD + Temperature + Thinking Tone
+
+### ✅ Just Deployed (commit f8ee88f0)
+- ✅ **VAD eagerness**: `"low"` → `"balanced"` — faster turn detection, less dead air between turns
+- ✅ **Temperature**: `0.8` added to session.update — more natural/varied responses
+- ✅ **Thinking tone**: 600ms 440Hz sine wave played to Twilio during tool calls — eliminates 2-3s silence
+
+**Server:** PID 4380 (launchd-managed), health check green at `http://localhost:8080/health`
+
+---
 
 ## Current State (2026-03-24) — OC Integration v1
 
