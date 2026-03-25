@@ -28,7 +28,9 @@ import asyncio
 import base64
 import json
 import logging
+import math
 import os
+import struct
 import time
 from datetime import datetime
 from pathlib import Path
@@ -552,6 +554,25 @@ TOOL_REGISTRY: dict = {
 }
 
 
+def generate_thinking_tone(duration_ms: int = 600, freq: int = 440, volume: float = 0.15) -> str:
+    """Generate a soft sine tone encoded as mulaw 8kHz base64 for Twilio.
+
+    Plays a ~600ms 440Hz tone (fade in/out) to fill silence while a tool call executes.
+    """
+    sample_rate = 8000
+    num_samples = int(sample_rate * duration_ms / 1000)
+    pcm_bytes = bytearray()
+    for i in range(num_samples):
+        t = i / sample_rate
+        # Fade in/out to avoid clicks
+        fade = min(i, num_samples - i, 100) / 100.0
+        sample = int(32767 * volume * fade * math.sin(2 * math.pi * freq * t))
+        sample = max(-32768, min(32767, sample))
+        pcm_bytes += struct.pack('<h', sample)
+    mulaw = audioop.lin2ulaw(bytes(pcm_bytes), 2)
+    return base64.b64encode(mulaw).decode()
+
+
 async def dispatch_tool_call(oai_ws, tool_name: str, tool_args: dict, call_id: str) -> None:
     """Execute a tool call and inject the result back into the OpenAI conversation."""
     logger.info(f"🔧 Tool call: {tool_name}({list(tool_args.keys())})")
@@ -1013,6 +1034,19 @@ async def media_stream_ws(websocket: WebSocket):
                     except json.JSONDecodeError:
                         tool_args = {}
 
+                    # Play thinking tone to fill silence during tool execution
+                    stream_sid = ctx.get("stream_sid")
+                    if stream_sid and audioop:
+                        try:
+                            tone_payload = generate_thinking_tone()
+                            await websocket.send_text(json.dumps({
+                                "event": "media",
+                                "streamSid": stream_sid,
+                                "media": {"payload": tone_payload}
+                            }))
+                        except Exception as _tone_err:
+                            logger.debug(f"Thinking tone send failed (non-fatal): {_tone_err}")
+
                     # Dispatch tool call (non-blocking — runs in background)
                     asyncio.create_task(
                         dispatch_tool_call(oai_ws, tool_name, tool_args, call_id)
@@ -1102,8 +1136,9 @@ async def media_stream_ws(websocket: WebSocket):
                             },
                             "turn_detection": {
                                 "type": "semantic_vad",
-                                "eagerness": "low"
+                                "eagerness": "balanced"
                             },
+                            "temperature": 0.8,
                             "tools": tools,
                             "tool_choice": "auto"
                         }
