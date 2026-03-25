@@ -1,11 +1,17 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-25 by Voice Coder (language hardening + session.updated gate)
+**Last Updated:** 2026-03-25 by Voice Coder (test coverage: webhook-server 54%, security_utils 87%, overall 73%)
 **Status:** ✅ ACTIVE — Server live, PID 8800
 
-## Current State (2026-03-25) — Language Rule Hardened + Audio Gating
+## Current State (2026-03-25) — Test Coverage Extended
 
-### ✅ Just Deployed (commit 4fab21d0)
+### ✅ Just Added (test coverage sprint)
+- ✅ **webhook-server.py coverage**: ~26% → **54%** (+28pp)
+  - New: `tests/test_webhook_server_extra2.py` — 63 new tests covering `tool_message_send`, `_message_send_cli`, `tool_sessions_send`, `dispatch_tool_call`, `load_agent_config`, `_read_openclaw_token`, `_save_transcript`, session config assertions, source-level structural checks
+- ✅ **security_utils.py coverage**: 0% → **87%** (existing `tests/test_security_utils.py`)
+- ✅ **Overall scripts coverage**: **73%** — all 669 tests passing
+
+### ✅ Previous (commit 4fab21d0) — Language Rule Hardened + Audio Gating
 - ✅ **Language rule**: Replaced soft "LANGUAGE RULE" header with hard "ABSOLUTE RULE #1" at the very top of system prompt — strongest possible instruction placement
 - ✅ **Temperature**: `0.8` → `0.6` — reduces model drift from hard instructions
 - ✅ **session_ready gate**: Audio forwarding to OpenAI is now blocked until `session.updated` is confirmed — prevents VAD firing before instructions land
