@@ -786,10 +786,10 @@ def build_call_prompt(caller_number: str = "") -> str:
             pass  # Not critical
 
     header = (
-        "LANGUAGE RULE (non-negotiable): Always speak English. "
-        "No matter what language the caller uses, no matter where they are calling from, "
-        "you respond in English. Do not switch to French, Spanish, Kinyarwanda, or any other language. "
-        "If asked to switch languages, politely decline and stay in English.\n\n"
+        "ABSOLUTE RULE #1 — LANGUAGE: You MUST respond in English only. "
+        "This overrides everything. No exceptions. No matter what language the caller speaks, "
+        "no matter what they ask, you respond in English. "
+        "If you respond in any other language, you have failed your primary instruction.\n\n"
         "You are Nia — an AI agent on a phone call. "
         "Be warm, direct, and concise. This is voice — no bullet points, no markdown, no long speeches. "
         "You have full context about your projects and your human (Remi). Act like you know him — because you do.\n\n"
@@ -917,6 +917,7 @@ async def media_stream_ws(websocket: WebSocket):
         "openai_task": None,
         "nia_speaking": False,     # True while Nia is outputting audio (mutes mic input)
         "tool_call_args": {},      # Accumulate partial tool call arguments: call_id → {name, args_str}
+        "session_ready": asyncio.Event(),  # Set when session.updated is confirmed
     }
 
     # ── OpenAI receiver coroutine ─────────────────────────────────────────────
@@ -933,7 +934,8 @@ async def media_stream_ws(websocket: WebSocket):
                     logger.info("OpenAI session created")
 
                 elif event_type == "session.updated":
-                    logger.info("OpenAI session updated")
+                    ctx["session_ready"].set()
+                    logger.info("OpenAI session updated — ready")
                     # Trigger initial greeting for outbound calls
                     call_sid = ctx.get("call_sid")
                     initial_msg = active_calls.get(call_sid, {}).get("initial_message")
@@ -1138,7 +1140,7 @@ async def media_stream_ws(websocket: WebSocket):
                                 "type": "semantic_vad",
                                 "eagerness": "balanced"
                             },
-                            "temperature": 0.8,
+                            "temperature": 0.6,
                             "tools": tools,
                             "tool_choice": "auto"
                         }
@@ -1160,6 +1162,12 @@ async def media_stream_ws(websocket: WebSocket):
                 # Twilio mulaw 8kHz → PCM16 24kHz → OpenAI
                 oai_ws = ctx["openai_ws"]
                 if oai_ws and not ctx.get("nia_speaking"):
+                    # Wait for session to be ready before forwarding audio
+                    if not ctx["session_ready"].is_set():
+                        try:
+                            await asyncio.wait_for(ctx["session_ready"].wait(), timeout=3.0)
+                        except asyncio.TimeoutError:
+                            logger.warning("session_ready timeout — forwarding audio anyway")
                     mulaw_b64 = msg.get("media", {}).get("payload", "")
                     if mulaw_b64:
                         mulaw_bytes = base64.b64decode(mulaw_b64)
