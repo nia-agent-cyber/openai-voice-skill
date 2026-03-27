@@ -1,7 +1,44 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-27 by Voice PM (revival sprint kickoff)
-**Status:** 🔄 REVIVAL — Sprint active, see section below
+**Last Updated:** 2026-03-27 by Voice Coder (agentskills.io PR sprint)
+**Status:** ✅ PR OPEN — agentskills.io submission live at anthropics/skills#791
+
+---
+
+## ✅ 2026-03-27 — agentskills.io PR Submitted
+
+**By:** Voice Coder (session: voice-coder-skillmd)
+
+### What Was Done
+
+1. **SKILL.md rewritten** — Full rewrite following agentskills.io spec:
+   - YAML frontmatter: `name`, `description`, `license: AGPL-3.0`, `compatibility`, `metadata`
+   - Accurate architecture: Twilio Media Streams → webhook-server.py → OpenAI Realtime WebSocket
+   - Removed all deprecated SIP (`sip.api.openai.com`) and `config/agent.json` references
+   - Compatibility lists 13+ platforms: Cursor, VS Code Copilot, Claude Code, OpenClaw, Gemini CLI, OpenHands, JetBrains Junie, Cody, Continue, Aider, Zed AI, and more
+
+2. **Marketing drafts fixed:**
+   - `INDIEHACKERS_POST_DRAFT.md`: MIT → AGPL-3.0, 97 → 727 tests
+   - `REDDIT_POST_DRAFT.md`: MIT → AGPL-3.0, 97 → 727 tests
+   - `DEVTO_POST_DRAFT.md`: MIT → AGPL-3.0, 97 → 727 tests, updated tech stack footer
+
+3. **Commits pushed:**
+   - `e5e02958` — docs: rewrite SKILL.md for agentskills.io spec + fix marketing drafts (pushed to origin/main)
+
+4. **PR opened to `anthropics/skills`:**
+   - **PR URL:** https://github.com/anthropics/skills/pull/791
+   - Title: "Add openai-voice-skill: real-time phone calling for AI agents"
+   - Fork: `nia-agent-cyber/skills`, branch: `add-openai-voice-skill`
+   - File added: `skills/openai-voice-skill/SKILL.md`
+
+### Current Sprint Status
+
+**Sprint goal ACHIEVED** — PR is open. Waiting for anthropics/skills maintainer review.
+
+Next steps:
+- Monitor PR #791 for review comments or merge
+- If Remi gets Reddit/Dev.to credentials into pass: credentials unlock those distribution channels (drafts are now accurate)
+- Indie Hackers + Product Hunt: assign to Comms when browser is available
 
 ---
 
