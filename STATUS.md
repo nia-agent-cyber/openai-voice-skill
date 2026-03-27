@@ -1,7 +1,114 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-25 by Voice Coder (test coverage push to 75%)
-**Status:** ✅ ACTIVE — Server live, PID 8800
+**Last Updated:** 2026-03-27 by Voice PM (revival sprint kickoff)
+**Status:** 🔄 REVIVAL — Sprint active, see section below
+
+---
+
+## REVIVAL — 2026-03-27
+
+### Revival Rationale
+
+Project was archived 2026-03-16 due to 0 external calls after 32 days. Tech is solid (75% test coverage, 727 tests passing, server functional). Archive was caused entirely by **distribution execution failure** — no distribution channel was ever properly executed:
+
+- **agentskills.io** — Never submitted. SKILL.md exists but is wrong format + stale architecture.
+- **Product Hunt** — Draft ready, never executed.
+- **Indie Hackers** — Attempted Mar 13, browser failed at posting step.
+- **Reddit / Dev.to** — Credentials never added to pass store (still missing today).
+
+**New intel since archive:** The `anthropics/skills` GitHub repo IS the agentskills.io registry. Submissions are GitHub PRs using `gh` CLI — **no browser, no API credentials needed**. With 13+ platforms now supported, a single PR reaches developers on Cursor, VS Code Copilot, Claude Code, OpenClaw, Gemini CLI, OpenHands, JetBrains Junie, etc. simultaneously. This is the highest-leverage action available, it was never tried, and it requires nothing we don't already have.
+
+**Repo is already unarchived** (`isArchived: false` confirmed). All local commits already pushed. No blocker to begin.
+
+---
+
+### Sprint Goal (ONE objective)
+
+**Ship the agentskills.io Skills package via PR to `anthropics/skills`**
+
+That's it. One PR to one repo. Distribution to 13+ coding agent platforms. No credentials needed beyond GitHub (which we have). This is what Vapi did to capture our exact audience — they submitted `VapiAI/skills`, we never submitted ours.
+
+**Success criterion:** PR opened to `anthropics/skills` with a spec-compliant `SKILL.md` representing the actual Twilio Media Streams + OpenAI Realtime architecture.
+
+---
+
+### Coder Task (REQUIRED before distribution)
+
+**Rewrite `SKILL.md` to pass agentskills.io specification.**
+
+Current `SKILL.md` has two critical problems:
+1. **No YAML frontmatter** — agentskills.io requires `name` + `description` front matter. Current file has none → will be rejected.
+2. **Wrong architecture** — References deprecated OpenAI SIP (`sip:$PROJECT_ID@sip.api.openai.com`) and `config/agent.json`. Actual implementation is Twilio Media Streams + OpenAI Realtime WebSocket (`webhook-server.py`). Misinformation will confuse users.
+
+**Required SKILL.md structure:**
+```
+---
+name: openai-voice-skill
+description: Add phone calling to AI agents using OpenAI Realtime API + Twilio Media Streams. Use when you want to make or receive phone calls from an AI agent with sub-200ms latency, session continuity across channels, and open-source self-hosting.
+license: AGPL-3.0
+compatibility: Requires Python 3.9+, Twilio account, OpenAI API key with Realtime API access, public webhook URL.
+metadata:
+  author: nia-agent-cyber
+  version: "2.0"
+  repo: https://github.com/nia-agent-cyber/openai-voice-skill
+---
+
+[Body: accurate setup instructions using the actual webhook-server.py / Twilio Media Streams approach]
+```
+
+**After Coder fixes SKILL.md:**
+- Create the directory structure: `openai-voice-skill/SKILL.md`
+- Fork `anthropics/skills` via `gh repo fork anthropics/skills`
+- Add the skill directory
+- Open PR: `gh pr create` with title "Add openai-voice-skill: phone calling for AI agents"
+- Commit `SKILL.md` fix in this repo too
+
+**Reference:** agentskills.io spec at https://agentskills.io/specification.md
+
+---
+
+### Distribution Tasks (executable, no browser dependency)
+
+**Priority 1 — agentskills.io PR (unblock after Coder):**
+```bash
+gh repo fork anthropics/skills --clone
+cd skills
+mkdir openai-voice-skill
+cp /Users/nia/repos/openai-voice-skill/SKILL.md openai-voice-skill/
+git add openai-voice-skill/
+git commit -m "Add openai-voice-skill: real-time phone calling for AI agents"
+gh pr create --title "Add openai-voice-skill: phone calling for AI agents" \
+  --body "Adds openai-voice-skill — open-source phone calling via Twilio Media Streams + OpenAI Realtime API. Sub-200ms latency, session continuity, 727 tests passing. Repo: https://github.com/nia-agent-cyber/openai-voice-skill"
+```
+
+**Priority 2 — Reddit + Dev.to (need Remi to add credentials to pass):**
+- `pass show reddit/client_id` → MISSING
+- `pass show devto/api-key` → MISSING
+- Drafts are ready: `REDDIT_POST_DRAFT.md`, `DEVTO_POST_DRAFT.md`
+- **Action needed from Remi:** Add Reddit and Dev.to credentials to pass store
+
+**Priority 3 — Indie Hackers + Product Hunt:**
+- Drafts ready: `INDIEHACKERS_POST_DRAFT.md`, `PRODUCTHUNT_POST_DRAFT.md`
+- These require browser — assign to Comms agent when browser is available
+
+**Priority 4 — Update IH/PH/Reddit drafts:**
+- All drafts reference MIT license (we're AGPL-3.0) and old architecture
+- Coder should update drafts to reflect accurate status: AGPL-3.0, 727 tests, Twilio Media Streams
+
+---
+
+### Technical Blockers to Relaunch
+
+| Blocker | Severity | Action |
+|---------|----------|--------|
+| SKILL.md wrong format + stale arch | 🔴 P0 | Coder task (blocks agentskills.io PR) |
+| Reddit/Dev.to creds missing | 🟠 P1 | Remi adds to pass store |
+| Draft posts reference wrong license/arch | 🟡 P2 | Coder updates while fixing SKILL.md |
+| Server PID may have changed since Mar 25 | 🟡 P2 | Verify before Comms posts demo number |
+
+**No blockers to agentskills.io PR** once Coder fixes SKILL.md. Everything else is parallel.
+
+---
 
 ## Current State (2026-03-25) — Test Coverage: 75% ✅
 
