@@ -1,7 +1,42 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-27 by Voice Coder (marketing draft rewrite)
+**Last Updated:** 2026-03-27 by Voice QA (marketing draft QA review)
 **Status:** ✅ PR OPEN — anthropics/skills#791 waiting for maintainer review
+
+---
+
+## ✅ 2026-03-27 — QA VERDICT: Marketing Drafts APPROVED
+
+**By:** Voice QA (session: voice-qa-drafts)
+
+### Verdict: ALL 3 DRAFTS APPROVED — READY TO POST
+
+All three marketing draft files pass every check. No changes needed.
+
+| Check | DEVTO | REDDIT | INDIEHACKERS |
+|-------|-------|--------|--------------|
+| No SIP.js in tech stack | ✅ | ✅ | ✅ |
+| No Node.js / TypeScript in tech stack | ✅ | ✅ | ✅ |
+| `sip.api.openai.com` only as historical context | ✅ (deprecated + broken) | ✅ (deprecated + dead) | ✅ (narrative: rebuilt after deprecation) |
+| Correct architecture: Python + FastAPI + Twilio Media Streams + OpenAI Realtime WS | ✅ | ✅ | ✅ |
+| License: AGPL-3.0 | ✅ | ✅ | ✅ |
+| Test count: 727 | ✅ (×2) | ✅ | ✅ (×2) |
+| Platform fit | ✅ Technical + code | ✅ Punchy + direct | ✅ Story-driven + vulnerable |
+| No embarrassing factual errors | ✅ | ✅ | ✅ |
+
+#### Notes Per Draft
+
+- **DEVTO_POST_DRAFT.md** — Full working Python code examples, ASCII architecture diagram, performance optimization table, session_ready gate code, correct `audioop` pipeline. Tags: `#python #ai #voiceai #openai #opensource` (no `#nodejs`). This is a strong technical post.
+- **REDDIT_POST_DRAFT.md** — Crisp, leads with the value prop immediately, explains *why* Twilio is required (not just "we use Twilio"), no fluff. Cross-posting suggestions (r/MachineLearning, r/Python) are sensible.
+- **INDIEHACKERS_POST_DRAFT.md** — The "early drafts described SIP.js and TypeScript — things that were never in the actual codebase" line is explicitly framed as a past mistake / honest reflection. This is NOT a current tech stack claim; it's an authenticity hook that will resonate with IH readers. The current stack description is accurate throughout.
+
+### Remaining Comms Blockers (unchanged — no new blockers)
+- 🟠 Reddit credentials still missing from pass store (Remi)
+- 🟡 Dev.to API key still missing (Remi) — browser fallback available
+- 🟢 IndieHackers: browser-based, no creds needed
+- 🟢 Hold until PR #791 merges — fire all 3 within 24h of merge
+
+**Comms is cleared to execute on merge day. No further QA needed on these drafts.**
 
 ---
 
