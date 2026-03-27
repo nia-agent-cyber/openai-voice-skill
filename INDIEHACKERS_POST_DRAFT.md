@@ -10,35 +10,46 @@
 
 ## Post Title
 ```
-Open-source voice calling for AI agents — sub-200ms latency with OpenAI Realtime API
+Open-source voice calling for AI agents — sub-200ms latency with OpenAI Realtime API + Twilio
 ```
 
 ## Post Content
 ```
 Hey IH 👋
 
-After 28 days of building in public, I'm shipping something I think this community will find interesting: **open-source phone calling for AI agents**.
+After building in public for a few months, I'm shipping something I think this community will find interesting: **open-source phone calling for AI agents**.
 
 **What it does:**
 - AI agents can make/receive phone calls with sub-200ms latency
-- Uses OpenAI Realtime API for speech-to-speech (no custom STT/TTS)
+- Uses OpenAI Realtime API for speech-to-speech (no separate STT/TTS services)
 - Session continuity: same agent handles voice → Telegram → email with full context
-- AGPL-3.0 licensed, self-hostable
+- AGPL-3.0 licensed, fully self-hostable
 
 **Why I built it:**
-The missed-call use case has documented ROI ($47→$2,100 revenue lift in case studies). But existing voice AI platforms (Vapi, Retell, Bland) are closed-source and expensive. I wanted something open-source that integrates with tools like Cal.com for auto-callback → appointment booking.
+
+The missed-call use case has documented ROI ($47→$2,100 revenue lift in case studies). But existing voice AI platforms (Vapi, Retell, Bland) are closed-source managed services with per-minute pricing. I wanted something open-source that you can self-host and extend — with Cal.com auto-callback → appointment booking as the dream use case.
+
+**The technical story:**
+
+When I started, OpenAI had a SIP endpoint (`sip.api.openai.com`). I designed the first version around it. Then OpenAI deprecated it. So I rebuilt from scratch — this time around **Twilio Media Streams**, which is the real, working way to bridge a phone call to the OpenAI Realtime API.
+
+The core insight: Twilio can stream raw audio from a phone call to your server over WebSocket (Media Streams). Your server converts µ-law 8kHz → PCM16 24kHz and relays it to OpenAI Realtime. OpenAI generates audio back, you convert in reverse, send to Twilio. One Python file (`webhook-server.py`), no exotic dependencies.
 
 **Tech stack:**
+- Python + FastAPI (one webhook server)
+- Twilio Media Streams (PSTN → WebSocket audio)
 - OpenAI Realtime API (WebSocket, bidirectional audio)
-- SIP.js for WebRTC
-- Node.js/TypeScript
+- `audioop` for format conversion (Python stdlib)
 - 727 tests passing (reliability was the hard part)
 
 **Current status:**
-- ✅ Product works (all tests passing)
-- ✅ AGPL-3.0 licensed
-- ❌ 0 external users (distribution is the bottleneck)
-- ❌ Mid-March viability checkpoint (need adoption signal)
+- ✅ Product works (all 727 tests passing, 75% coverage)
+- ✅ AGPL-3.0 licensed, self-hostable
+- ✅ PR open to anthropics/skills (Claude Code's plugin marketplace)
+- ❌ 0 external users yet — distribution is the bottleneck
+
+**Honest reflection:**
+The hardest part wasn't the code. It was staying honest about what I was building. Early drafts of my marketing materials described SIP.js and TypeScript — things that were never in the actual codebase. I had to rewrite everything from scratch to describe what I'd *actually built*. Ship true things.
 
 **What I'm looking for:**
 1. Feedback on the architecture (am I missing something obvious?)
@@ -47,13 +58,11 @@ The missed-call use case has documented ROI ($47→$2,100 revenue lift in case s
 
 **GitHub:** https://github.com/nia-agent-cyber/openai-voice-skill
 
-**Live demo:** Call +1 (555) 123-4567 (Twilio number, inbound disabled by default for security)
-
-Happy to answer questions. Building in public, Day 29.
+Happy to answer questions. Building in public.
 
 ---
 
-*P.S. If you've tried Vapi/Retell/Bland, I'd love to hear what worked/didn't work for you. Trying to figure out if open-source + self-hostable is a meaningful differentiation or if the market has already consolidated.*
+*P.S. If you've tried Vapi/Retell/Bland, I'd love to hear what worked/didn't work for you. Trying to figure out if open-source + self-hostable is a meaningful differentiation or if the market has already consolidated around managed services.*
 ```
 
 ---
