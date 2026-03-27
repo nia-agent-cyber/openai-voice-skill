@@ -1,7 +1,47 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-27 by Voice BA (post-PR strategic analysis)
+**Last Updated:** 2026-03-27 by Voice Coder (marketing draft rewrite)
 **Status:** ✅ PR OPEN — anthropics/skills#791 waiting for maintainer review
+
+---
+
+## ✅ 2026-03-27 — Marketing Drafts: ACCURATE AND READY FOR COMMS
+
+**By:** Voice Coder (session: voice-coder-fixdrafts)
+
+All 3 marketing draft files have been fully rewritten with the correct tech stack. Previous versions described SIP.js, Node.js/TypeScript, and "no Twilio required" — none of which reflects the actual codebase.
+
+### What Was Fixed
+
+| File | Problem | Fix |
+|------|---------|-----|
+| `DEVTO_POST_DRAFT.md` | TypeScript code blocks, SIP.js architecture diagram, SIP.js docs links, `#nodejs` tag | Full rewrite: Python/FastAPI code, accurate Twilio→webhook-server.py→OpenAI architecture diagram, audioop conversion code, session_ready gate code, `#python` tag |
+| `REDDIT_POST_DRAFT.md` | "Native SIP integration (no Twilio required)", "SIP.js for WebRTC/SIP bridging", "Node.js + TypeScript" | Replaced with accurate stack: Python+FastAPI, Twilio Media Streams, audioop; explains why Twilio is required |
+| `INDIEHACKERS_POST_DRAFT.md` | "SIP.js for WebRTC", "Node.js/TypeScript" | Accurate stack description + story about rebuilding from deprecated SIP to Twilio Media Streams |
+
+### What Was Preserved
+- License: AGPL-3.0 ✅
+- Test count: 727 ✅
+- Marketing tone and angle ✅
+- Platform-appropriate style (dev.to: technical, Reddit: punchy, IH: story-driven) ✅
+
+### Architecture Consistency
+All 3 drafts now describe the same architecture as `SKILL.md`:
+```
+Phone → Twilio → TwiML → WebSocket (Media Streams)
+     → webhook-server.py (µ-law 8kHz ↔ PCM16 24kHz)
+     → OpenAI Realtime WebSocket
+     → [response audio back to Twilio → caller]
+```
+
+### Comms: Ready to Execute
+All 3 drafts can be posted verbatim. The dev.to post has working Python code examples. No stale references remain.
+
+**Remaining Comms blockers** (unchanged from BA analysis):
+- 🟠 Reddit API credentials still missing from pass store (Remi)
+- 🟡 Dev.to API key still missing (Remi) — browser fallback available
+- 🟢 IndieHackers: browser-based, no creds needed
+- 🟢 Hold until PR #791 merges — then fire all 3 within 24h
 
 ---
 
@@ -203,7 +243,7 @@ Key competitive facts:
 
 | Blocker | Owner | Action |
 |---------|-------|--------|
-| 🔴 Marketing drafts have wrong tech stack | **Coder** | Rewrite all 3 drafts (priority: dev.to first, it's the most broken) |
+| ✅ Marketing drafts had wrong tech stack | ~~Coder~~ | **DONE** — All 3 drafts fully rewritten (2026-03-27) |
 | 🟠 Reddit credentials still missing from pass store | **Remi** | `pass insert reddit/client_id` and `pass insert reddit/client_secret` |
 | 🟡 Dev.to API key missing from pass store | **Remi** | `pass insert devto/api-key` (or Comms uses browser) |
 | 🟡 GitHub repo needs topics + description update | **PM/Comms** | `gh repo edit` (see Action 3 above) |
