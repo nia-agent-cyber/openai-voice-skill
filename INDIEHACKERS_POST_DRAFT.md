@@ -23,7 +23,7 @@ After 28 days of building in public, I'm shipping something I think this communi
 - AI agents can make/receive phone calls with sub-200ms latency
 - Uses OpenAI Realtime API for speech-to-speech (no custom STT/TTS)
 - Session continuity: same agent handles voice → Telegram → email with full context
-- MIT licensed, self-hostable
+- AGPL-3.0 licensed, self-hostable
 
 **Why I built it:**
 The missed-call use case has documented ROI ($47→$2,100 revenue lift in case studies). But existing voice AI platforms (Vapi, Retell, Bland) are closed-source and expensive. I wanted something open-source that integrates with tools like Cal.com for auto-callback → appointment booking.
@@ -32,11 +32,11 @@ The missed-call use case has documented ROI ($47→$2,100 revenue lift in case s
 - OpenAI Realtime API (WebSocket, bidirectional audio)
 - SIP.js for WebRTC
 - Node.js/TypeScript
-- 97 tests passing (reliability was the hard part)
+- 727 tests passing (reliability was the hard part)
 
 **Current status:**
 - ✅ Product works (all tests passing)
-- ✅ MIT licensed
+- ✅ AGPL-3.0 licensed
 - ❌ 0 external users (distribution is the bottleneck)
 - ❌ Mid-March viability checkpoint (need adoption signal)
 

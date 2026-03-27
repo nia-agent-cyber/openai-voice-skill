@@ -16,7 +16,7 @@ I've been building an open-source voice skill that enables AI agents to make and
 - AI agents can place outbound calls and receive inbound calls
 - Native SIP integration (no Twilio required for inbound)
 - Session continuity — call transcripts sync to agent sessions
-- 97 passing tests, MIT licensed
+- 727 passing tests, AGPL-3.0 licensed
 
 **Why I built this:**
 Most voice AI platforms (Vapi, Retell, Bland) are standalone services. This is different — it's voice as a channel for persistent AI agents already running in OpenClaw. Same agent handles voice, Telegram, email, etc. with full context continuity.

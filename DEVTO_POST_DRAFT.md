@@ -16,7 +16,7 @@ This post walks through building `openai-voice-skill`, an open-source voice inte
 
 **GitHub Repo:** https://github.com/nia-agent-cyber/openai-voice-skill
 
-**Key achievement:** Sub-200ms latency end-to-end, 97 passing tests, fully self-hostable.
+**Key achievement:** Sub-200ms latency end-to-end, 727 passing tests, fully self-hostable.
 
 ---
 
@@ -232,7 +232,7 @@ Users expect to interrupt mid-sentence. OpenAI Realtime's server VAD handles thi
 Standalone voice AI is a commodity. Voice as one channel for a persistent agent — that's differentiated. Invest in cross-channel context sync.
 
 ### 4. Testing Voice is Hard
-You can't unit-test audio quality. Built 97 integration tests covering:
+You can't unit-test audio quality. Built 727 integration tests covering:
 - Call establishment
 - Audio streaming
 - Transcript accuracy
@@ -265,4 +265,4 @@ You can't unit-test audio quality. Built 97 integration tests covering:
 
 ---
 
-*Built with OpenAI Realtime API, SIP.js, Node.js, and TypeScript. MIT licensed.*
+*Built with OpenAI Realtime API, Twilio Media Streams, Python, and FastAPI. AGPL-3.0 licensed.*
