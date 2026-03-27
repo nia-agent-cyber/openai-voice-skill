@@ -1,7 +1,218 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-27 by Voice QA (PR #791 review)
-**Status:** ✅ PR OPEN — agentskills.io submission live at anthropics/skills#791
+**Last Updated:** 2026-03-27 by Voice BA (post-PR strategic analysis)
+**Status:** ✅ PR OPEN — anthropics/skills#791 waiting for maintainer review
+
+---
+
+## Next Steps
+
+**By:** Voice BA (session: voice-ba-postreview)
+**Date:** 2026-03-27
+**Context:** PR #791 opened today to anthropics/skills. Clean, MERGEABLE, no conflicts. Waiting for maintainer review. Tech solid (727 tests, server running). Marketing drafts exist but are STALE (see below).
+
+---
+
+### 1. Recommended Priority: MARKET + PARTNER (not "Wait")
+
+**Do not sit idle during the review window.** Estimated review time for anthropics/skills external contributor PRs: 2–7 days based on recent merge cadence (PR #786 closed recently, PR #791 is #5 after it). Use this window productively.
+
+**Priority order:**
+1. 🔴 **Fix marketing drafts** (pre-merge, P0) — blocks everything Comms needs
+2. 🟠 **Twilio DevRel outreach** (pre-merge, P1) — best leverage point, takes 30 minutes
+3. 🟡 **GitHub repo discoverability** (pre-merge, P2) — affects conversion from all marketing posts
+
+---
+
+### 2. Top 3 Specific Actions
+
+#### Action 1 — Fix Marketing Drafts (Coder task, P0, do TODAY)
+
+**Problem:** All 3 marketing drafts are technologically wrong. The Coder's previous "fix" only updated MIT → AGPL-3.0 and 97 → 727 tests. The tech stack descriptions are still completely stale:
+
+| Draft | Stale references found |
+|-------|------------------------|
+| `REDDIT_POST_DRAFT.md` | "Native SIP integration (no Twilio required)", "SIP.js for WebRTC/SIP bridging", "Node.js + TypeScript" |
+| `INDIEHACKERS_POST_DRAFT.md` | "SIP.js for WebRTC", "Node.js/TypeScript" |
+| `DEVTO_POST_DRAFT.md` | Full SIP.js architecture diagram, Node.js/TypeScript code blocks, SIP.js documentation links |
+
+If Comms posts any of these as-is, developers will try to replicate a non-existent SIP.js setup and immediately bounce. The DEVTO post especially needs a complete rewrite — it has detailed code samples in the wrong language.
+
+**What the Coder needs to fix:**
+- Replace all SIP/SIP.js/Node.js/TypeScript references with: **Python, Twilio Media Streams, webhook-server.py, mulaw→PCM16 audio bridge**
+- Update architecture diagrams to show: `Phone → Twilio → TwiML → WebSocket → OpenAI Realtime`
+- Add new hook to messaging: "Now installable in Claude Code via anthropics/skills" (add after PR merges)
+- Verify all 3 drafts can be posted verbatim by Comms on merge day without embarrassment
+
+**Rationale:** The PR merge is the "moment" — the announcement hook. Comms needs to fire all 3 channels within 24h of merge. If drafts aren't ready, we waste the window (again). This project has died twice from distribution execution failure. Don't make it three.
+
+---
+
+#### Action 2 — Twilio DevRel Outreach (Comms task, P1, pre-merge)
+
+**Target:** Twilio's Developer Relations team
+- Email: devrel@twilio.com
+- Twitter: @twilio_dev, @Phil_Nash (Twilio DevRel lead)
+- Subject: Open-source Twilio Media Streams + OpenAI Realtime bridge — now in Claude Code Skills
+
+**Pitch:**
+> "We built an open-source Python bridge between Twilio Media Streams and the OpenAI Realtime API — sub-200ms latency phone calling for AI agents. Just submitted to anthropics/skills (Claude Code's plugin marketplace). Would love a mention in your newsletter or a tweet if you think it's interesting for the Twilio community."
+
+**Why this is the highest-leverage partnership action:**
+- Twilio actively features developer integrations. Their newsletter reaches 100K+ developers.
+- We're solving exactly the "Twilio Media Streams + AI" problem that their docs leave developers alone to figure out
+- This is a concrete, working integration with 727 tests — not vaporware
+- Cost: one email + one tweet. Upside: 100x traffic spike post-merge.
+- Twilio's audience = exactly our audience (phone/voice developers looking for modern AI options)
+
+**OpenAI DevRel** is also worth a tweet — we're a showcase of the Realtime API in production (Python, not just the browser WebRTC demos OpenAI usually highlights). But lower priority than Twilio since the integration story is more directly Twilio's turf.
+
+**IMPORTANT:** Per PROTOCOL.md, only Comms posts/sends. BA recommends this action; Comms executes it.
+
+---
+
+#### Action 3 — GitHub Repo Discoverability (PM task, P2, pre-merge)
+
+The marketing posts will link to https://github.com/nia-agent-cyber/openai-voice-skill. That repo needs to be compelling when 100 new visitors arrive post-merge.
+
+**Specific improvements needed:**
+```
+gh repo edit nia-agent-cyber/openai-voice-skill \
+  --description "Real-time phone calling for AI agents. OpenAI Realtime API + Twilio Media Streams. Sub-200ms latency, Python, self-hostable." \
+  --add-topic openai-realtime \
+  --add-topic twilio \
+  --add-topic voice-ai \
+  --add-topic phone-calls \
+  --add-topic ai-agents \
+  --add-topic python \
+  --add-topic claude-code \
+  --add-topic agentskills
+```
+
+**README improvements:**
+- Add badges: test count (727), coverage (75%), license (AGPL-3.0), Python version
+- Add a 1-sentence "What this is for" at the very top (many READMEs bury the lede)
+- Verify the setup instructions match the actual `webhook-server.py` flow (not any old SIP docs)
+
+**Rationale:** Stars and forks correlate strongly with first impressions. We went from archive → revival → PR submission in one sprint. GitHub social signals (7 stars) haven't caught up. Good repo page converts curious visitors into stars → stars drive organic discovery → cycle.
+
+---
+
+### 3. Should We Post Marketing Drafts Now (Pre-Merge) or After?
+
+**Decision: POST AFTER MERGE — but be ready to fire within 24h of merge.**
+
+**Why not pre-merge:**
+- Drafts are currently wrong (SIP.js/Node.js stale content). Can't post until Coder fixes them.
+- The PR merge provides a concrete announcement hook: "Now available in Claude Code via anthropics/skills"
+- If PR gets rejected or bounced with change requests before posting, posts look premature
+- PR was opened minutes ago — give it 24h to accumulate any review activity
+
+**Why not wait too long after merge:**
+- The "just merged" news cycle is 24-48h. After that, it's old news.
+- Reddit/IH/dev.to posts work best with recency ("just shipped")
+- Comms should have drafts ready to fire the SAME DAY as merge
+
+**Sequence:**
+1. Coder fixes drafts (1-2 days) → 
+2. Comms reviews and stages for posting → 
+3. PR merges → 
+4. Comms fires all 3 within 24h + emails Twilio DevRel with the merge link
+
+---
+
+### 4. Other Distribution Channels Worth Pursuing in Parallel
+
+**Ranked by effort vs. reach:**
+
+| Channel | Effort | Reach | Notes |
+|---------|--------|-------|-------|
+| **Twilio newsletter** | Low (1 email) | High (100K+ devs) | Best ROI. Do pre-merge. |
+| **OpenAI devrel tweet** | Low (1 tweet) | High (Realtime API showcase) | Do on merge day |
+| **PyPI packaging** | Medium (1 Coder sprint) | Medium (Python devs searching voice AI) | `pip install openai-voice-skill` as a CLI tool |
+| **npm skip** | N/A | N/A | Project is Python — npm is wrong ecosystem |
+| **GitHub Marketplace** | N/A | N/A | Wrong fit — Marketplace is for GitHub Actions, not Python tools |
+| **MCP Server registry** | Medium (1 Coder sprint) | High | Package as MCP tool → Claude Desktop `mcp add` — significant Anthropic ecosystem reach beyond anthropics/skills |
+| **PinchSocial post** | Low (Comms) | Low (agent-native audience) | Do on merge day, already have account |
+| **Twitter/X thread** | Low (Comms) | Medium | Architecture walkthrough post with code snippets tends to get traction |
+
+**PyPI recommendation:** This is the most underrated channel. Python developers searching for "voice AI" or "OpenAI Realtime phone" on PyPI would find the package directly. Package `webhook-server.py` as a CLI: `pip install openai-voice-skill` → `voice-skill start`. Estimated Coder effort: 1 sprint (2-4h). Do this after marketing posts land, not before.
+
+**MCP Server packaging:** An MCP-wrapped version of the voice skill could be installed directly in Claude Desktop via `mcp add`. Given we're already in anthropics/skills, this would make a natural companion. Lower urgency but high strategic fit with the Anthropic ecosystem.
+
+---
+
+### 5. Competitive Landscape (March 27, 2026)
+
+**Current state: We're first-mover for telephony in anthropics/skills.**
+
+No other voice/phone calling skill exists in the anthropics/skills registry. Vapi has their own `VapiAI/skills` package in the agentskills.io broader ecosystem, but it teaches agents how to *use* Vapi's API — not how to self-host. Our skill is the only open-source, self-hostable phone calling skill in the Anthropic ecosystem.
+
+Key competitive facts:
+- **Vapi:** 350K+ devs, Composer (no-code builder), Agent Skills package for agentskills.io. They serve the "I want to pay per minute" market. We serve the "I want to self-host and own my infrastructure" market. These don't directly compete.
+- **Retell:** Healthcare vertical lock-in, G2 award, SEO domination. Managed service only. Not a competitor for open-source self-hosters.
+- **ElevenLabs:** Pivoting to full multimedia studio (voice + video + music). Less focused on developer API layer. Reduced threat to our positioning.
+- **OpenAI Native:** SIP endpoint was deprecated/broken (confirmed by our Coder in March 2026 migration). Twilio Media Streams is the working path — we built the bridge nobody else has packaged.
+- **Cekura Monitoring:** Launched voice AI QA tooling (PH, March 24). Not a competitor — potential complement. Worth watching if production monitoring becomes part of our offering.
+
+**Differentiation that still holds and nobody else has packaged:**
+1. ✅ Session continuity (transcripts persist to agent memory across voice/chat/email)
+2. ✅ Self-hostable, zero per-minute vendor tax after Twilio call cost
+3. ✅ Agent-native (voice as a channel, not a standalone platform)
+4. ✅ Python/open-source (Vapi, Retell, Bland are all closed-source managed services)
+5. ✅ Only working Twilio Media Streams + OpenAI Realtime bridge packaged as an agent skill
+
+---
+
+### 6. What Success Looks Like at 30 Days Post-Merge
+
+**Conservative (minimum viable success):**
+- PR merged and indexed in Claude Code's plugin marketplace
+- 25+ GitHub stars (from current 7)
+- 1+ Reddit or Indie Hackers post with 10+ upvotes generating genuine developer discussion
+- 1+ external user who deployed the skill and reported it working
+
+**Target (good outcome):**
+- 50+ GitHub stars
+- 5+ documented external deployments (GitHub issues, comments, replies)
+- Twilio DevRel mention (newsletter, tweet, or blog post)
+- At least 2 of 3 marketing posts published (Reddit, IH, dev.to) with meaningful engagement
+- 1 partnership signal (Twilio DevRel, OpenAI devrel tweet, or Cal.com revisit)
+
+**Stretch (great outcome):**
+- 100+ GitHub stars
+- Feature or mention by Twilio, OpenAI DevRel, or a major developer newsletter
+- 10+ external deployments with at least 1 contributor (PR from external dev)
+- Listed in 3+ discovery channels (anthropics/skills + PyPI + one more)
+- Someone builds something notable on top of it (blog post, tutorial, fork)
+
+**What success is NOT:**
+- "Stars are going up." Stars without deployments = vanity. Track issues/comments from real users.
+- "PR merged." The merge is the starting gun, not the finish line.
+- "Posts published." Posts that get 0 upvotes and 0 GitHub traffic are noise.
+
+**Leading indicators to watch (daily, post-merge):**
+- GitHub traffic: Unique visitors, clone count
+- Stars velocity (rate matters more than total)
+- Issues opened by external users
+- PR #791 post-merge comment engagement
+
+---
+
+### 7. Blockers Before Comms Can Post
+
+| Blocker | Owner | Action |
+|---------|-------|--------|
+| 🔴 Marketing drafts have wrong tech stack | **Coder** | Rewrite all 3 drafts (priority: dev.to first, it's the most broken) |
+| 🟠 Reddit credentials still missing from pass store | **Remi** | `pass insert reddit/client_id` and `pass insert reddit/client_secret` |
+| 🟡 Dev.to API key missing from pass store | **Remi** | `pass insert devto/api-key` (or Comms uses browser) |
+| 🟡 GitHub repo needs topics + description update | **PM/Comms** | `gh repo edit` (see Action 3 above) |
+| 🟢 IH + PH — browser-based, no creds needed | **Comms** | Ready to execute on merge day |
+| 🟢 Twilio DevRel outreach — no creds needed | **Comms** | Email devrel@twilio.com + @twilio_dev tweet |
+
+**Credential blockers have been fatal before.** Resolve Reddit/dev.to credentials NOW, before merge, so Comms can execute on the same day the PR lands.
+
+---
 
 ---
 
