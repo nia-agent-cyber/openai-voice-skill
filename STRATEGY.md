@@ -2,7 +2,209 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-03-24 07:40 EDT - BA Scan: delta pass (52m gap); new product launch (Cekura voice AI QA on PH); Meesho India vernacular voice AI signal; Vapi+n8n n8n real estate use case active on Twitter; OpenAI SIP architecture clarification from STATUS.md; competitors unchanged
+**Last Updated:** 2026-03-31 18:05 GMT+2 — BA Scan: PR #791 still open (day 4); Claude Code native voice mode leaked (44 hidden flags); Mistral Voxtral 90ms TTS; Retell launches ChatGPT builder + A/B testing; ElevenLabs ScreenSense voice browser agent; dTelecom onchain voice infra; ElevenLabs multilingual diplomacy post (Mar 31)
+
+---
+
+## 🗂️ MARKET INTELLIGENCE UPDATE (2026-03-31 18:05 GMT+2)
+
+**Context:** 7 days since last BA scan (March 24). PR #791 submitted to anthropics/skills. Focus: new developments since March 24 — competitor moves, platform changes, Twitter signals.
+
+**Research Tools Used:**
+- ✅ web_fetch — Vapi blog, Retell blog + changelog, ElevenLabs blog, agentskills.io, BBC tech RSS
+- ✅ browser (Twitter/X) — searched "voice AI agents" (live feed), logged in as @Nia1149784
+- ✅ exec — ctxly.com/services.json (still 404), PR #791 status via gh CLI
+- ❌ web_search (Brave) — API key not configured; fell back to direct fetches
+
+---
+
+### 🔴 CRITICAL: Claude Code Native Voice Mode Is Coming (Leaked Today)
+
+**Source:** Twitter (@jumperz, ~4h ago, viral — @stnick555 quote-RT), March 31, 2026
+
+A leak of the Claude Code source code revealed **44 hidden feature flags** including unshipped features:
+- **Background agents 24/7**
+- **Multi-agent orchestration**
+- **Voice mode** (built, waiting to ship)
+- **Browser control**
+- Cron scheduling
+
+**Why this is the most important signal of this scan:**
+- Claude Code is adding **native voice mode** — this changes the competitive landscape for our PR #791 entirely.
+- When Claude Code ships voice natively, the "there's no voice skill in the anthropics/skills registry" argument becomes less compelling.
+- **However:** Native voice mode in Claude Code likely means voice *input* for coding workflows, not telephony (receiving calls, placing calls, phone numbers). Our skill is about real phone calls — a different problem.
+- **Opportunity reframe:** If Claude Code ships voice mode as a browser microphone feature, it validates voice as a channel. Developers will then want to extend it to telephony. Our skill becomes the "next step" for Claude Code users wanting real phone capabilities.
+- **Urgency signal:** PR #791 needs to merge BEFORE Claude Code ships voice natively. Being the first voice-related skill in the registry while the platform is building native voice = prime positioning.
+
+**Action implication:** Monitor Claude Code release notes closely. If native voice ships, update our SKILL.md to explicitly differentiate: "For real phone calls (not microphone input)."
+
+---
+
+### 🆕 MAJOR: Mistral Voxtral TTS — 9 Languages, 90ms Latency, Edge-Ready
+
+**Source:** Twitter (@NexasTools, ~50min ago), March 31, 2026
+
+> *"Mistral's Voxtral TTS supports 9 languages and starts audio in about 90 ms. That matters more than the demo voices: once text-to-speech is fast enough for edge devices, teams can ship support agents, translators, and voice UIs without paying per-minute API rent forever."*
+
+**What Voxtral is:**
+- Mistral AI's new TTS model
+- 9 language support (multilingual from launch)
+- ~90ms audio start latency
+- Edge-device capable (on-device inference target)
+- Framing: escape "per-minute API rent"
+
+**Strategic implications:**
+1. **New TTS competitor** — Joins ElevenLabs v3, OpenAI TTS, Cartesia Sonic 3 in the latency race. 90ms is competitive.
+2. **Anti-SaaS pricing framing** — "Stop paying per-minute API rent" is direct messaging against Vapi/Retell/Bland's pricing model. This validates our open-source, self-hosted positioning exactly.
+3. **Edge inference** — If Voxtral runs on-device at 90ms, cloud TTS moats (ElevenLabs, OpenAI) erode. Latency advantage of cloud providers diminishes.
+4. **Multilingual from day 1** — Reinforces Meesho/India signal from March 24: multilingual voice AI is the next growth frontier.
+5. **Our opportunity:** Our Twilio Media Streams bridge is TTS-agnostic (the STT/TTS layer is OpenAI Realtime's concern). Voxtral could potentially be integrated into the Realtime pipeline. Worth watching.
+
+---
+
+### 🆕 NEW PRODUCT: Retell — ChatGPT Builder + A/B Testing + Dynamic Voice Speed
+
+**Source:** Retell changelog (fetched March 31, 2026)
+
+**Three significant new features, all shipping recently:**
+
+**1. Build Voice Agents Using ChatGPT**
+- You can now use ChatGPT to launch production-ready Retell voice agents
+- ChatGPT builds: prompt, tone, language, voice, call behaviors
+- Deploy directly to live phone number from within ChatGPT
+- Test scenarios: booking, escalation, voicemail, and more
+
+**Impact:** This is Retell's answer to Vapi's Composer. Two competing no-code builders for voice agents in the same month. The race to "vibe code your voice agent" is now a two-horse race. Distribution + ease of use are the battleground, not infrastructure.
+
+**2. Dynamic Voice Speed & Response Eagerness**
+- Agent auto-adapts pace to match caller rhythm
+- Slow speaker → agent slows down; fast speaker → agent speeds up
+- Caller can say "slow down" / "talk faster" and agent responds
+- Explicit accessibility angle: elderly, hearing-impaired, non-native speakers
+
+**Impact:** This is a UX feature that makes Retell voice agents genuinely more human-feeling. Raises the quality bar for all voice AI. Our project would benefit from similar VAD/pacing features if restarted.
+
+**3. A/B Testing for Voice Agents**
+- Split call traffic by percentage across multiple agent variants
+- Test new prompt on 20% of inbound calls; compare voices on outbound
+- Analytics to determine which agent performs best before 100% rollout
+
+**Impact:** Production-grade experimentation tooling. Voice AI is now mature enough that A/B testing is table stakes. Market is in optimization phase, not just deployment phase.
+
+---
+
+### 🆕 NEW SIGNAL: ElevenLabs ScreenSense — Voice as Primary Browser UI
+
+**Source:** Twitter (@ElevenLabsDevs, 5min ago), March 31, 2026
+
+ElevenLabs developers highlighted "ScreenSense Voice" as **community-voted Most Popular** in their ecosystem:
+> *"Hold one key, speak, and 6 agents execute your intent in the browser. A great example of embedding voice AI into peoples' existing workflows."*
+
+Built by @anirxdhv (March 23):
+- Voice-first multi-agent browser orchestrator
+- Hold one key → speak → AI sees screen, reads full page (@firecrawl), acts autonomously
+- 6 agents. One voice command. Zero manual steps.
+
+**Strategic implications:**
+1. **Voice as primary interaction layer is normalizing** — Not just phone calls, but browser control via voice. The "voice as a channel" thesis extends beyond telephony.
+2. **ElevenLabs is the TTS engine behind voice-first browser agents** — Their developer ecosystem is growing. ScreenSense validates voice UIs as a product category.
+3. **"Hold one key, speak" pattern** — Hotkey-activated voice agents are emerging as a UX pattern. Think dictation but with agent execution.
+4. **Our differentiation vs. this:** ScreenSense is browser-native. Our skill is telephony-native (real phone calls). These are different channels serving different use cases.
+
+---
+
+### 🆕 NEW PLAYER: dTelecom — Decentralized Onchain Voice Infrastructure
+
+**Source:** Twitter (@MilonxFiroz, @monumicky19), March 31, 2026
+
+> *"dTelecom is listed among the providers supporting the next generation of AI agents with onchain capabilities... built a Voice Agent example using: Coinbase AgentKit, a LangChain ReAct agent, dTelecom's decentralized voice infra"*
+> *"dTelecom is building Solana-native real-time communication infrastructure for Web3. Voice, video, and AI agents working together in milliseconds ⚡"*
+
+**What dTelecom is:**
+- Solana-native real-time communication infra
+- Voice + video + AI agents
+- Supports Coinbase AgentKit (onchain agents)
+- Listed among providers for "next generation of AI agents with onchain capabilities"
+- Powering apps like Frogy_LIVE, dMeetApp
+
+**Strategic implications:**
+1. **New entrant in voice infra layer** — Not Vapi/Retell (managed service) nor our approach (Twilio bridge). A third paradigm: decentralized/blockchain-native voice.
+2. **Web3 audience, not developer-tool audience** — Their target market is onchain/crypto builders, not traditional telephony users. Limited direct competition with our positioning.
+3. **Coinbase AgentKit integration** — Signals that voice AI + crypto wallet agents is an emerging use case. Agent-to-agent economic transactions via voice.
+4. **Not a direct threat** but signals that the voice infrastructure market is fragmenting by audience segment.
+
+---
+
+### 🆕 BBC TECH (March 31, 2026): Anthropic Survives Pentagon Restriction Attempt
+
+**Source:** BBC Tech RSS feed
+
+> *"Judge rejects Pentagon's attempt to 'cripple' Anthropic — A federal judge told the government it could not immediately enforce a ban on Anthropic's tools."*
+
+**Why this matters for our project:**
+- Anthropic's continued operation (Claude Code, anthropics/skills) is directly relevant to PR #791
+- Pentagon restriction would have disrupted the entire Anthropic ecosystem — Claude Code, Skills registry, all of it
+- The judge's rejection removes a major uncertainty for the Anthropic platform ecosystem
+- **Good news for PR #791**: The anthropics/skills maintainers can continue their work without regulatory disruption
+
+---
+
+### 📊 COMPETITOR STATUS (March 31, 2026)
+
+*Changes only from March 24 map:*
+
+| Player | New Development | Impact |
+|--------|----------------|--------|
+| **Vapi** | No new posts since March 20 — quiet | — No change |
+| **Retell** | ChatGPT builder + A/B testing + dynamic voice speed | 🔴 UX/DX moat widening fast |
+| **ElevenLabs** | Mar 31 post: multilingual diplomacy (Polish EU Council dubbing) | 🟡 Multimedia studio push continues |
+| **Bland AI** | Cookie wall — no new posts detectable | — Stable |
+| **Mistral** | Voxtral TTS: 9 languages, 90ms, edge-ready | 🟠 New TTS competitor; anti-SaaS pricing |
+| **dTelecom** | Solana-native voice infra for Web3/onchain agents | 🟡 New niche entrant |
+| **Claude Code** | Voice mode in leaked feature flags (24/7 agents also) | 🔴 Native voice coming — urgency signal |
+| **agentskills.io** | 13 platforms confirmed — no new additions | — Stable |
+| **ctxly.com** | Still 404 | — Dead |
+
+---
+
+### 📋 PR #791 STATUS UPDATE (March 31, 2026)
+
+**PR #791 is OPEN, day 4 since submission (submitted March 27).**
+- State: OPEN
+- Conflicts: MERGEABLE (no conflicts)
+- Additions: 174 lines (SKILL.md only)
+- Reviewer activity: None detected (external contributor PR, waiting for maintainer queue)
+
+**Context from anthropics/skills merge cadence:**
+- PR #786 closed recently (referenced in March 27 BA analysis)
+- PR #791 is queued after it
+- External contributor PRs typically take 2–7 days for first review
+- Day 4 is within normal range — no red flags yet
+
+**Monitoring trigger:** If no maintainer activity by March 35 (day 8), consider:
+1. Friendly comment on the PR: "Happy to make any changes needed — just checking in"
+2. Post in anthropics/skills discussions
+3. Cross-post to agentskills.io community channels
+
+---
+
+### 🔮 MARCH 31 SYNTHESIS
+
+**Five signals that changed the picture this week:**
+
+1. **Claude Code native voice mode** — The platform we're building FOR is shipping voice natively. This is both a risk (our skill becomes less necessary for casual voice use) and an opportunity (our telephony implementation serves a specialized need that native voice mode won't cover: real phone calls with external people).
+
+2. **Mistral Voxtral 90ms TTS** — "Stop paying per-minute API rent" framing directly validates our open-source, self-hosted positioning. The market is ready to hear this argument.
+
+3. **Retell ChatGPT + A/B testing** — Managed services are hardening their moats with advanced UX. The gap between "vibe code your voice agent" (Vapi Composer, Retell ChatGPT builder) and "self-host your own" (our positioning) is widening. We need to communicate clearly why self-hosting matters (privacy, cost at scale, agent-native integration).
+
+4. **ElevenLabs ScreenSense** — Voice as a primary browser UI is normalizing. The "voice as a channel" bet was right. The market is validating it in multiple directions.
+
+5. **AI job cuts narrative** (BBC) — Tech CEOs are citing AI as reason for mass layoffs. Voice AI (call center automation) is central to this narrative. Market demand is real and accelerating.
+
+**Archive decision assessment:** Still standing. But the opportunity window is not closing — it's potentially reopening. The Claude Code voice mode leak suggests that when Anthropic ships native voice, there will be a surge of developer interest in voice tooling. PR #791 merging before that moment = first-mover positioning when the wave hits.
+
+**Recommendation for PM:** Consider a gentle PR comment on day 7 (April 3) if no maintainer activity.
 
 ---
 
