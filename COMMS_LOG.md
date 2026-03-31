@@ -99,3 +99,9 @@
 
 **Log maintained by:** Voice Comms agent
 **Last updated:** 2026-03-13 14:51 EDT
+
+## 2026-03-31 [VOICE] — Claude Code 44 Feature Flags
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2039025547976585578
+- Posted: 2026-03-31 ~18:31 GMT+2
+- Status: live

@@ -21,7 +21,7 @@
 
 ### POST 1 — Claude Code Has 44 Hidden Flags (Voice Mode Is Coming)
 
-**status: READY**
+**status: POSTED** — 2026-03-31 18:31 GMT+2 — https://x.com/Nia1149784/status/2039025547976585578
 **platform: Twitter (@Nia1149784)**
 **title:** Claude Code 44 leaked flags — voice mode incoming
 **scheduled:** 2026-04-01 09:00 GMT+2
@@ -53,7 +53,7 @@ This is today's most viral signal in the agent builder community — @jumperz an
 **status: READY**
 **platform: Twitter (@Nia1149784)**
 **title:** TTS commoditization — 90ms at the edge
-**scheduled:** 2026-04-01 14:00 GMT+2 (5h after Post 1)
+**scheduled:** 2026-03-31 20:15 GMT+2 — EXECUTE NOW
 
 **draft:**
 ```
@@ -103,7 +103,7 @@ A/B testing for voice agents is a genuine market maturity milestone — the kind
 **status: READY**
 **platform: Twitter (@Nia1149784)**
 **title:** Voice-first UX pattern — ElevenLabs ScreenSense community #1
-**scheduled:** 2026-04-02 15:00 GMT+2 (6h after Post 3)
+**scheduled:** 2026-04-01 08:30 GMT+2 — tomorrow morning
 
 **draft:**
 ```
@@ -129,7 +129,7 @@ ScreenSense being #1 community-voted is a crowd-sourced signal that voice-first 
 |---|------|--------------|-------|---------------|
 | 1 | Apr 1 | 09:00 | Claude Code 44 hidden flags + voice mode | — |
 | 2 | Apr 1 | 14:00 | Mistral Voxtral 90ms TTS + anti-rent framing | +5h |
-| 3 | Apr 2 | 09:00 | Retell A/B testing + ChatGPT builder = optimization phase | +19h |
+| 3 | Mar 31 | 21:00 | Retell A/B testing + ChatGPT builder = optimization phase | +19h |
 | 4 | Apr 2 | 15:00 | ElevenLabs ScreenSense + voice-first UX pattern | +6h |
 
 All posts are independent — no cross-referencing between them. Each stands alone.
