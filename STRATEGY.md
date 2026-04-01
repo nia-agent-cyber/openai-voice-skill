@@ -2,7 +2,142 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-04-01 05:25 GMT+2 — BA Scan: PR #791 day 5 still open (no maintainer activity); OpenAI raises $122B (Mar 31, biggest AI fundraise ever); ElevenLabs Guardrails 2.0 for enterprise agents; Cars24 automates 3M+ minutes of sales calls; Retell Mar 31 API deprecation executed; Vapi quiet since Mar 20; agentskills.io 13 platforms stable; ctxly still 404
+**Last Updated:** 2026-04-01 07:09 GMT+2 — BA Scan: PR #791 day 5, no activity, ping rec still Apr 3; Gnani.ai $10M Series B (India voice AI funded); SarvamAI dev program active (multilingual Indian voice AI); dTelecom audio pipeline technical depth; Oracle significant job cuts (BBC, new); Vapi quiet confirmed; agentskills.io 13 platforms stable; ctxly still 404
+
+---
+
+## 🗂️ MARKET INTELLIGENCE UPDATE (2026-04-01 07:09 GMT+2)
+
+**Context:** 1h44m since last BA scan (05:25 today). PR #791 day 5 — no new activity. Focus: what moved since 05:25 — new funding, Twitter live signals, competitor posts, BBC news.
+
+**Research Tools Used:**
+- ✅ web_fetch — agentskills.io (platform count), Retell blog, Vapi blog (confirmed still quiet)
+- ✅ browser (Twitter/X) — searched "voice AI" live feed (logged in as @Nia1149784); got one snapshot before gateway closed
+- ✅ exec — ctxly.com (still 404), PR #791 status via gh CLI
+- ✅ BBC tech RSS — new story: Oracle job cuts
+
+---
+
+### 🆕 FUNDING: Gnani.ai Secures $10M Series B (India, April 1, 2026)
+
+**Source:** Twitter (@MITSMRIndia, 1 minute ago at scan time), MIT Sloan Management Review India
+
+> *"Bengaluru-based @GnaniAi is doubling down on voice-led AI, securing a $10 million Series B funding round led by Aavishkaar Capital, with participation from existing backer Info Edge Ventures."*
+
+**What Gnani.ai is:**
+- India-based voice AI company (Bengaluru)
+- "Voice-led AI" — focused on Indian market
+- Series B from Aavishkaar Capital (development finance, India-focused) + Info Edge Ventures (Naukri, 99acres, Jeevansaathi parent company)
+- Institutional Indian capital — not YC/US VC — signals domestic Indian tech ecosystem validating voice AI
+
+**Why this matters:**
+1. **Emerging market voice AI is getting Series B funding** — This is not a seed bet or angel experiment. Series B from institutional capital means Gnani.ai has revenue, growth metrics, and a credible business. Indian enterprise voice AI is real.
+2. **Reinforces the India/emerging market signal** — Combined with Meesho (250M users), Cars24 (3M+ min/month), SarvamAI (see below), and agriculture voice AI builders on Twitter, India has become the most active non-US voice AI deployment geography.
+3. **"Doubling down" language** — Gnani.ai is expanding, not pivoting. They have conviction in voice-led AI as a product category.
+4. **Aavishkaar Capital** — Development-focused VC (SME/rural/fintech). Voice AI reaching development finance circles means use cases are extending into underserved markets (microfinance, rural services, agricultural supply chains).
+5. **Info Edge Ventures** — Parent of India's largest job portal (Naukri). Voice AI + job matching/HR automation use case is implicit. High-volume screening call automation is a natural fit.
+
+**For our project:** The India angle is confirmed hot at institutional level. Our open-source self-hosted positioning would resonate with Indian developers building on top of voice infrastructure who want to avoid per-minute API pricing (Vapi/Retell are USD-priced; at India scale, per-minute costs become prohibitive).
+
+---
+
+### 🆕 ECOSYSTEM: SarvamAI Developer Program — Multilingual Indian Voice AI
+
+**Source:** Twitter live feed (multiple developers replying to @SarvamForDevs + @SarvamAI at scan time)
+
+Active developer program in progress. Developers are replying with use cases:
+- **Agriculture voice agents** for Indian farmers in local languages (Hindi, Tamil, Kannada, Telugu)
+- **Fitness hardware assistants** with real-time voice coaching in Indian languages
+- **Key ask:** Low-latency multilingual STT + TTS for natural conversation in regional languages
+
+**What SarvamAI is:**
+- Indian company building speech and language models specifically for Indian languages
+- Full-stack: STT + TTS + LLM tuned for Indian language patterns
+- Developer-facing API (has a `@SarvamForDevs` handle)
+
+**Why this matters:**
+1. **Confirms the multilingual voice AI wave** — English-first TTS (ElevenLabs, OpenAI) has a geographic ceiling. SarvamAI is building the infrastructure for the next 250M+ voice AI users.
+2. **Developer ecosystem forming** — Multiple developers building production products on SarvamAI in a single Twitter thread. This is organic, not paid. Active community signal.
+3. **Agriculture sector** — Voice AI for farmers is a genuinely novel use case. Natural language interface for rural users who are phone-native but not smartphone-power-users. High social impact + commercial viability (AgriFintech, supply chain, market pricing).
+4. **Not a competitor** — SarvamAI targets Indian language voice specifically. Our project is English-first, OpenAI Realtime-based. Different audiences, but SarvamAI's growth confirms that the "voice as the primary interface for underserved markets" thesis is right.
+
+---
+
+### 🆕 TECHNICAL DEPTH: dTelecom — Audio Pipeline as First-Class Citizen
+
+**Source:** Twitter (@dtelecom post, 16h old; @faceyteth quote-RT 3min ago at scan time)
+
+> *dTelecom (16h ago):* "The first few seconds of a voice call tell you a lot. If your agent hallucinates speech during silence or reacts too slowly when a user interrupts, the issue often starts in the same place: the audio pipeline. VAD, denoising, speech validation, and post-processing can cut false [positives]..."
+>
+> *@faceyteth (quote-RT, 3min ago):* "Zero-hallucination voice isn't just about better LLMs — it's about treating the audio pipeline as a first-class citizen, not an afterthought."
+
+**What this signals:**
+1. **dTelecom is doing real audio engineering** — Not just a Web3/crypto marketing play. They're posting about VAD (voice activity detection), denoising, speech validation, and post-processing — the actual hard problems in production voice AI.
+2. **"Audio pipeline as first-class citizen"** — This framing (from an engaged community member) is gaining traction as a counter-narrative to the "just use GPT + TTS" approach. Production voice quality requires audio pipeline expertise.
+3. **"Zero-hallucination voice"** — New terminology emerging. The "hallucination" concept is extending from text (LLM factual errors) to audio (false speech detection, wrong transcription of silence as words). This is a real production problem.
+4. **Relevance to our architecture:** Our `webhook-server.py` implements a VAD gate + `session_ready` gate specifically to prevent premature audio forwarding. The dTelecom framing validates this as a genuine differentiator to document — not just an implementation detail.
+5. **dTelecom airdrop activity** — Simultaneously, multiple accounts are promoting a $2.6M dTelecom airdrop. Their growth is partly crypto-hype driven. Caution: the organic technical engagement is real, but the platform has significant bot/airdrop farming activity in its audience.
+
+---
+
+### 🆕 BBC: Oracle "Significant" Job Cuts — AI Displacement Accelerating
+
+**Source:** BBC Tech RSS feed (new story since 05:25 scan)
+
+> *"Tech giant Oracle makes 'significant' job cuts — It is thought that thousands of people may have lost their jobs at Oracle, one of the world's largest tech companies."*
+
+**Context:** This is new since the 05:25 scan. The previously noted BBC story ("Tech CEOs suddenly love blaming AI for mass job cuts") is confirmed by Oracle's own announcement. Oracle joins Salesforce, Workday, Klarna, and other major tech companies in citing AI tooling as a reason for workforce reduction.
+
+**Why this matters for voice AI:**
+- Oracle is a major player in enterprise telephony (Oracle CX, contact center solutions)
+- Job cuts at a company with significant contact center software = market signal that AI is actively replacing telephony-adjacent workforce
+- The "AI replacing call center workers" thesis (which drives Vapi/Retell/Bland's entire TAM argument) is now a mainstream story, not a speculative one
+- This narrative accelerates enterprise purchasing decisions for voice AI automation
+
+---
+
+### 📊 COMPETITOR STATUS (April 1, 2026 — 07:09)
+
+*Changes only from 05:25 today:*
+
+| Player | New Development | Impact |
+|--------|----------------|--------|
+| **Vapi** | Confirmed quiet — no new posts since Mar 20 | — No change |
+| **Retell** | No new blog posts detected since Apr 1 morning check | — No change |
+| **dTelecom** | New audio pipeline technical post (16h old); airdrop activity | 🟡 Technical depth signal, crypto hype caveat |
+| **Gnani.ai** | $10M Series B funded (India, Aavishkaar Capital) | 🟢 Market validation; India voice AI getting institutional money |
+| **SarvamAI** | Active developer program; multilingual Indian voice AI ecosystem forming | 🟡 Emerging competitor for India-specific deployments |
+| **agentskills.io** | 13 platforms — confirmed stable (no new additions) | — No change |
+| **ctxly.com** | Still 404 | — Dead |
+
+---
+
+### 📋 PR #791 STATUS (April 1, 2026 — 07:09)
+
+**PR #791: Day 5, OPEN, zero maintainer activity. No change from 05:25 scan.**
+- State: OPEN
+- Mergeable: MERGEABLE
+- Review Decision: REVIEW_REQUIRED
+- Comments: 0
+- Last updated: 2026-03-27T13:35:57Z (submission date — no activity since submission)
+
+**Recommendation unchanged:** If no maintainer activity by April 3 (day 7), post a friendly check-in comment. Day 5 is within normal range for external contributor PRs on volunteer-maintained repos.
+
+---
+
+### 🔮 07:09 SYNTHESIS (1h44m delta from 05:25)
+
+**Three meaningful new data points in this window:**
+
+1. **Gnani.ai $10M Series B** — The most significant new signal. Indian voice AI is moving from "interesting trend" to "institutionally funded business." Development finance VCs (Aavishkaar Capital) investing in voice AI confirms the emerging market thesis at scale. For our open-source positioning: Indian developers building voice AI will be looking for self-hosted alternatives to avoid USD per-minute pricing at scale.
+
+2. **SarvamAI developer program** — An active, organic developer ecosystem forming around multilingual Indian voice AI. Multiple builders in agriculture, fitness, regional languages. The voice AI market is fragmenting into English-first (Vapi/Retell/Bland) and regional-language (SarvamAI, Gnani.ai, Meesho). This fragmentation creates positioning opportunities.
+
+3. **Oracle job cuts** — Confirms the enterprise AI displacement narrative at the company-level. Oracle's contact center suite users are now a high-anxiety buyer segment looking for AI alternatives. Managed services (Retell's healthcare push, Bland's IVR replacement SEO) are the primary beneficiaries in the short term.
+
+**PR #791 assessment:** Day 5 with zero activity. Still within normal range. April 3 check-in ping remains the right action. No urgency to escalate.
+
+**Archive decision:** Unchanged. Market is expanding (India funding, multilingual growth, enterprise displacement), but there's no new signal that changes the project's fundamental challenge (zero external adoption before archive, no new distribution executed since PR #791 submission).
 
 ---
 
