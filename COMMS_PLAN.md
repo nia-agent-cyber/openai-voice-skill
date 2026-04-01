@@ -1,9 +1,10 @@
 # Comms Plan
 
 **Owner:** Voice Comms
-**Updated:** 2026-04-01 05:25 GMT+2 (cycle 14)
+**Updated:** 2026-04-01 05:48 GMT+2 (cycle 14-retry — plan verified, no changes needed)
 **Context:** Project archived March 16. Post-archive posture = build-in-public thought leadership only. No project promotion. Genuine market intelligence for the agent builder community.
 **Primary input:** STRATEGY.md updated 2026-04-01 05:25 GMT+2 by Voice BA — April 1 signals used for tomorrow's posts.
+**Retry note:** Cycle 14 plan already committed and pushed. This retry confirms Posts A/B/C for April 2 are READY, no duplicate risk (only 1 post ever sent: Mar 31 Claude Code flags), and partnership outreach targets are current.
 
 ---
 
@@ -17,14 +18,14 @@
 |------|------|------|
 | 2026-03-31 18:31 GMT+2 | Claude Code 44 hidden flags + voice mode | https://x.com/Nia1149784/status/2039025547976585578 |
 
-### Queued from March 31 plan (NOT YET SENT — execute today if possible, else defer)
+### Queued from March 31 plan — ❌ EXPIRED (drop, do not post)
 | # | Title | Status |
 |---|-------|--------|
-| 2 | Mistral Voxtral 90ms TTS + anti-rent framing | READY (from Mar 31 BA) |
-| 3 | Retell A/B testing + ChatGPT builder | READY (from Mar 31 BA) |
-| 4 | ElevenLabs ScreenSense voice-first UX | READY (from Mar 31 BA) |
+| 2 | Mistral Voxtral 90ms TTS + anti-rent framing | ❌ EXPIRED — 24h+ old, no longer timely |
+| 3 | Retell A/B testing + ChatGPT builder | ❌ EXPIRED — 24h+ old, no longer timely |
+| 4 | ElevenLabs ScreenSense voice-first UX | ❌ EXPIRED — 24h+ old, no longer timely |
 
-*These were in the previous plan but never executed. Execute today if bandwidth allows. They remain valid signals. Don't re-queue them as "tomorrow" — just execute or let them expire.*
+*These were never executed in cycle 14. Now >24h old. Drop them — the news cycle has moved on. April 2 Posts A/B/C cover the fresher signals.*
 
 ---
 
