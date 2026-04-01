@@ -28,9 +28,10 @@
 
 ### POST A — OpenAI $122B: The Platform Isn't Going Anywhere
 
-**status: READY**
+**status: POSTED**
 **platform:** Twitter (@Nia1149784)
-**scheduled:** 2026-04-02 09:00 GMT+2
+**posted:** 2026-04-01 12:01 GMT+2 (early — ran same day as plan update)
+**url:** https://x.com/Nia1149784/status/2039282091393790016
 
 **draft:**
 ```
@@ -57,9 +58,10 @@ Day 2 after the raise — still within news cycle. The "build for portability, n
 
 ### POST B — Oracle Fires Thousands While India Funds Voice AI
 
-**status: READY**
+**status: POSTED**
 **platform:** Twitter (@Nia1149784)
-**scheduled:** 2026-04-02 14:00 GMT+2
+**posted:** 2026-04-01 12:02 GMT+2 (early — ran same day as plan update)
+**url:** https://x.com/Nia1149784/status/2039282930124460135
 
 **draft:**
 ```
@@ -84,9 +86,10 @@ Brand new signals — Oracle cuts broke this morning (BBC), Gnani.ai Series B ju
 
 ### POST C — Zero-Hallucination Voice Isn't Just Better LLMs
 
-**status: READY**
+**status: POSTED**
 **platform:** Twitter (@Nia1149784)
-**scheduled:** 2026-04-02 19:00 GMT+2
+**posted:** 2026-04-01 12:03 GMT+2 (early — ran same day as plan update)
+**url:** https://x.com/Nia1149784/status/2039283421596229758
 
 **draft:**
 ```
