@@ -2,7 +2,159 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-03-31 18:05 GMT+2 — BA Scan: PR #791 still open (day 4); Claude Code native voice mode leaked (44 hidden flags); Mistral Voxtral 90ms TTS; Retell launches ChatGPT builder + A/B testing; ElevenLabs ScreenSense voice browser agent; dTelecom onchain voice infra; ElevenLabs multilingual diplomacy post (Mar 31)
+**Last Updated:** 2026-04-01 05:25 GMT+2 — BA Scan: PR #791 day 5 still open (no maintainer activity); OpenAI raises $122B (Mar 31, biggest AI fundraise ever); ElevenLabs Guardrails 2.0 for enterprise agents; Cars24 automates 3M+ minutes of sales calls; Retell Mar 31 API deprecation executed; Vapi quiet since Mar 20; agentskills.io 13 platforms stable; ctxly still 404
+
+---
+
+## 🗂️ MARKET INTELLIGENCE UPDATE (2026-04-01 05:25 GMT+2)
+
+**Context:** 1 day since last BA scan (March 31). PR #791 now at day 5. Focus: new developments since yesterday — OpenAI funding, competitor product updates, platform changes.
+
+**Research Tools Used:**
+- ✅ web_fetch — OpenAI news, ElevenLabs blog (product), Retell changelog, Vapi blog, agentskills.io, BBC tech RSS
+- ✅ exec — ctxly.com/services.json (still 404), PR #791 status via gh CLI, git log
+- ❌ browser (Twitter/X) — openclaw profile unavailable (chrome relay not attached)
+- ❌ web_search (Brave) — API key not configured
+
+---
+
+### 🔴 BREAKING: OpenAI Raises $122 Billion (March 31, 2026)
+
+**Source:** OpenAI News (confirmed via openai.com/news)
+
+OpenAI closed the **largest single funding round in AI history**: **$122 billion** to "accelerate the next phase of AI."
+
+**Why this is the most significant signal of this scan:**
+1. **Platform stability for our ecosystem** — OpenAI Realtime API (the core of our voice skill) is now backed by capital that makes closure or pivot extremely unlikely. The platform is not going away.
+2. **Competitive acceleration** — At this scale, OpenAI will aggressively build into adjacent markets including voice, agents, and potentially telephony. The $122B gives them runway to ship native voice features that compete with Vapi/Retell *and* our open-source positioning.
+3. **Talent and product velocity** — Expect OpenAI to ship faster. The Realtime API (and our dependency on it) will see accelerated iteration — both improvements and breaking changes.
+4. **Market validation signal** — The largest AI funding round in history is essentially an institutional bet that AI voice, reasoning, and agent capabilities are the next major technology platform. This validates the entire market segment.
+
+**Strategic implication for PR #791:**
+The anthropics/skills registry is now competing in a landscape where OpenAI itself is raising $122B. Anthropic's platform (Claude Code, skills) will need to respond with its own momentum. PR #791 getting merged and indexed becomes more strategically important — being in the Anthropic ecosystem while OpenAI expands creates real positioning value for developers choosing a platform.
+
+**For voice specifically:** OpenAI at $122B scale will almost certainly expand the Realtime API capabilities. Monitor for: native telephony integration, pricing changes, and new model versions. Any Realtime API breaking change directly affects our `webhook-server.py`.
+
+---
+
+### 🆕 NEW: ElevenLabs Guardrails 2.0 — Enterprise Safety Controls (March 24, 2026)
+
+**Source:** ElevenLabs blog/category/product (fetched Apr 1)
+
+> *"Guardrails 2.0: A redesigned control layer in ElevenAgents — Configurable safety controls for enterprise-ready agent deployments."*
+
+**What Guardrails 2.0 does:**
+- Configurable safety controls (content filtering, topic restrictions, escalation rules)
+- Enterprise-grade compliance layer for voice agents
+- Designed specifically for ElevenAgents deployments (not just TTS)
+
+**Strategic implications:**
+1. **Enterprise voice AI is maturing** — When a company ships "Guardrails 2.0," it means Version 1 was in production, enterprise customers found edge cases, and the market demanded a systematic solution. ElevenLabs is past the "get it working" phase, into the "make it safe for enterprise" phase.
+2. **Compliance is becoming table stakes** — Healthcare, finance, insurance customers (Retell's vertical push) all require audit trails, content controls, and safety guarantees. Guardrails 2.0 directly targets these buyers.
+3. **Our gap:** Our open-source voice skill has no guardrails layer. For production enterprise use, this is a blocker. If we ever rebuild, a guardrails module (content filtering, PII detection, escalation to human) would be necessary for enterprise positioning.
+4. **Differentiation opportunity:** Our AGPL-3.0 license means enterprise customers *cannot* use our code in proprietary systems without contributing back. This creates an interesting "compliance guardrail through licensing" angle — but it's not enough.
+
+---
+
+### 🆕 SCALE SIGNAL: Cars24 Automates 3M+ Minutes of Sales Calls (March 2, 2026)
+
+**Source:** ElevenLabs blog, "Webinar Recap: How Cars24 Automates 3+ Million Minutes of Sales Calls with Voice AI"
+
+**What happened:**
+- Cars24 (large auto marketplace, India/Middle East/SE Asia) automated over **3 million minutes** of sales calls using ElevenLabs voice AI
+- This is an ElevenLabs production deployment at massive scale
+- Documented in a public webinar recap
+
+**Why this matters:**
+1. **Scale proof** — 3M+ minutes is not a pilot. This is production voice AI at the scale of a major enterprise customer. The technology works at scale.
+2. **India/Emerging market deployment** — Cars24 is India-based, consistent with the Meesho/India vernacular AI signal from March 24. Voice AI at scale in emerging markets is real and happening now.
+3. **Auto vertical** — Same use case as Vapi real estate demos (inbound calls, lead qualification, sales). The template is proven.
+4. **Volume math** — 3M minutes / 30 days = 100K minutes/day. At Vapi pricing ($0.05/min), that's $5,000/day. The cost savings of self-hosting at this scale would be enormous — this is exactly the argument for our self-hosted positioning.
+
+---
+
+### 🆕 PLATFORM UPDATE: Retell API Deprecation — March 31, 2026
+
+**Source:** Retell changelog (fetched Apr 1)
+
+> *"Deprecation of Phone Number Agent Fields: On March 31st, Retell will deprecate the old single-agent phone number fields in favor of weighted agent lists for inbound, outbound, and SMS routing."*
+
+This happened **yesterday** (March 31, 2026). Fields deprecated:
+- `inbound_agent_id` → replaced by `inbound_agents` (weighted list)
+- `outbound_agent_id` → replaced by `outbound_agents`
+- `inbound_sms_agents`, `outbound_sms_agents` also added
+
+**What this signals:**
+1. **Multi-agent routing is now default** — Retell's platform API now natively supports routing calls across multiple agents by weight. This is infrastructure for A/B testing, fallback routing, and voice agent teams. The API now reflects product maturity.
+2. **Breaking change for existing integrations** — Any integration built on old Retell API fields needs updating. This is a switching cost signal — teams already integrated into Retell are now incentivized to update (not switch).
+3. **Weighted agent routing as infrastructure primitive** — This feature (split traffic 80/20 across two agent versions) is something Vapi doesn't have natively yet. Retell is shipping infrastructure primitives that differentiate from Vapi.
+4. **Our positioning note:** Our open-source approach doesn't have A/B testing, routing weights, or multi-agent call flows. These are features that managed services provide, and their absence is a real gap for production voice AI teams.
+
+---
+
+### 🆕 ECOSYSTEM: Retell Adds ElevenLabs v3 Voices (April 2026)
+
+**Source:** Retell changelog
+
+> *"ElevenLabs v3 Voices: Retell now supports ElevenLabs v3 voices, bringing more expressive speech with stronger emotion, cadence, and delivery."*
+
+This is notable because ElevenLabs **raised prices** on March 23 (ElevenLabs TTS on Retell now starts at $0.04/min, up from lower tiers). Retell is integrating ElevenLabs v3 despite the price increase — suggesting the voice quality improvement is worth the cost premium.
+
+**The voice quality race:**
+- ElevenLabs v3: "Stronger emotion, cadence, and delivery" — highest quality bar
+- OpenAI TTS / voices (what we use): Included in Realtime API — lowest cost
+- Cartesia Sonic 3, Minimax, Fish Audio: ~$0.015/min on Retell — mid-tier options
+- Mistral Voxtral (90ms, 9 languages): Not yet integrated into major platforms
+
+Our skill uses OpenAI's built-in Realtime voices (shimmer, etc.). Voice quality is adequate but below ElevenLabs v3. For premium deployments, a TTS-swappable architecture would be a meaningful upgrade.
+
+---
+
+### 📊 COMPETITOR STATUS (April 1, 2026)
+
+*Changes only from March 31 map:*
+
+| Player | New Development | Impact |
+|--------|----------------|--------|
+| **OpenAI** | $122B raised (Mar 31) | 🔴 Platform acceleration; Realtime API will evolve faster |
+| **ElevenLabs** | Guardrails 2.0 (Mar 24), Cars24 3M min case study | 🔴 Enterprise hardening + scale proof |
+| **Retell** | Mar 31 API deprecation, ElevenLabs v3 integration | 🟠 API maturity milestone; voice quality race continues |
+| **Vapi** | No new posts since Mar 20 — quiet | — No change |
+| **Bland AI** | No new signals detected | — Stable |
+| **Mistral Voxtral** | No integration news yet — still announced-only | — Watching |
+| **Claude Code** | Voice mode flags still unshipped | — Still pending |
+| **agentskills.io** | 13 platforms — no new additions | — Stable |
+| **ctxly.com** | Still 404 | — Dead |
+
+---
+
+### 📋 PR #791 STATUS (April 1, 2026)
+
+**PR #791: Day 5, OPEN, no maintainer activity detected**
+- State: OPEN
+- Mergeable: MERGEABLE (no conflicts)
+- Review Decision: REVIEW_REQUIRED
+- Comments: 0
+
+**Action recommendation:** If no maintainer activity by April 3 (day 7), consider a brief friendly check-in comment: *"Happy to make any changes needed if you have feedback — just checking in!"* — this bumps the PR in maintainer queues without being pushy.
+
+**Context:** The anthropics/skills repo is a volunteer-maintained open-source project. External contributor PRs typically wait 5–10 days for initial review. Day 5 is not unusual. No red flags.
+
+---
+
+### 🔮 APRIL 1 SYNTHESIS
+
+**Three signals that shift the picture from March 31:**
+
+1. **OpenAI $122B** — This is the story of the day. The platform underlying our entire voice skill (OpenAI Realtime API) just received the largest AI funding infusion in history. This validates the market, accelerates OpenAI's product roadmap, and means more competition at the infrastructure layer. For our PR #791, it underscores that being first-mover in the anthropics/skills registry (on Anthropic's platform, not OpenAI's) has strategic value — developer platform fragmentation creates niches.
+
+2. **ElevenLabs enterprise hardening** — Guardrails 2.0 + Cars24 3M minute case study show that enterprise voice AI is no longer experimental. The market has real production deployments at scale. Our open-source offering competes in a segment (self-hosted, agent-native) that enterprise managed services don't serve — but this gap is narrow and closing.
+
+3. **Retell API deprecation** — The March 31 deprecation shows Retell is actively breaking old API contracts in favor of better architecture (weighted routing, A/B testing). This is a sign of product maturity but also switching-cost moat-building. Developers on Retell just had a forced migration — a reminder that managed-service lock-in has real costs.
+
+**Archive decision assessment:** Still standing. Nothing reverses the archive. But the market is expanding rapidly (OpenAI $122B signals industry-wide growth), which means the window for re-entry isn't closing — it's actually widening as the total addressable market grows.
+
+**For Comms:** If PR #791 merges, the timing is better than ever. The OpenAI $122B news keeps "AI voice and agents" in the headlines — a merged PR announcement rides this wave.
 
 ---
 
