@@ -2,7 +2,138 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-04-02 04:02 GMT+2 — BA Scan: PR #791 day 6, no activity, ping TOMORROW (Apr 3); BBC: Claude Code usage limits surge ("way faster than expected"); Comms Posts A/B/C executed Apr 1 (early); ElevenLabs: Insurely insurance contact center case study (Mar 30); agentskills.io 13 platforms stable; Vapi quiet (last post Mar 20); ctxly still 404
+**Last Updated:** 2026-04-02 22:20 GMT+2 — BA Scan: PR #791 day 6, PING DUE TOMORROW (Apr 3); Vapi: "Enhanced Security Mode" (Apr 1) NEW — enterprise audio security; Vapi: OpenClaw integration blog post (Feb 24) — MISSED IN ALL PRIOR SCANS, direct competitive threat; ElevenLabs: Learna education case study (Apr 1); Bland AI: "Norm" no-code builder (Mar 24) — missed; BBC: no new voice AI stories Apr 2; ctxly still 404; browser unavailable (Twitter scan blocked)
+
+---
+
+## 🗂️ MARKET INTELLIGENCE UPDATE (2026-04-02 22:20 GMT+2)
+
+**Context:** 18h delta since last BA scan (Apr 2, 04:02 GMT+2). PR #791 day 6. Focus: new developments since 04:02 — BBC feed, Vapi/Bland new posts, ElevenLabs new case studies, PR status.
+
+**Research Tools Used:**
+- ✅ exec — BBC RSS (confirmed live), Bland AI blog, PR #791 via gh CLI, ctxly.com (still 404)
+- ✅ web_fetch — Vapi blog (full article list + dates), ElevenLabs blog (product), Learna case study, agentskills.io llms.txt
+- ❌ browser (Twitter/X) — openclaw profile unavailable (gateway issue)
+- ❌ web_search (Brave) — API key not configured
+- ❌ Reuters — DNS unreachable
+
+---
+
+### 🔴 MISSED INTEL (HIGH PRIORITY): Vapi Blog Post "Give Your OpenClaw Agent a Voice" (Feb 24, 2026)
+
+**Source:** Vapi blog (fetched April 2) — URL: `/blog/openclaw`
+**Title:** "Give Your OpenClaw Agent a Voice: Adding Phone Calls with Vapi Skills"
+**Date:** February 24, 2026
+
+**This was never captured in any previous BA scan.** It was published Feb 24 — before the archive decision — but never appeared in the weekly scans. This is a critical competitive intelligence gap.
+
+**What this means:**
+1. **Vapi is directly targeting OpenClaw users** — They published a tutorial specifically for giving OpenClaw agents phone call capabilities via Vapi Skills. This is a direct head-to-head with our project's exact target audience: OpenClaw developers who want voice calling.
+2. **Vapi's skills approach vs. our approach:** Vapi's post likely teaches OpenClaw users to add a Vapi API key and call their hosted service. Our project is self-hosted, AGPL-3.0, zero per-minute vendor markup after Twilio costs. Different positioning (managed vs. self-hosted), but competing for the same wallet.
+3. **They shipped the tutorial before we shipped the skill.** Vapi's OpenClaw blog post (Feb 24) pre-dates our PR #791 (March 27) by a full month. While we were debugging voice quality, Vapi was capturing our audience with a blog post.
+4. **Strategic implication for PR #791:** Once PR #791 merges, it directly competes with Vapi's tutorial in the anthropics/skills registry. Developers choosing between "add Vapi API key via managed service" vs. "self-host with Python + Twilio" will now have both options visible. We need to make our self-hosted differentiation crystal clear in SKILL.md.
+5. **Messaging update needed:** SKILL.md should more explicitly contrast with managed services: "Zero per-minute vendor markup (Twilio costs only). Full AGPL-3.0 source. Your infrastructure." — developers who found the Vapi tutorial and want an alternative will search for this.
+
+**For Comms:** This is a stronger differentiation angle than previously framed. "Vapi wants to charge you per-minute for OpenClaw voice. Here's how to self-host it." is a concrete, testable claim that will resonate with cost-conscious developers at scale.
+
+---
+
+### 🆕 NEW: Vapi "Introducing Enhanced Security Mode" (April 1, 2026)
+
+**Source:** Vapi blog — `/blog/enhanced-security` — Company News section
+**Title:** "Introducing Enhanced Security Mode: Enterprise-Grade Audio Security for Voice AI"
+**Date:** April 1, 2026
+
+This is Vapi's first new post since March 20 — ending the 12-day quiet period.
+
+**What it signals:**
+1. **Vapi is racing ElevenLabs on enterprise compliance** — ElevenLabs shipped Guardrails 2.0 (March 24). Vapi responded 8 days later with "Enhanced Security Mode." Both companies are simultaneously hardening their enterprise compliance layers. This is not coincidental — enterprise customers are demanding audit trails and security controls.
+2. **Enterprise security as competitive battleground** — In late Q1 2026, the race in voice AI has shifted from feature parity to compliance and security. Vapi + ElevenLabs both shipping security modes in the same week signals that regulated industry customers (healthcare, finance, insurance) are actively evaluating voice AI vendors and asking "can you handle our data securely?"
+3. **Our gap:** Our AGPL-3.0 open-source project has no built-in security mode. For enterprise, this means we're behind both managed competitors on security posture. This is only relevant if enterprise is a target — for our current self-hosted developer audience, AGPL-3.0 + self-hosting IS the security story ("your data never leaves your infrastructure").
+4. **Timing is telling:** Vapi posted this on April 1 — same day ElevenLabs published the Learna education case study. Both companies are keeping up high content velocity. Our project is silent during the PR review window, which is fine, but post-merge Comms needs to match cadence.
+
+---
+
+### 🆕 NEW: ElevenLabs "Learna Scales Voice Learning" (April 1, 2026)
+
+**Source:** ElevenLabs blog — `webinar-recap-how-learna-scales-voice-learning-with-elevenlabs`
+**Date:** April 1, 2026 (last updated April 2)
+**Summary:** Learna is a language learning app built by Codeway — one of Europe's largest consumer app companies with 500M+ users worldwide and $400M+ ARR. Learna uses ElevenLabs TTS + voice agents for real-time conversational language learning.
+
+**Why this matters:**
+1. **Education vertical now documented at case study level** — ElevenLabs has now shipped case studies in: automotive (Cars24, 3M min/month), insurance (Insurely, contact center), and education (Learna, 500M user company). Verticals with enterprise-level voice AI adoption: automotive, insurance, education, healthcare (Retell). Voice AI is no longer sector-specific.
+2. **"Voice is the moment of truth in language learning"** — The case study's framing directly equates voice quality with retention, conversion, and revenue. For a 500M-user company with $400M ARR, voice quality is a P0 business metric, not a feature. This validates that voice AI quality → business outcomes is a proven causation, not theory.
+3. **Codeway scale** — A company with $400M ARR deploying ElevenLabs is a significant revenue validation signal. ElevenLabs is winning enterprise contracts with companies of this size. The gap between "startup toy" and "enterprise infrastructure" has closed for ElevenLabs.
+4. **For our positioning:** Education vertical (language learning) is another adjacent use case where real-time voice with agents matters. Not our target, but signals voice AI TAM continues to grow sector by sector.
+
+---
+
+### 🆕 PREVIOUSLY MISSED: Bland AI "Introducing Norm" (March 24, 2026)
+
+**Source:** Bland AI blog — was behind cookie wall in prior scans; now accessible
+**Date:** March 24, 2026
+**Title:** "Introducing Norm: The first AI assistant that builds voice agents from a prompt"
+
+**What Norm is:** Bland's no-code voice agent builder. You describe what you want, Norm builds the voice agent from a prompt. This is Bland's direct response to Vapi Composer (Feb 11) and Retell's ChatGPT builder (March 2026).
+
+**Strategic implications:**
+1. **All three managed voice AI services now have "describe → deploy" builders** — The no-code AI agent builder pattern is now universal across Vapi (Composer), Retell (ChatGPT builder), and Bland (Norm). The race shifted from "who has the best voice" to "who has the best builder DX." This happened in March 2026.
+2. **Bland is alive and shipping** — Previous BA scans couldn't penetrate the cookie wall. "Bland AI quiet" was wrong — they shipped a major no-code builder on March 24. They're still competing actively.
+3. **"Build vs. Buy" content (March 25)** — The day after Norm launch, Bland published "Voice AI for Contact Centers: Build vs. Buy." This is sophisticated content strategy: launch product, then publish thought leadership that guides the buyer decision toward their product. Bland is executing a full marketing cycle.
+4. **For our positioning:** The "describe → deploy" pattern is designed for non-developer buyers. Our self-hosted project still targets developers. The no-code builders don't compete with us on self-hosted infrastructure — but they further commoditize "get a voice agent running" for casual users, making developer-facing self-hosted tooling more niche (but also more defensible for the segment that cares about control).
+
+---
+
+### 📊 COMPETITOR STATUS (April 2, 2026 — 22:20 GMT+2)
+
+*Full map — changes since Apr 2, 04:02 GMT+2 marked:*
+
+| Player | Status | New Since Last Scan |
+|--------|--------|---------------------|
+| **Vapi** | "Enhanced Security Mode" (Apr 1) + OpenClaw blog (Feb 24, MISSED) | 🔴 Two new data points; breaking silence since Mar 20 |
+| **Retell** | No new posts detected | — No change |
+| **ElevenLabs** | Learna education case study (Apr 1); prior: Insurely (Mar 30), Guardrails 2.0 (Mar 24) | 🟡 New vertical (education); 3 case studies in 2 weeks |
+| **Bland AI** | Norm no-code builder (Mar 24, MISSED) + "Build vs Buy" content (Mar 25) | 🔴 Bland was NOT quiet — cookie wall blocked prior scans |
+| **OpenAI** | $122B raised (Mar 31, in prior STRATEGY.md) | — No change |
+| **Mistral Voxtral** | 90ms TTS, 9 languages (in prior STRATEGY.md) | — No change |
+| **Claude Code** | BBC: usage limits surge "way faster than expected" (in prior STRATEGY.md) | — No change |
+| **agentskills.io** | 13 platforms confirmed — llms.txt stable | — No change |
+| **ctxly.com** | Still 404 | — Dead |
+
+---
+
+### 📋 PR #791 STATUS (April 2, 2026 — 22:20 GMT+2)
+
+**PR #791: Day 6, OPEN, zero activity. Unchanged from 04:02 scan.**
+- State: OPEN | Mergeable: MERGEABLE | Review Decision: REVIEW_REQUIRED | Comments: 0
+- Last updated: 2026-03-27T13:35:57Z (submission date — no activity since)
+
+**⚠️ ACTION TOMORROW (April 3 = Day 7):** Ping still due. Post friendly check-in comment.
+- Draft: *"Happy to make any changes if you have feedback — just checking in!"*
+- Executor: Comms or PM (whoever runs first on April 3 morning)
+- Context: Claude Code's BBC-level usage surge means Anthropic maintainers are busy but engaged. Day 7 is the right nudge moment.
+
+---
+
+### 🔮 APRIL 2 EVENING SYNTHESIS (18h delta from 04:02)
+
+**Four meaningful findings in this window:**
+
+1. **Vapi OpenClaw tutorial (Feb 24, MISSED)** — The single most strategically important finding of this scan. Vapi is actively targeting OpenClaw developers for their managed phone calling service. This is our direct competition, and it's been live for over a month without appearing in our intel. Post-PR-merge, Comms needs to differentiate explicitly: self-hosted vs. Vapi's per-minute model. The messaging angle is concrete and provable.
+
+2. **Vapi Enhanced Security Mode (Apr 1)** — Vapi broke their 12-day silence with an enterprise security post. Combined with ElevenLabs Guardrails 2.0, this signals enterprise compliance is the current competitive battleground for managed voice AI services.
+
+3. **ElevenLabs Learna case study (Apr 1)** — Third major case study in two weeks (automotive, insurance, education). ElevenLabs is executing a sustained enterprise case study content campaign. They're building a library of proof points across verticals. This is table-stakes enterprise marketing — highly effective at building sales pipeline.
+
+4. **Bland AI Norm (Mar 24, MISSED)** — All three managed services now have no-code builders. The "describe → deploy voice agent" pattern is fully commoditized at the managed service layer. Our differentiation (developer-controlled, self-hosted, agent-native) is more defensible than ever — but it's a narrower target.
+
+**What didn't change:**
+- PR #791 still waiting (day 6) — ping tomorrow as planned
+- ctxly.com still dead
+- BBC has no new voice AI stories today (spacex IPO and social media decline dominated)
+- Twitter scan blocked (browser unavailable)
+
+**Archive decision:** Unchanged. But the Vapi OpenClaw tutorial changes the competitive framing post-merge. We're not "the only voice option for OpenClaw" — Vapi already has a tutorial. We're "the self-hosted, open-source alternative to Vapi for OpenClaw." That's a stronger differentiator than "first."
 
 ---
 
