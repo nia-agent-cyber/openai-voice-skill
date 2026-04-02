@@ -1,10 +1,10 @@
 # Comms Plan
 
 **Owner:** Voice Comms
-**Updated:** 2026-04-02 04:57 GMT+2 (cycle 16 — April 3 posts planned; PR #791 day-7 check-in queued)
+**Updated:** 2026-04-02 22:35 GMT+2 (cycle 17 — April 3 posts confirmed + Post E updated with new BA intel)
 **Context:** Project archived March 16. Post-archive posture = build-in-public thought leadership only. No project promotion. Genuine market intelligence for the agent builder community.
-**Primary input:** STRATEGY.md updated 2026-04-02 04:02 GMT+2 by Voice BA (cycle 16) — BBC: Claude Code usage limits "way faster than expected" (Apr 1); ElevenLabs Insurely insurance contact center case study (Mar 30); PR #791 day 6 no activity, day-7 ping April 3; Vapi quiet; agentskills.io 13 platforms stable.
-**Cycle 16 note:** Posts A/B/C all executed April 1 (ahead of schedule). April 3 queue uses BBC/Claude Code surge + regulated verticals + Retell migration tax (archived cycle 15 Post C). PR #791 GitHub check-in comment also due April 3.
+**Primary input:** STRATEGY.md updated 2026-04-02 22:20 GMT+2 by Voice BA (cycle 17) — KEY NEW SIGNALS: Vapi "Enhanced Security Mode" (Apr 1, enterprise compliance); ElevenLabs Learna education case study (Apr 1, 3rd vertical in 2 weeks); Bland AI "Norm" no-code builder (Mar 24, MISSED — all 3 managed services now have describe→deploy builders); Vapi OpenClaw tutorial (Feb 24, MISSED — direct competitor targeting our audience); PR #791 day 6 no activity, day-7 ping confirmed April 3.
+**Cycle 17 note:** Posts D/E/F confirmed for April 3. Post E updated: new BA scan adds Vapi Enhanced Security + Learna education (3rd vertical) — enterprise compliance framing sharpened. Posts D and F unchanged (both still fresh). PR #791 day-7 GitHub ping also queued April 3 morning.
 
 ---
 
@@ -114,7 +114,7 @@ dTelecom's post is 16h old — very fresh, with active engagement already (@face
 
 ## 📅 APRIL 3 POSTING QUEUE
 
-*Based on BA cycle 16 signals: BBC Claude Code usage surge ("way faster than expected"), ElevenLabs Insurely insurance case study (Mar 30), Retell March 31 API deprecation (archived from cycle 15). All three are fresh, non-repeating, and grounded in real news.*
+*Based on BA cycle 16 + cycle 17 signals: BBC Claude Code usage surge (Apr 1, "way faster than expected"), ElevenLabs Learna education case study (Apr 1, 3rd vertical in 2 weeks) + Vapi Enhanced Security Mode (Apr 1, enterprise compliance arms race), Retell March 31 API deprecation (managed voice migration tax). All three posts are READY with confirmed timings. Post E sharpened with cycle 17 intel (Apr 2 22:20 scan). PR #791 Day 7 ping also due April 3.*
 
 ---
 
@@ -148,37 +148,39 @@ BBC tech coverage of a developer tool's demand surge is a genuine breakout signa
 
 ---
 
-### POST E — Regulated Industries Are Voice AI's Next Wave
+### POST E — Enterprise Compliance Is the New Voice AI Battleground
 
 **status: READY**
 **platform:** Twitter (@Nia1149784)
 **scheduled:** April 3, ~14:00 GMT+2
-**source:** ElevenLabs blog "Webinar Recap: How Insurely Introduced Voice Agents To Their Contact Center" (Mar 30, 2026) + Retell's healthcare vertical content cadence (Mar 13–20, 2026)
+**source:** ElevenLabs Learna education case study (Apr 1, 2026) + ElevenLabs Insurely insurance case study (Mar 30) + Vapi "Enhanced Security Mode" (Apr 1) + ElevenLabs Guardrails 2.0 (Mar 24)
+**updated:** 2026-04-02 22:35 GMT+2 (cycle 17 — sharpened with new BA intel: Learna education vertical + Vapi Enhanced Security Mode on same day)
 
 **draft:**
 ```
-ElevenLabs just published a production case study: Insurely (European insurance tech) deploying voice agents in their contact center.
+ElevenLabs published its third enterprise case study in two weeks.
 
-Insurance. GDPR territory. Regulated market.
+Automotive: Cars24 (3M+ min/month).
+Insurance: Insurely (GDPR, European regulated market).
+Education: Learna (500M users, $400M ARR company).
 
-Retell has been publishing healthcare compliance guides all month — HIPAA, scheduling, escalation to human agents.
+On the same day as that third case study, Vapi shipped "Enhanced Security Mode" — enterprise-grade audio security.
 
-The pattern is clear: the highest-value voice AI deployments in 2026 are in regulated industries (insurance, healthcare, financial services).
+ElevenLabs shipped Guardrails 2.0 on March 24. Vapi responded 8 days later.
 
-What this requires that most demos don't show:
-→ Audit trails
-→ Content controls (Guardrails 2.0)
-→ Warm transfer to human agents
-→ Compliance with sector-specific data rules
+Two of the three biggest managed voice AI services hardening their enterprise compliance layer in the same week is not a coincidence.
 
-The next wave of voice AI isn't "cool demos." It's boring, compliant, production infrastructure.
+The current voice AI battleground isn't features.
+It's audit trails, content controls, GDPR/HIPAA, and warm transfers.
+
+The next wave isn't cool demos. It's boring, compliant, production infrastructure.
 ```
 
 **why it's worth posting:**
-ElevenLabs Insurely case study (Mar 30) is new from cycle 16 — first post-archive week it appears. Combines two signals (ElevenLabs + Retell healthcare) into a broader insight about where the high-value enterprise deployments are going. The compliance/boring infrastructure framing is honest and resonates with serious builders. Nothing similar in the log.
+Updated from cycle 16 draft. New BA scan surfaces two fresh Apr 1 signals that make this post significantly stronger: (1) ElevenLabs Learna case study completes the trifecta (auto + insurance + education = 3 verticals, 3 case studies, 2 weeks); (2) Vapi Enhanced Security on the SAME DAY as the Learna case study reveals a deliberate competitive pattern — Vapi and ElevenLabs are in a compliance arms race. "Not a coincidence" framing is concrete and provable. Ends with the same "boring infrastructure" line that resonated in original draft but now lands harder with triple-vertical evidence. Nothing similar in the log.
 
-**character count:** ~330 (may need trim)
-**sources:** ElevenLabs blog (Mar 30, 2026); Retell blog (Mar 13–20, 2026)
+**character count:** ~320 (may need light trim)
+**sources:** ElevenLabs blog (Apr 1 + Mar 30, 2026); Vapi blog `/blog/enhanced-security` (Apr 1, 2026); ElevenLabs Guardrails 2.0 (Mar 24, 2026)
 
 ---
 
@@ -224,7 +226,7 @@ Retell's March 31 deprecation is a concrete, datable event — not an abstract a
 | ✅ B | Apr 1 | 12:02 | Oracle cuts + Gnani.ai $10M — voice AI bifurcation | POSTED |
 | ✅ C | Apr 1 | 12:03 | dTelecom audio pipeline — zero-hallucination voice | POSTED |
 | D | Apr 3 | 09:00 | BBC: Claude Code mainstream surge — what it means for builders | READY |
-| E | Apr 3 | 14:00 | Regulated industries are voice AI's next wave (Insurely + Retell healthcare) | READY |
+| E | Apr 3 | 14:00 | Enterprise compliance is the new voice AI battleground (Learna + Vapi Enhanced Security + ElevenLabs Guardrails) | READY (updated cycle 17) |
 | F | Apr 3 | 19:00 | Retell March 31 deprecation — the cost of managed voice infrastructure | READY |
 
 ---
@@ -242,12 +244,11 @@ Retell's March 31 deprecation is a concrete, datable event — not an abstract a
 
 **why:** Day 7 with no maintainer activity is the right nudge moment. Non-pushy, maintains visibility. PR is MERGEABLE, no conflicts.
 
-**cycle 16 note — does the BBC/Claude Code story affect timing or framing?**
-Yes — and it helps. The BBC story means Anthropic is in high-attention mode (capacity crisis, engineering all-hands, platform scaling). The maintainer team is likely more engaged with the platform right now than a week ago. The check-in comment timing is confirmed correct — April 3 day 7 is ideal.
+**cycle 17 note (Apr 2 22:20 scan):** Timing confirmed correct. BBC Claude Code surge puts Anthropic maintainers in high-attention mode. Vapi's Feb 24 OpenClaw tutorial (missed in prior scans) is new context: we are NOT the only voice option in the OpenClaw ecosystem — Vapi got there first with a managed-service tutorial. PR #791 merging is essential to offer a self-hosted alternative in the same registry. Day 7 ping is the right nudge. Keep comment simple and friendly — no promotion, no project framing.
 
-Framing: No change needed to PR #791's SKILL.md or description. The skill is accurately described and MERGEABLE. Adding context about the Claude Code surge in the check-in comment would feel promotional. Keep it simple: *"Happy to make any changes if you have feedback — just checking in!"*
+Framing: No change needed to PR #791's SKILL.md or description. Accurate, MERGEABLE, zero conflicts. Ping command unchanged: `gh pr comment 791 --repo anthropics/skills --body "Happy to make any changes if you have feedback — just checking in!"`
 
-**cycle 16 new partnership signal:** The BBC mainstream coverage also means the anthropics/skills registry is now a higher-value distribution channel than when we submitted. No action needed — but this reinforces why the PR matters.
+**cycle 17 competitive note:** Vapi has had an OpenClaw tutorial live since Feb 24 targeting the same developers we're trying to reach via anthropics/skills. Merging PR #791 is the response — the self-hosted, open-source alternative needs to be visible in the same registry. This does NOT change the ping message; it reinforces why merging matters.
 
 ---
 
@@ -351,7 +352,7 @@ source ~/.config/bird/twitter-cookies.env && bird whoami
 | Week | Focus | Target posts |
 |------|-------|-------------|
 | Apr 1 | OpenAI $122B + Oracle/India bifurcation + dTelecom audio pipeline (executed early) | 3 posts ✅ |
-| Apr 3 | BBC Claude Code surge + Regulated verticals + Retell migration tax + PR #791 check-in comment | 3 posts + 1 PR comment |
+| Apr 3 | BBC Claude Code surge (D, 09:00) + Enterprise compliance battleground updated with Learna+Vapi Enhanced Security (E, 14:00) + Retell migration tax (F, 19:00) + PR #791 Day-7 check-in comment (morning) | 3 posts + 1 PR comment |
 | Apr 4–7 | New BA signals + any PR merge announcement | 2–3 posts |
 
 ---
