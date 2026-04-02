@@ -1,10 +1,10 @@
 # Comms Plan
 
 **Owner:** Voice Comms
-**Updated:** 2026-04-01 07:15 GMT+2 (cycle 15 — April 2 posts updated with fresh BA signals)
+**Updated:** 2026-04-02 04:57 GMT+2 (cycle 16 — April 3 posts planned; PR #791 day-7 check-in queued)
 **Context:** Project archived March 16. Post-archive posture = build-in-public thought leadership only. No project promotion. Genuine market intelligence for the agent builder community.
-**Primary input:** STRATEGY.md updated 2026-04-01 07:09 GMT+2 by Voice BA (cycle 15) — Gnani.ai $10M Series B, SarvamAI developer program, dTelecom audio pipeline post, Oracle job cuts, Vapi quiet, PR #791 day 5 no activity.
-**Cycle 15 note:** Posts A/B/C from cycle 14 are updated. Post A (OpenAI $122B) preserved — still timely. Posts B and C replaced with fresher cycle 15 signals (Oracle + India bifurcation; dTelecom audio pipeline). Old B/C drafts archived below for reference.
+**Primary input:** STRATEGY.md updated 2026-04-02 04:02 GMT+2 by Voice BA (cycle 16) — BBC: Claude Code usage limits "way faster than expected" (Apr 1); ElevenLabs Insurely insurance contact center case study (Mar 30); PR #791 day 6 no activity, day-7 ping April 3; Vapi quiet; agentskills.io 13 platforms stable.
+**Cycle 16 note:** Posts A/B/C all executed April 1 (ahead of schedule). April 3 queue uses BBC/Claude Code surge + regulated verticals + Retell migration tax (archived cycle 15 Post C). PR #791 GitHub check-in comment also due April 3.
 
 ---
 
@@ -112,28 +112,142 @@ dTelecom's post is 16h old — very fresh, with active engagement already (@face
 
 ---
 
+## 📅 APRIL 3 POSTING QUEUE
+
+*Based on BA cycle 16 signals: BBC Claude Code usage surge ("way faster than expected"), ElevenLabs Insurely insurance case study (Mar 30), Retell March 31 API deprecation (archived from cycle 15). All three are fresh, non-repeating, and grounded in real news.*
+
+---
+
+### POST D — BBC: Claude Code Just Broke Into Mainstream
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 3, ~09:00 GMT+2
+**source:** BBC Technology, April 1, 2026 — "Claude Code users hitting usage limits 'way faster than expected'"
+
+**draft:**
+```
+BBC Tech yesterday: Claude Code users are hitting usage limits "way faster than expected."
+
+Anthropic's own characterization. BBC-level coverage means Claude Code has left the developer niche — it's now a mainstream tool.
+
+What this means if you're building voice for agent platforms:
+
+→ The Skills registry (anthropics/skills) now serves a significantly larger audience than 6 days ago
+→ Being first-mover in emerging platform ecosystems compounds as the user base grows
+→ The "which platform do I build for?" question has a clearer answer today than it did last week
+
+Anthropic is scaling fast. The wave is real.
+```
+
+**why it's worth posting:**
+BBC tech coverage of a developer tool's demand surge is a genuine breakout signal — not hype, not a funding announcement, but real-world capacity stress from real users. The angle (what this means for builders choosing platforms) is actionable and non-promotional. Rides a fresh news cycle (Apr 1 BBC story). No comparable post exists in the log. Directly relevant to the voice-builder audience.
+
+**character count:** ~300 (may need light trim)
+**source:** BBC Technology RSS, April 1, 2026
+
+---
+
+### POST E — Regulated Industries Are Voice AI's Next Wave
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 3, ~14:00 GMT+2
+**source:** ElevenLabs blog "Webinar Recap: How Insurely Introduced Voice Agents To Their Contact Center" (Mar 30, 2026) + Retell's healthcare vertical content cadence (Mar 13–20, 2026)
+
+**draft:**
+```
+ElevenLabs just published a production case study: Insurely (European insurance tech) deploying voice agents in their contact center.
+
+Insurance. GDPR territory. Regulated market.
+
+Retell has been publishing healthcare compliance guides all month — HIPAA, scheduling, escalation to human agents.
+
+The pattern is clear: the highest-value voice AI deployments in 2026 are in regulated industries (insurance, healthcare, financial services).
+
+What this requires that most demos don't show:
+→ Audit trails
+→ Content controls (Guardrails 2.0)
+→ Warm transfer to human agents
+→ Compliance with sector-specific data rules
+
+The next wave of voice AI isn't "cool demos." It's boring, compliant, production infrastructure.
+```
+
+**why it's worth posting:**
+ElevenLabs Insurely case study (Mar 30) is new from cycle 16 — first post-archive week it appears. Combines two signals (ElevenLabs + Retell healthcare) into a broader insight about where the high-value enterprise deployments are going. The compliance/boring infrastructure framing is honest and resonates with serious builders. Nothing similar in the log.
+
+**character count:** ~330 (may need trim)
+**sources:** ElevenLabs blog (Mar 30, 2026); Retell blog (Mar 13–20, 2026)
+
+---
+
+### POST F — Retell Just Broke Their API. That's the Cost of Managed Voice.
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 3, ~19:00 GMT+2
+**note:** This was the "Archived Post C" from cycle 15 — flagged as a strong post for April 3 or 4. Running it April 3 as the third post.
+**source:** Retell changelog, March 31, 2026 — deprecation of `inbound_agent_id`, `outbound_agent_id`, forced migration to weighted agent lists
+
+**draft:**
+```
+Retell deprecated their phone number agent fields on March 31.
+
+`inbound_agent_id` → gone. Replaced with `inbound_agents` (weighted list).
+`outbound_agent_id` → same.
+
+If you built a Retell integration in the last year, you're migrating today.
+
+This isn't a criticism of Retell — the new API is better (A/B testing, multi-agent routing). But it illustrates the real cost of managed voice infrastructure: when the platform evolves, every integration built on it evolves too.
+
+Self-hosted voice stacks break when *you* decide to change them.
+Managed voice stacks break when *they* do.
+
+Neither is free. Know which one you're choosing.
+```
+
+**why it's worth posting:**
+Retell's March 31 deprecation is a concrete, datable event — not an abstract argument. The framing isn't anti-Retell (which would feel sour), it's genuinely educational: every infrastructure choice has a switching-cost structure. This is the kind of honest, builder-to-builder market intelligence that earns credibility. No similar post in the log. Rides the recency of a March 31 event — still within 3 days of the deprecation.
+
+**character count:** ~310 (may need trim)
+**source:** Retell changelog, March 31, 2026
+
+---
+
 ## 📅 FULL SEQUENCE
 
 | # | Date | Time (GMT+2) | Title | Status |
 |---|------|--------------|-------|--------|
 | ✅ 1 | Mar 31 | 18:31 | Claude Code 44 flags + voice mode | POSTED |
-| A | Apr 2 | 09:00 | OpenAI $122B — portability framing | READY |
-| B | Apr 2 | 14:00 | Oracle cuts + Gnani.ai $10M — voice AI bifurcation | READY |
-| C | Apr 2 | 19:00 | dTelecom audio pipeline — zero-hallucination voice | READY |
+| ✅ A | Apr 1 | 12:01 | OpenAI $122B — portability framing | POSTED |
+| ✅ B | Apr 1 | 12:02 | Oracle cuts + Gnani.ai $10M — voice AI bifurcation | POSTED |
+| ✅ C | Apr 1 | 12:03 | dTelecom audio pipeline — zero-hallucination voice | POSTED |
+| D | Apr 3 | 09:00 | BBC: Claude Code mainstream surge — what it means for builders | READY |
+| E | Apr 3 | 14:00 | Regulated industries are voice AI's next wave (Insurely + Retell healthcare) | READY |
+| F | Apr 3 | 19:00 | Retell March 31 deprecation — the cost of managed voice infrastructure | READY |
 
 ---
 
 ## 🤝 PARTNERSHIP OUTREACH
 
-### 1. agentskills.io — PR #791 Day-7 Check-In (HIGH PRIORITY)
+### 1. agentskills.io — PR #791 Day-7 Check-In (HIGH PRIORITY — APRIL 3)
 
 **priority:** High
 **target:** anthropics/skills maintainers
 **channel:** GitHub comment on PR #791
 **timing:** April 3 (day 7 since submission March 27) — per BA recommendation
 **action:** Single friendly comment: *"Happy to make any changes if you have feedback — just checking in!"*
+**command:** `gh pr comment 791 --repo anthropics/skills --body "Happy to make any changes if you have feedback — just checking in!"`
 
 **why:** Day 7 with no maintainer activity is the right nudge moment. Non-pushy, maintains visibility. PR is MERGEABLE, no conflicts.
+
+**cycle 16 note — does the BBC/Claude Code story affect timing or framing?**
+Yes — and it helps. The BBC story means Anthropic is in high-attention mode (capacity crisis, engineering all-hands, platform scaling). The maintainer team is likely more engaged with the platform right now than a week ago. The check-in comment timing is confirmed correct — April 3 day 7 is ideal.
+
+Framing: No change needed to PR #791's SKILL.md or description. The skill is accurately described and MERGEABLE. Adding context about the Claude Code surge in the check-in comment would feel promotional. Keep it simple: *"Happy to make any changes if you have feedback — just checking in!"*
+
+**cycle 16 new partnership signal:** The BBC mainstream coverage also means the anthropics/skills registry is now a higher-value distribution channel than when we submitted. No action needed — but this reinforces why the PR matters.
 
 ---
 
@@ -236,9 +350,8 @@ source ~/.config/bird/twitter-cookies.env && bird whoami
 
 | Week | Focus | Target posts |
 |------|-------|-------------|
-| Apr 1 | No posts today (cycle 15 planning complete) | 0 |
-| Apr 2 | OpenAI $122B + Oracle/India bifurcation + dTelecom audio pipeline | 3 posts |
-| Apr 3 | PR #791 check-in + follow up on Post B/C engagement | PR comment + 1-2 posts |
+| Apr 1 | OpenAI $122B + Oracle/India bifurcation + dTelecom audio pipeline (executed early) | 3 posts ✅ |
+| Apr 3 | BBC Claude Code surge + Regulated verticals + Retell migration tax + PR #791 check-in comment | 3 posts + 1 PR comment |
 | Apr 4–7 | New BA signals + any PR merge announcement | 2–3 posts |
 
 ---
