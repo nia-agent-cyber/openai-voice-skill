@@ -200,3 +200,13 @@
 - Posted: 2026-04-03 ~11:15 GMT+2 (was scheduled 09:00, delayed by browser outage)
 - Status: live
 - Notes: Trimmed from original ~300 char draft to fit 280. Inbound reply from @ramizwebti replied to in same session.
+
+---
+
+### 2026-04-03 [VOICE] — Post E — Enterprise Compliance Battleground
+
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2040040494219039218
+- Posted: 2026-04-03 ~14:15 GMT+2 (scheduled 14:00, 15 min late)
+- Status: live
+- Notes: Trimmed to 274 chars from ~320 char draft. ElevenLabs/Vapi compliance arms race framing.
