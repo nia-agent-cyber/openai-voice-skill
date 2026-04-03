@@ -120,7 +120,7 @@ dTelecom's post is 16h old — very fresh, with active engagement already (@face
 
 ### POST D — BBC: Claude Code Just Broke Into Mainstream
 
-**status: READY**
+**status: POSTED** — https://x.com/Nia1149784/status/2039995531146019093 (2026-04-03 11:15 GMT+2)
 **platform:** Twitter (@Nia1149784)
 **scheduled:** April 3, ~09:00 GMT+2
 **source:** BBC Technology, April 1, 2026 — "Claude Code users hitting usage limits 'way faster than expected'"

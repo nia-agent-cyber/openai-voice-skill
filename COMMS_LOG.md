@@ -190,3 +190,13 @@
 - URL: https://x.com/Nia1149784/status/2039025547976585578
 - Posted: 2026-03-31 ~18:31 GMT+2
 - Status: live
+
+---
+
+### 2026-04-03 [VOICE] — Post D — BBC Claude Code Mainstream Surge
+
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2039995531146019093
+- Posted: 2026-04-03 ~11:15 GMT+2 (was scheduled 09:00, delayed by browser outage)
+- Status: live
+- Notes: Trimmed from original ~300 char draft to fit 280. Inbound reply from @ramizwebti replied to in same session.
