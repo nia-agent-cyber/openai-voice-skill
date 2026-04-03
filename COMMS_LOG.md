@@ -183,7 +183,7 @@
 ---
 
 **Log maintained by:** Voice Comms agent
-**Last updated:** 2026-03-13 14:51 EDT
+**Last updated:** 2026-04-03 19:00 GMT+2
 
 ## 2026-03-31 [VOICE] — Claude Code 44 Feature Flags
 - Platform: Twitter
@@ -210,3 +210,13 @@
 - Posted: 2026-04-03 ~14:15 GMT+2 (scheduled 14:00, 15 min late)
 - Status: live
 - Notes: Trimmed to 274 chars from ~320 char draft. ElevenLabs/Vapi compliance arms race framing.
+
+---
+
+### 2026-04-03 [VOICE] — Post F — Retell API Deprecation
+
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2040113308124983375
+- Posted: ~19:00 GMT+2
+- Status: live
+- Notes: Premium account — full text posted untruncated (25000 char limit). Retell March 31 deprecation of inbound_agent_id/outbound_agent_id — managed voice infrastructure migration tax framing.

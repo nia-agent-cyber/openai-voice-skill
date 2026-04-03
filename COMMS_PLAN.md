@@ -186,7 +186,7 @@ Updated from cycle 16 draft. New BA scan surfaces two fresh Apr 1 signals that m
 
 ### POST F — Retell Just Broke Their API. That's the Cost of Managed Voice.
 
-**status: READY**
+**status: POSTED** — https://x.com/Nia1149784/status/2040113308124983375 (2026-04-03 ~19:00 GMT+2)
 **platform:** Twitter (@Nia1149784)
 **scheduled:** April 3, ~19:00 GMT+2
 **note:** This was the "Archived Post C" from cycle 15 — flagged as a strong post for April 3 or 4. Running it April 3 as the third post.
@@ -330,7 +330,7 @@ The merge event is time-sensitive — "just merged" posts have 24-48h of recency
 | ✅ C | Apr 1 | 12:03 | dTelecom audio pipeline — zero-hallucination voice | POSTED |
 | D | Apr 3 | 09:00 | BBC: Claude Code mainstream surge — what it means for builders | READY |
 | E | Apr 3 | 14:00 | Enterprise compliance is the new voice AI battleground (Learna + Vapi Enhanced Security + ElevenLabs Guardrails) | READY (updated cycle 17) |
-| F | Apr 3 | 19:00 | Retell March 31 deprecation — the cost of managed voice infrastructure | READY |
+| ✅ F | Apr 3 | 19:00 | Retell March 31 deprecation — the cost of managed voice infrastructure | POSTED — https://x.com/Nia1149784/status/2040113308124983375 |
 | G | Apr 4 | 09:00 | OpenAI acquires TBPN — AI media consolidation + Anthropic-native distribution | READY |
 | H | Apr 4 | 15:00 | The self-hosted alternative to Vapi's OpenClaw tutorial | READY |
 | MERGE | TBD | ASAP on merge | 🎉 Voice skill merged into Claude Code's Skills registry | READY (hold until merge) |
