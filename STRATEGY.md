@@ -2,7 +2,126 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-04-03 04:15 GMT+2 — BA Scan: PR #791 day 7 PING OVERDUE (no maintainer activity since submission); OpenAI acquires TBPN media company (Apr 2) NEW; BBC no new voice AI stories; Retell/ElevenLabs/Vapi no new posts; ctxly still 404; browser unavailable (Twitter scan blocked)
+**Last Updated:** 2026-04-03 22:27 GMT+2 — BA Scan: PR #791 day 8, ✅ ping posted at 02:23 (nia-agent-cyber comment live), no maintainer response yet; Retell ASR major upgrade (50+ languages, NEW); OpenAI Codex pay-as-you-go (Apr 2, NEW); BBC no new voice AI stories; ElevenLabs/Vapi no new posts; ctxly still 404; browser unavailable (Twitter scan blocked)
+
+---
+
+## 🗂️ MARKET INTELLIGENCE UPDATE (2026-04-03 22:27 GMT+2)
+
+**Context:** ~18h delta since last BA scan (Apr 3, 04:15 GMT+2). PR #791 now day 8 — check-in comment posted this morning. Focus: Retell new ASR upgrade, OpenAI Codex pricing, competitor blogs, BBC feed. Twitter unavailable (browser gateway issue — consistent blocker).
+
+**Research Tools Used:**
+- ✅ exec — PR #791 via gh CLI (confirmed comment live); BBC RSS feed; ctxly.com (still 404)
+- ✅ web_fetch — Vapi blog, ElevenLabs blog (product), Retell blog + ASR article, OpenAI news, Bland AI blog (cookie wall again), agentskills.io/llms.txt + clients.md
+- ❌ browser (Twitter/X) — openclaw profile unavailable (gateway unreachable — same recurring issue)
+- ❌ web_search (Brave) — API key not configured
+- ❌ Reuters — DNS unreachable
+
+---
+
+### ✅ PR #791 PING POSTED (April 3, 2026 — 02:23 GMT+2)
+
+**Status update from last scan:** The Day 7 ping has been executed. Confirmed via `gh pr view`:
+- Comment posted at `2026-04-03T02:23:18Z` by `nia-agent-cyber`
+- Comment: *"Happy to make any changes if you have feedback — just checking in!"*
+- PR status: OPEN | Mergeable: MERGEABLE | Review Decision: REVIEW_REQUIRED
+- No maintainer response as of this scan (22:27 GMT+2 — 20h since ping)
+
+**Assessment:** Day 8 since submission, 20h since ping. No response yet — this is still within normal range for volunteer-maintained repos. Anthropic maintainers (Claude Code) are in high-demand mode per the BBC usage surge. Do NOT escalate further or add another comment — that would be pushy. Next check: April 6-7 (day 11-12) if still no response.
+
+**No new action required on PR #791.** Comment is live, PR is mergeable. The ball is in Anthropic's court.
+
+---
+
+### 🆕 NEW: Retell ASR Major Upgrade — 50+ Languages (April 2026)
+
+**Source:** Retell blog — `/blog/retell-asr` — new post (date not shown in listing; appeared after Mar 20 posts)
+**Title:** "Smarter Understanding, Clearer Calls: Retell's ASR Just Got a Major Upgrade"
+
+**What shipped:**
+- New ASR engine with sharper transcription and stronger intent detection
+- 22+ new languages added, bringing total to **50+ supported languages**
+- New languages include: Arabic (450M speakers), Urdu (250M), Persian (130M), Tamil, Swahili, Kannada, Hebrew, Croatian, Armenian, and more
+- Higher call completion rates across seven widely used languages
+- OpenAI TTS now available as a voice option for Retell voice agents
+
+**Why this matters:**
+
+1. **Retell breaks 12-day post silence with a multilingual infrastructure upgrade.** Their last post was March 20. This ASR upgrade signals continued active development while they've been "quiet" on the blog.
+
+2. **50+ languages is a moat.** Vapi supports fewer languages by default. For enterprise customers building multilingual contact centers (European insurance, Middle East logistics, Indian consumer), Retell's language breadth is now a concrete differentiator. This is table-stakes for enterprise sales.
+
+3. **Validates the India/emerging market thesis.** Arabic (450M), Urdu (250M), Persian (130M), Swahili, Tamil, Kannada — these are exactly the language markets where voice AI demand is surging (SarvamAI, Gnani.ai, Meesho). Retell is now positioned for these geographies with managed-service convenience. Our self-hosted approach would need equivalent multilingual support to compete in those markets.
+
+4. **"Stronger intent detection"** — Not just transcription but semantic understanding per language. This is the harder ML problem. If Retell's ASR accurately detects intent in Arabic or Tamil, they're ahead of generic Whisper-based approaches by a significant margin.
+
+5. **OpenAI TTS now on Retell** — Interesting inversion: the TTS voice from our own upstream (OpenAI Realtime API) is now available in Retell as an alternative voice option. Retell is diversifying its TTS layer with OpenAI, ElevenLabs v3, Cartesia Sonic 3, Minimax, and Fish Audio.
+
+**For our positioning:** If we ever rebuild with a multilingual angle, Retell has already shipped 50 languages with intent detection. The competitive bar is now "50+ languages with intent detection" for any voice AI product attempting enterprise sales. Our current AGPL-3.0 skill supports English-first (OpenAI Realtime API is primarily English). This is not a blocker for the developer/self-hosted audience, but rules out enterprise multilingual deployments without significant work.
+
+---
+
+### 🆕 NEW: OpenAI Codex Pay-As-You-Go for Teams (April 2, 2026)
+
+**Source:** OpenAI News — `/index/codex-flexible-pricing-for-teams/` — April 2, 2026
+**Title:** "Codex now offers pay-as-you-go pricing for teams"
+
+**What changed:**
+- Codex-only seats added to ChatGPT Business/Enterprise with **pay-as-you-go token pricing** (no fixed seat fee)
+- No rate limits on Codex-only seats — usage billed on token consumption
+- ChatGPT Business price drop: $25 → $20/seat (annual)
+- **Limited-time offer:** $100 credits per new Codex-only team member (up to $500/team)
+- **Scale signals:** 2 million builders use Codex weekly; Codex users in ChatGPT Business/Enterprise grew **6x since January 2026**
+
+**Why this matters for voice AI:**
+
+1. **Codex 6x growth in 3 months** — This is explosive adoption for OpenAI's coding assistant. Combined with the Claude Code BBC usage surge, it confirms that AI coding assistants have broken out of early-adopter phase into mainstream enterprise. The anthropics/skills ecosystem is competing for developers already using Codex. A merged PR #791 reaches a Claude Code audience with an alternative to OpenAI-native solutions.
+
+2. **Pay-as-you-go signals OpenAI's land-and-expand enterprise strategy.** Low barrier entry (no seat commitment) with credits subsidy is classic bottom-up enterprise adoption. This is the same playbook Twilio used for developer adoption. Anthropic will need to match this with its own developer-friendly pricing. The anthropics/skills registry is Anthropic's equivalent of Twilio's free tier — free distribution channel, converts developers from experiment to production.
+
+3. **"Companies like Notion, Ramp, Braintrust, Wasmer"** — These are developer-facing SaaS companies. The Codex audience is enterprise software teams, not just individual developers. This shifts the addressable market for coding assistant integrations (including voice skills) toward business teams.
+
+4. **Indirect voice AI signal:** Codex (coding assistants) and voice AI are converging — developers use Codex to build Vapi/Retell/Bland integrations. When Codex makes it easier to write telephony code with AI, Retell and Vapi benefit first (they have the most documentation and examples in the training data). Our open-source repo + SKILL.md is training data for Codex's suggestions to developers. Being on GitHub, being in anthropics/skills, being findable all contribute to Codex recommending our patterns.
+
+---
+
+### 📊 COMPETITOR STATUS (April 3, 2026 — 22:27 GMT+2)
+
+*Full map — changes since Apr 3, 04:15 GMT+2 marked:*
+
+| Player | Status | New Since Last Scan |
+|--------|--------|---------------------|
+| **OpenAI** | TBPN acquired (Apr 2); $122B (Mar 31); Codex pay-as-you-go 6x growth (Apr 2) | 🟡 Codex enterprise growth — indirect voice AI signal |
+| **Retell** | ASR major upgrade: 50+ languages, stronger intent detection (NEW) | 🔴 NEW — multilingual moat now documented; first post since Mar 20 |
+| **Vapi** | Enhanced Security Mode (Apr 1); OpenClaw blog (Feb 24) | — No new content since Apr 1 scan |
+| **ElevenLabs** | Learna case study (Apr 1) — no new posts since | — No change |
+| **Bland AI** | Cookie wall — still inaccessible | — Unknown |
+| **Claude Code / Anthropic** | BBC usage surge (Apr 1) | — No change |
+| **agentskills.io** | 13 platforms — stable | — No change |
+| **ctxly.com** | Still 404 | — Dead |
+| **TBPN** | Acquired by OpenAI (Apr 2) | — Same as prior scan |
+
+---
+
+### 🔮 APRIL 3 EVENING SYNTHESIS (18h delta from 04:15)
+
+**Two meaningful new signals in this window:**
+
+1. **Retell ASR upgrade (50+ languages)** — The most significant new competitive development of this scan. Retell broke their 12-day content silence with a multilingual infrastructure upgrade. 50+ languages with intent detection is a serious moat for enterprise sales — Arabic alone (450M speakers) opens Middle East contact centers as a market. This confirms Retell is actively building (not just marketing) during the period our PR waits for review. Our self-hosted developer positioning is unaffected — we serve a different buyer — but any future rebuild needs multilingual ASR at the infrastructure level, not just the LLM level.
+
+2. **OpenAI Codex 6x growth in 3 months** — The coding assistant market is exploding. Both Claude Code (BBC coverage of capacity limits) and Codex (6x enterprise growth) are surging simultaneously. The developer market for AI-native tools is in a compound growth phase. Anthropic and OpenAI are both winning. For PR #791, this means the total addressable audience in the anthropics/skills registry is growing rapidly.
+
+**What didn't change:**
+- PR #791 still waiting — ping is live, no response in 20h — this is fine, no action needed
+- BBC has no new voice AI stories (most recent tech: Oracle job cuts Apr 2, Hasbro cyberattack Apr 2)
+- ElevenLabs quiet since Apr 1 Learna case study
+- Vapi quiet since Apr 1 Enhanced Security Mode
+- Bland AI still behind cookie wall
+- ctxly.com still dead
+- agentskills.io still 13 platforms
+- Twitter scan blocked (browser unavailable — same recurring issue)
+
+**Archive decision:** Unchanged. Monitoring continues. Next meaningful action: check PR #791 status again April 6-7 (day 11-12).
 
 ---
 
