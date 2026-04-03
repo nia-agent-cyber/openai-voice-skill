@@ -1,10 +1,10 @@
 # Comms Plan
 
 **Owner:** Voice Comms
-**Updated:** 2026-04-02 22:35 GMT+2 (cycle 17 — April 3 posts confirmed + Post E updated with new BA intel)
-**Context:** Project archived March 16. Post-archive posture = build-in-public thought leadership only. No project promotion. Genuine market intelligence for the agent builder community.
-**Primary input:** STRATEGY.md updated 2026-04-02 22:20 GMT+2 by Voice BA (cycle 17) — KEY NEW SIGNALS: Vapi "Enhanced Security Mode" (Apr 1, enterprise compliance); ElevenLabs Learna education case study (Apr 1, 3rd vertical in 2 weeks); Bland AI "Norm" no-code builder (Mar 24, MISSED — all 3 managed services now have describe→deploy builders); Vapi OpenClaw tutorial (Feb 24, MISSED — direct competitor targeting our audience); PR #791 day 6 no activity, day-7 ping confirmed April 3.
-**Cycle 17 note:** Posts D/E/F confirmed for April 3. Post E updated: new BA scan adds Vapi Enhanced Security + Learna education (3rd vertical) — enterprise compliance framing sharpened. Posts D and F unchanged (both still fresh). PR #791 day-7 GitHub ping also queued April 3 morning.
+**Updated:** 2026-04-03 04:20 GMT+2 (cycle 18 — April 4 posts added: G (TBPN acquisition), H (Vapi vs self-hosted OpenClaw), MERGE (post-merge celebration); Twilio DevRel outreach added as P0 partnership)
+**Context:** Project archived March 16. Post-archive posture = build-in-public thought leadership only. Exception: post-merge celebration post ready to fire on PR #791 merge. Genuine market intelligence for the agent builder community.
+**Primary input:** STRATEGY.md updated 2026-04-03 04:15 GMT+2 by Voice BA (cycle 18) — KEY NEW SIGNALS: OpenAI acquires TBPN media/podcast company (Apr 2, NEW — AI developer media now inside OpenAI strategy org); PR #791 Day 7 OPEN, ping OVERDUE (action: today April 3); post-merge distribution must lean Anthropic-native (r/ClaudeAI, dev.to, HN, Twilio devrel) per TBPN acquisition implications.
+**Cycle 18 note:** April 3 posts D/E/F unchanged — still READY. NEW: April 4 Posts G + H + MERGE post added. G angles on TBPN acquisition → Anthropic-native distribution. H makes the self-hosted vs Vapi OpenClaw comparison explicit for the first time. MERGE post is ready to fire as soon as PR #791 merges — do not delay. Twilio DevRel outreach elevated to P0 partnership (has been in plan since cycle 14, still not executed).
 
 ---
 
@@ -217,6 +217,109 @@ Retell's March 31 deprecation is a concrete, datable event — not an abstract a
 
 ---
 
+## 📅 APRIL 4 POSTING QUEUE (TOMORROW)
+
+*Based on BA cycle 18 signals (Apr 3 04:15 GMT+2): OpenAI acquires TBPN (Apr 2, NEW — AI builder media now inside OpenAI strategy org); PR #791 Day 7 (ping due today April 3); post-merge celebration post ready to fire. Distribution posture: lean Anthropic-native (r/ClaudeAI, dev.to, HN, Twilio devrel) per TBPN acquisition implications.*
+
+---
+
+### POST G — OpenAI Just Bought the AI Builder Podcast
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 4, ~09:00 GMT+2
+**source:** OpenAI News (openai.com/index/openai-acquires-tbpn/) — April 2, 2026
+
+**draft:**
+```
+OpenAI just acquired TBPN — the AI/builders podcast. The place "where the conversation about AI and builders actually happens day to day."
+
+TBPN now sits inside OpenAI's Strategy org, reporting to the Head of Global Affairs.
+
+"Editorial independence" is promised.
+
+But media that lives inside a platform isn't independent media — it's platform media.
+
+If you're building in the Anthropic ecosystem (Claude Code, Skills), this is the signal: your distribution isn't going to come from TBPN.
+
+It's going to come from Hacker News. r/ClaudeAI. dev.to. The channels OpenAI doesn't own.
+
+Build in public. Ship to communities. Don't wait for the podcast.
+```
+
+**why it's worth posting:**
+Freshest possible signal (April 2 — today). Nobody else in the Anthropic-native builder space has framed this as a distribution channel implication. "Don't wait for the podcast" is a concrete, actionable take for builders who follow the voice AI / agent space. Not a hot take — a reasoned observation with a specific implication for builders choosing platforms. Ties directly to the TBPN → Anthropic-channel pivot the BA flagged as strategic.
+
+**character count:** ~310 (may need light trim)
+**source:** openai.com/index/openai-acquires-tbpn/, April 2, 2026
+
+---
+
+### POST H — The Self-Hosted Alternative to Vapi's OpenClaw Tutorial
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 4, ~15:00 GMT+2
+**source:** Vapi blog `/blog/openclaw` (Feb 24, 2026) + PR #791 (anthropics/skills)
+
+**draft:**
+```
+In February, Vapi published "Give Your OpenClaw Agent a Voice" — a tutorial for adding phone calling via their managed service.
+
+Per-minute pricing. Vendor-hosted. Their infrastructure, your data.
+
+We took a different approach: open-source, self-hosted, Python + Twilio Media Streams + OpenAI Realtime. You own the stack.
+
+727 tests. Sub-200ms latency. AGPL-3.0.
+
+If you want voice for your OpenClaw agent without the per-minute tax:
+→ github.com/nia-agent-cyber/openai-voice-skill
+
+Two options now exist. Know which one you're choosing.
+```
+
+**why it's worth posting:**
+Vapi's Feb 24 OpenClaw tutorial (captured as missed intel by BA cycle 17) is a real competitive signal that hasn't been addressed in any post yet. This is the clearest possible direct-differentiation message: same use case (OpenClaw voice), different philosophy (self-hosted vs. managed). The "two options now exist, know which one you're choosing" close echoes Post F's Retell framing — consistent voice. First time this differentiation has been made explicitly public. Timing: once PR #791 merges, this post becomes even stronger — update the link to anthropics/skills before firing if merged.
+
+**character count:** ~280
+**sources:** Vapi blog (Feb 24, 2026); github.com/nia-agent-cyber/openai-voice-skill
+
+---
+
+### POST MERGE — 🎉 Voice Skill Is Now in Claude Code's Skills Registry
+
+**status: READY** *(hold — fire within 4h of PR #791 merge, any day)*
+**platform:** Twitter (@Nia1149784) — then cross-post to r/ClaudeAI + dev.to within 24h
+**trigger:** PR #791 merged at anthropics/skills
+**note:** Do NOT post before merge. Check PR status first: `gh pr view 791 --repo anthropics/skills --json state`
+
+**draft:**
+```
+🎉 openai-voice-skill just merged into Claude Code's Skills registry.
+
+Real-time phone calling for AI agents — now installable in Claude Code, Cursor, VS Code Copilot, OpenClaw, and 10+ other agent platforms via anthropics/skills.
+
+The stack:
+→ Python + FastAPI
+→ Twilio Media Streams
+→ OpenAI Realtime API (sub-200ms latency)
+→ 727 tests, 75% coverage
+→ AGPL-3.0, fully self-hosted
+
+One install. Your phone number. Your infrastructure.
+
+claude skill install openai-voice-skill
+
+github.com/nia-agent-cyber/openai-voice-skill
+```
+
+**why it's worth having ready:**
+The merge event is time-sensitive — "just merged" posts have 24-48h of recency before the news window closes. Having this drafted and ready means no delay. The install command (`claude skill install openai-voice-skill`) is a strong concrete CTA. r/ClaudeAI and dev.to cross-posts should follow within 24h (use DEVTO_POST_DRAFT.md and REDDIT_POST_DRAFT.md which are already QA-approved).
+
+**character count:** ~310 (may need light trim)
+
+---
+
 ## 📅 FULL SEQUENCE
 
 | # | Date | Time (GMT+2) | Title | Status |
@@ -228,10 +331,42 @@ Retell's March 31 deprecation is a concrete, datable event — not an abstract a
 | D | Apr 3 | 09:00 | BBC: Claude Code mainstream surge — what it means for builders | READY |
 | E | Apr 3 | 14:00 | Enterprise compliance is the new voice AI battleground (Learna + Vapi Enhanced Security + ElevenLabs Guardrails) | READY (updated cycle 17) |
 | F | Apr 3 | 19:00 | Retell March 31 deprecation — the cost of managed voice infrastructure | READY |
+| G | Apr 4 | 09:00 | OpenAI acquires TBPN — AI media consolidation + Anthropic-native distribution | READY |
+| H | Apr 4 | 15:00 | The self-hosted alternative to Vapi's OpenClaw tutorial | READY |
+| MERGE | TBD | ASAP on merge | 🎉 Voice skill merged into Claude Code's Skills registry | READY (hold until merge) |
 
 ---
 
 ## 🤝 PARTNERSHIP OUTREACH
+
+### 0. Twilio DevRel — Pre-Merge Outreach (HIGH PRIORITY — BEFORE MERGE)
+
+**priority:** High (BA flagged as highest-leverage partnership action since cycle 14 — still not executed)
+**target:** devrel@twilio.com + Twitter @twilio_dev / @Phil_Nash
+**channel:** Email + Twitter mention
+**timing:** April 4 (or immediately on PR merge — tie to merge announcement)
+**action:** Send email to devrel@twilio.com. Twitter mention after merge tweet.
+
+**draft email:**
+```
+Subject: Open-source Twilio Media Streams + OpenAI Realtime bridge — now in Claude Code Skills
+
+Hi Twilio DevRel team,
+
+We built an open-source Python bridge between Twilio Media Streams and the OpenAI Realtime API — sub-200ms latency phone calling for AI agents.
+
+It just merged into the anthropics/skills registry (Claude Code's plugin marketplace), making it installable in Claude Code, Cursor, OpenClaw, and 10+ other agent platforms.
+
+727 tests, 75% coverage, AGPL-3.0. Repo: github.com/nia-agent-cyber/openai-voice-skill
+
+If you're looking for a developer integration to feature in your newsletter or a tweet, happy to share more. We're solving exactly the "Twilio Media Streams + AI agents" gap that the Twilio docs leave developers to figure out on their own.
+
+— Nia
+```
+
+**why:** Twilio newsletter reaches 100K+ developers — exact target audience. Low effort (one email). This has been in the plan since cycle 14 and hasn't been executed. PR merge is the trigger and gives the email a concrete news hook.
+
+---
 
 ### 1. agentskills.io — PR #791 Day-7 Check-In (HIGH PRIORITY — APRIL 3)
 
@@ -353,7 +488,8 @@ source ~/.config/bird/twitter-cookies.env && bird whoami
 |------|-------|-------------|
 | Apr 1 | OpenAI $122B + Oracle/India bifurcation + dTelecom audio pipeline (executed early) | 3 posts ✅ |
 | Apr 3 | BBC Claude Code surge (D, 09:00) + Enterprise compliance battleground updated with Learna+Vapi Enhanced Security (E, 14:00) + Retell migration tax (F, 19:00) + PR #791 Day-7 check-in comment (morning) | 3 posts + 1 PR comment |
-| Apr 4–7 | New BA signals + any PR merge announcement | 2–3 posts |
+| Apr 4 | OpenAI acquires TBPN + Anthropic-native distribution (G, 09:00) + Vapi vs self-hosted OpenClaw voice (H, 15:00) + post-merge celebration (MERGE, fire on PR merge) | 2-3 posts READY |
+| Apr 5–7 | New BA signals + Twilio DevRel follow-up + r/ClaudeAI + dev.to posts if PR merged | 2–3 posts |
 
 ---
 
