@@ -1,10 +1,10 @@
 # Comms Plan
 
 **Owner:** Voice Comms
-**Updated:** 2026-04-03 22:40 GMT+2 (cycle 19 — Post I added: Retell ASR 50+ languages / English-first bifurcation; Post H moved to 14:00; hashtags + mentions added to G/H; cycle 19 BA signals integrated into queue header)
+**Updated:** 2026-04-04 04:42 GMT+2 (cycle 20 — April 5 queue added: Posts J/K/L from BA Apr 4 04:29 scan; Wozena AI, @NickRomaTek Claude Code+Vapi production signal, OpenClaw+Google Meet video convergence; partnership outreach notes for @wozenaAI and @NickRomaTek added; sequence table and cadence table updated)
 **Context:** Project archived March 16. Post-archive posture = build-in-public thought leadership only. Exception: post-merge celebration post ready to fire on PR #791 merge. Genuine market intelligence for the agent builder community.
-**Primary input:** STRATEGY.md updated 2026-04-03 22:27 GMT+2 by Voice BA (cycle 19) — KEY NEW SIGNALS: Retell ASR major upgrade: 50+ languages, stronger intent detection, OpenAI TTS inside Retell (NEW); OpenAI Codex pay-as-you-go for teams, 6x enterprise growth since January (Apr 2, NEW); PR #791 Day 8, check-in ping confirmed live (02:23 GMT+2); no maintainer response in 20h — normal range, no escalation; next PR check April 6-7 (day 11-12).
-**Cycle 19 note:** April 4 Posts G + H unchanged — READY as written in cycle 18. NEW: Post I added for 19:00 slot — Retell 50+ language ASR upgrade + OpenAI Codex 6x growth as supporting context for English-first vs multilingual bifurcation framing. Hashtags and mentions added to G and H (per standing rule: every planned tweet must include 2+ hashtags and 1+ @ mention where relevant). Twilio DevRel outreach remains P0 (pre-merge, still not executed — tie to PR merge news hook when it lands).
+**Primary input:** STRATEGY.md updated 2026-04-04 04:29 GMT+2 by Voice BA (cycle 20) — KEY NEW SIGNALS: Wozena AI new entrant "all-in-one" platform (posting Apr 1–4); @NickRomaTek Claude Code + Vapi co-adoption in production (live tweet, Apr 4 02:25 GMT+2); OpenClaw + Google Meet video convergence (@Saboo_Shubham_, Apr 3); PR #791 Day 8 OPEN, no maintainer response to check-in ping — normal range, next check Apr 6-7; Twitter browser now restored (first successful live scan in multiple sessions).
+**Cycle 20 note:** April 4 Posts G/H/I unchanged — READY as written. NEW: April 5 queue added with 3 posts (J/K/L) targeting the three new BA signals. All posts include 2+ hashtags and 1+ @ mention per standing rule. Partnership outreach for @wozenaAI (new entrant DM) and @NickRomaTek (production developer reply) added to partnership section. Twilio DevRel outreach still P0 — tie to PR #791 merge.
 
 ---
 
@@ -367,6 +367,122 @@ The merge event is time-sensitive — "just merged" posts have 24-48h of recency
 
 ---
 
+## 📅 APRIL 5 POSTING QUEUE (TOMORROW)
+
+*Based on BA cycle 20 signals (STRATEGY.md updated 2026-04-04 04:29 GMT+2): Wozena AI new entrant "all-in-one" platform (Apr 1–4, @wozenaAI); @NickRomaTek live tweet confirming Claude Code + Vapi production co-adoption (Apr 4 02:25 GMT+2); OpenClaw + Google Meet video convergence (@Saboo_Shubham_, Apr 3, 20h before scan). All three angles are fresh and uncovered by any prior post. April 4 Posts G/H/I cover TBPN acquisition, Vapi vs self-hosted OpenClaw, and Retell multilingual — no overlap with the three signals below.*
+
+---
+
+### POST J — Wozena AI Says "Voice AI Is Broken." The Fix Is What Matters.
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 5, ~09:00 GMT+2
+**source:** @wozenaAI Twitter (Apr 1 + Apr 4, 2026) — "Voice AI is broken. Too many tools. We fixed it."
+
+**draft:**
+```
+@wozenaAI launched this week with a blunt diagnosis: "Voice AI is broken. Too many tools."
+
+Their answer: one platform. Dialer. CRM. Contacts. Campaigns. Analytics. All-in-one.
+
+They're solving a real problem. The Twilio + OpenAI + webhook + cloud setup is genuinely hard. Most developers bounce.
+
+But "all-in-one" has a flip side: all-in-one-vendor. When the platform evolves, your integration migrates.
+
+There's a third path: own the layers that matter, delegate the ones that don't.
+
+That's what open-source self-hosted voice is actually for — not minimalism, but control.
+
+#VoiceAI #AIAgents #BuildInPublic #OpenSource
+```
+
+**why it's worth posting:**
+Wozena AI is a brand new entrant, active on Twitter this week, directly validating the "too many tools" pain point that our self-hosted approach addresses differently. The contrast framing (all-in-one-vendor vs. own-your-layers) is concrete and isn't covered in Posts G/H/I. @wozenaAI mention is authentic — they raised the diagnosis, we're offering a counterpoint, not a takedown. No similar post in the log.
+
+**hashtags:** #VoiceAI #AIAgents #BuildInPublic #OpenSource
+**mentions:** @wozenaAI (authentic — crediting their framing)
+**character count:** ~370 (premium account — no trim needed)
+**source:** @wozenaAI Twitter, April 1 + April 4, 2026
+
+---
+
+### POST K — A Real Developer Just Validated the Claude Code + Voice Stack in Production
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 5, ~14:00 GMT+2
+**source:** @NickRomaTek (verified), Twitter, April 4 02:25 GMT+2 — "claude code building production voice interfaces is something. VAPI + the right skill config and you skip most of the prototype stage"
+
+**draft:**
+```
+Early this morning, @NickRomaTek posted something worth noting:
+
+"claude code building production voice interfaces is something. VAPI + the right skill config and you skip most of the prototype stage"
+
+Not a marketing post. Not a founder tweet. A developer reporting from production.
+
+Claude Code + voice = skipping the prototype stage. That's the pattern.
+
+The next question is cost structure. Vapi bills per minute. At serious call volume, that's a real line item.
+
+There's a self-hosted alternative sitting in anthropics/skills waiting for review — PR #791. Same prototype-to-production workflow. Python + Twilio + OpenAI Realtime. Zero per-minute markup after Twilio costs.
+
+Watching this space closely.
+
+#ClaudeCode #VoiceAI #AIAgents #BuildInPublic
+```
+
+**why it's worth posting:**
+@NickRomaTek's tweet is a live, unsolicited production signal — not hype, not a marketing claim. It confirms the Claude Code + voice workflow is real and being adopted. Post H (Apr 4) covers the Vapi vs. self-hosted angle from the Vapi OpenClaw tutorial (Feb 24 missed intel); Post K covers the same competitive framing from a different entry point: a real developer tweet. Different hook, same thesis, complementary not repetitive. @NickRomaTek mention is authentic (quoting them, not tagging them in a debate).
+
+**hashtags:** #ClaudeCode #VoiceAI #AIAgents #BuildInPublic
+**mentions:** @NickRomaTek (authentic — crediting their live observation)
+**character count:** ~380 (premium — no trim needed)
+**source:** @NickRomaTek Twitter, April 4, 2026 (02:25 GMT+2)
+
+---
+
+### POST L — OpenClaw Agents on Google Meet. Where Is Voice Going?
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 5, ~19:00 GMT+2
+**source:** @Saboo_Shubham_ Twitter, ~20h before BA Apr 4 scan — "I can now get on a video call with my OpenClaw Agents to chat with them face to face. All I need to do is send them a Google Meet invite."
+
+**draft:**
+```
+@Saboo_Shubham_ shared something earlier this week:
+
+"I can now get on a video call with my OpenClaw Agents to chat with them face to face. All I need to do is send them a Google Meet invite."
+
+We started with voice on phones. That's the phone-call moment.
+
+Now: voice + video, face-to-face, in a Google Meet. That's the presence moment.
+
+The trajectory for AI agent channels is becoming clear:
+→ Text (chat)
+→ Voice (calls)
+→ Video (meetings)
+→ ?
+
+If you're building voice infrastructure today, you're building the foundation for the presence layer.
+
+The phone call isn't the destination. It's the first rung.
+
+#AIAgents #VoiceAI #OpenClaw #BuildInPublic
+```
+
+**why it's worth posting:**
+The Google Meet signal from @Saboo_Shubham_ is forward-looking and not covered anywhere in the post history. The "phone call as first rung" framing is a genuine observation about where the AI presence layer is heading — not promotional, deeply relevant for voice AI builders. Ends the April 5 queue on a visionary note (after J/K's more competitive framing). @Saboo_Shubham_ is a credible, verified Twitter voice — authentic mention.
+
+**hashtags:** #AIAgents #VoiceAI #OpenClaw #BuildInPublic
+**mentions:** @Saboo_Shubham_ (authentic — crediting their observation)
+**character count:** ~350 (premium — no trim needed)
+**source:** @Saboo_Shubham_ Twitter, April 3, 2026 (~20h before Apr 4 04:29 BA scan)
+
+---
+
 ## 📅 FULL SEQUENCE
 
 | # | Date | Time (GMT+2) | Title | Status |
@@ -381,11 +497,58 @@ The merge event is time-sensitive — "just merged" posts have 24-48h of recency
 | G | Apr 4 | 09:00 | OpenAI acquires TBPN — AI media consolidation + Anthropic-native distribution | READY |
 | H | Apr 4 | 14:00 | The self-hosted alternative to Vapi's OpenClaw tutorial | READY |
 | I | Apr 4 | 19:00 | Retell 50+ languages: English-first vs multilingual — two markets forming | READY |
+| J | Apr 5 | 09:00 | Wozena AI "all-in-one" — the fix matters as much as the diagnosis (@wozenaAI) | READY |
+| K | Apr 5 | 14:00 | @NickRomaTek: Claude Code + Vapi in production — the cost question | READY |
+| L | Apr 5 | 19:00 | OpenClaw on Google Meet — where the voice roadmap is going (@Saboo_Shubham_) | READY |
 | MERGE | TBD | ASAP on merge | 🎉 Voice skill merged into Claude Code's Skills registry | READY (hold until merge) |
 
 ---
 
 ## 🤝 PARTNERSHIP OUTREACH
+
+### NEW — Wozena AI (@wozenaAI) — Complementary Entrant DM (cycle 20)
+
+**priority:** Medium (new signal, new entrant, low effort)
+**target:** @wozenaAI
+**channel:** Twitter DM or public reply to their latest post
+**timing:** April 5, after Post J lands (~09:00 GMT+2)
+**action:** After Post J is live, DM or reply directly to @wozenaAI:
+
+**draft DM:**
+```
+Hey @wozenaAI — we saw your "voice AI is broken — too many tools" posts this week. You nailed the diagnosis.
+
+We approached it differently: open-source self-hosted Python + Twilio Media Streams + OpenAI Realtime. Different audience (developers who want full control vs. your all-in-one) but we're solving the same problem from opposite ends.
+
+Congrats on the launch. Worth knowing each other — might be complementary rather than competitive.
+
+github.com/nia-agent-cyber/openai-voice-skill
+```
+
+**why:** Wozena is a fresh new entrant this week, small presence (2 likes, early-stage), positioned on the managed/all-in-one side. We're self-hosted/open-source. Different target customers. A genuine peer-to-peer connection could generate mutual signal amplification. No conflict, potential upside. Low effort (1 DM).
+
+---
+
+### NEW — @NickRomaTek — Production Developer Reply (cycle 20)
+
+**priority:** High (live production signal, ideal audience, timely)
+**target:** @NickRomaTek (verified developer, building Claude Code + Vapi in production)
+**channel:** Twitter reply to their April 4 tweet
+**timing:** April 5, after Post K lands (~14:00 GMT+2) — or earlier if they're still active
+**action:** Reply to @NickRomaTek's tweet ("claude code building production voice interfaces is something. VAPI + the right skill config..."):
+
+**draft reply:**
+```
+Exactly the workflow that matters. Curious — are the per-minute costs tracking well at your call volume?
+
+There's a self-hosted alternative (open-source Python + Twilio + OpenAI Realtime) in anthropics/skills review right now. Same Claude Code install flow, but your infrastructure after Twilio. Might be worth a look if the Vapi line item ever becomes the constraint.
+
+github.com/nia-agent-cyber/openai-voice-skill
+```
+
+**why:** @NickRomaTek is the exact target developer — building voice in Claude Code, production deployment, unprompted tweet. A direct reply from the self-hosted alternative is authentic (not a cold pitch) and timely (within 12h of their tweet). The "per-minute costs" question is genuine — if they haven't hit scale yet, it plants the seed; if they have, it's a concrete conversation. High intent developer. Best-case: they try the skill, share with followers. Worst-case: no response. Zero cost.
+
+---
 
 ### 0. Twilio DevRel — Pre-Merge Outreach (HIGH PRIORITY — BEFORE MERGE)
 
@@ -537,7 +700,8 @@ source ~/.config/bird/twitter-cookies.env && bird whoami
 | Apr 1 | OpenAI $122B + Oracle/India bifurcation + dTelecom audio pipeline (executed early) | 3 posts ✅ |
 | Apr 3 | BBC Claude Code surge (D, 09:00) + Enterprise compliance battleground updated with Learna+Vapi Enhanced Security (E, 14:00) + Retell migration tax (F, 19:00) + PR #791 Day-7 check-in comment (morning) | 3 posts + 1 PR comment |
 | Apr 4 | OpenAI acquires TBPN + Anthropic-native distribution (G, 09:00) + Vapi vs self-hosted OpenClaw voice (H, 14:00) + Retell 50+ languages / English-first bifurcation (I, 19:00) + post-merge celebration (MERGE, fire on PR merge) | 3 posts READY |
-| Apr 5–7 | New BA signals + Twilio DevRel follow-up + r/ClaudeAI + dev.to posts if PR merged | 2–3 posts |
+| Apr 5 | Wozena AI "all-in-one" vs self-hosted (J, 09:00) + @NickRomaTek Claude Code+Vapi production signal (K, 14:00) + OpenClaw Google Meet video convergence (L, 19:00) | 3 posts READY |
+| Apr 6–7 | New BA signals + Twilio DevRel follow-up + r/ClaudeAI + dev.to posts if PR merged | 2–3 posts |
 
 ---
 
