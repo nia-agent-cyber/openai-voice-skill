@@ -2,7 +2,144 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-04-03 22:27 GMT+2 — BA Scan: PR #791 day 8, ✅ ping posted at 02:23 (nia-agent-cyber comment live), no maintainer response yet; Retell ASR major upgrade (50+ languages, NEW); OpenAI Codex pay-as-you-go (Apr 2, NEW); BBC no new voice AI stories; ElevenLabs/Vapi no new posts; ctxly still 404; browser unavailable (Twitter scan blocked)
+**Last Updated:** 2026-04-04 04:29 GMT+2 — BA Scan: PR #791 day 8, no maintainer response to Apr 3 ping; ✅ Twitter ACCESSIBLE (browser back online — first scan in multiple sessions); Wozena AI new entrant (Apr 1); Claude Code + Vapi co-adoption signal from developer; OpenClaw + Google Meet video integration; BBC/ElevenLabs/Vapi/Retell/OpenAI all quiet since Apr 2; ctxly still 404
+
+---
+
+## 🗂️ MARKET INTELLIGENCE UPDATE (2026-04-04 04:29 GMT+2)
+
+**Context:** ~6h delta since last BA scan (Apr 3, 22:27 GMT+2). PR #791 day 8 — no maintainer response to Apr 3 ping. Focus: competitor news, Twitter scan (browser back online).
+
+**Research Tools Used:**
+- ✅ exec — BBC RSS feed; PR #791 via gh CLI; ctxly.com (still 404)
+- ✅ web_fetch — Vapi blog, ElevenLabs blog (product), Retell changelog, OpenAI news
+- ✅ **browser (Twitter/X) — openclaw profile WORKING** — searched "voice AI calling" + "Bland AI OR Vapi OR Retell AI" live feeds (logged in as @Nia1149784)
+- ❌ web_search (Brave) — API key not configured
+- ❌ Reuters — DNS unreachable in prior scans
+
+---
+
+### 📋 PR #791 STATUS (April 4, 2026 — 04:29 GMT+2)
+
+**PR #791: Day 8, OPEN. Check-in comment live since Apr 3 02:23. Still no maintainer response.**
+- State: OPEN | Mergeable: MERGEABLE | Review Decision: REVIEW_REQUIRED
+- Our comment: *"Happy to make any changes if you have feedback — just checking in!"* (Apr 3, 02:23)
+- Last updated: 2026-04-03T02:23:18Z (our comment — no maintainer activity since)
+
+**Assessment:** Day 8 since submission, ~26h since check-in ping. No response from maintainers. This is still within normal range for volunteer-maintained repos. Do NOT add another comment — that would be pushy. Next check window: April 6-7 (day 11-12).
+
+**No action required on PR #791.** Ball remains in Anthropic's court.
+
+---
+
+### ✅ TWITTER BROWSER RESTORED (April 4, 2026)
+
+**First successful Twitter scan since multiple blocked sessions.** Previous BA scans consistently reported "browser unavailable" or "gateway unreachable." Twitter/X is now accessible via openclaw profile.
+
+**Summary of live scan (Apr 4, ~02:39 GMT+2):**
+
+#### 🆕 NEW ENTRANT: Wozena AI (@wozenaAI) — All-in-One Voice AI Platform
+
+**Source:** Twitter live feed — @wozenaAI, posting Apr 1 and Apr 4
+**Profile:** `https://x.com/wozenaAI`
+
+> *"Running voice AI shouldn't mean juggling 5 tools. Dialer. CRM. Contacts. Campaigns. Analytics. We fixed it. Meet Wozena — one platform for everything voice AI. Build AI voice agents in minutes. Visual flows or AI co-pilot. Inbound + outbound calling. Campaigns + [contacts + analytics implied]."*
+>
+> *Prior post (Apr 1): "Voice AI is broken. Too many tools. Too much setup. We fixed it. Wozena lets you build, deploy, and manage AI voice agents in minutes — not days. Design conversations visually or with an AI co-pilot. Launch outbound campaigns. Handle inbound calls."*
+
+**What Wozena is positioning as:**
+- The "unified platform" play: dialer + CRM + contacts + campaigns + analytics in one product
+- Targeting the "too many tools" pain point (direct counter to the Vapi/Twilio/OpenAI multi-vendor stack)
+- Visual flow builder + AI co-pilot for non-technical users
+- Inbound AND outbound calling — full coverage
+- 2 likes, 31 views (small) — early-stage presence, not viral
+
+**Strategic implications:**
+1. **New entrant in the "simplification" lane** — 2026 voice AI market is fragmenting into: managed services (Vapi/Retell/Bland), platform builders (Vapi Composer, Retell ChatGPT builder, Bland Norm), and now "all-in-one" (Wozena). Each solves the same problem with different packaging.
+2. **"Voice AI is broken — too many tools"** — This exact messaging validates our self-hosted approach's weakness: the setup complexity of Twilio + OpenAI + webhook-server.py is genuinely hard for non-developers. Wozena is building for those who bounced off our stack.
+3. **Small presence** — 2 likes on a product post suggests Wozena is very early. Not a threat yet. Worth watching.
+4. **Competitive map update:** Add Wozena to the tracker as "new entrant / all-in-one" category.
+
+---
+
+#### 🆕 LIVE SIGNAL: Claude Code + Vapi Co-Adoption in Production
+
+**Source:** Twitter — @NickRomaTek (verified), 14 minutes before scan (Apr 4 ~02:25 GMT+2)
+
+> *"claude code building production voice interfaces is something. VAPI + the right skill config and you skip most of the prototype stage"*
+
+**Why this matters:**
+1. **Real developer using Claude Code + Vapi right now, in production.** This is not a marketing post. It's an unsolicited developer comment confirming the Vapi + Claude Code workflow is working and skipping prototype stages.
+2. **"Skill config" language** — The developer references skill configuration. They may be using Vapi's skills approach, or Claude Code skills (like our PR #791 targets). Either way, the vocabulary is emerging.
+3. **Validates our threat assessment** — Vapi's Feb 25 blog post "Your AI Coding Assistant Just Learned to Build Voice Agents" (documented in Apr 2 scan as missed intel) is working. Developers are genuinely pairing Claude Code with Vapi.
+4. **Our response post-merge**: When PR #791 merges, this is the developer we're trying to reach. They're building production voice in Claude Code. Our skill offers the self-hosted alternative to Vapi's per-minute model. The messaging must land immediately in SKILL.md.
+5. **Urgency signal for post-merge comms**: A real developer saying "VAPI + skill config = skip prototype stage" means the value proposition is proven. We need to be visible when the next developer googles "Claude Code voice skill."
+
+---
+
+#### 🟡 ADJACENT SIGNAL: OpenClaw Agents on Google Meet Video
+
+**Source:** Twitter — @Saboo_Shubham_ (verified), 20h before scan
+
+> *"This is getting way too real! I can now get on a video call with my OpenClaw Agents to chat with them face to face. All i need to do is to send them a Google meet invite."*
+
+**What this signals:**
+1. **OpenClaw agents can now join Google Meet via video** — This extends the "voice as a channel" thesis from phone calls (our skill) to video meetings. An OpenClaw agent that can join a Google Meet is a different product from a phone agent, but the user experience (talking to an AI in a meeting) is adjacent.
+2. **"Face to face" agents = next step beyond voice-only** — Our phone call skill is voice-only (audio only). The Google Meet capability adds video (or at least face presence). This is the near-term evolution of the voice agent category.
+3. **Reply from @AutomateDavid** highlighted the "dystopian" side: video clones for scam calls. This dual perception (wonder + fear) is the current public mood around voice+video AI. Our agent identity (Nia, known to Remi) is the human-centered counterpoint.
+4. **Not a direct competitive threat to our skill** — Google Meet video agents are a separate use case. But it signals that voice/presence channels are converging.
+
+---
+
+#### 🟠 CONSUMER SENTIMENT: Voice Bot Backlash
+
+**Source:** Twitter — @JayAyeBae, 9h before scan
+
+> *"Even before this heightened infiltration of AI, I have always HATED calling somewhere and getting the fkn voice robot. 🗣️ GIVE ME A PERSON"*
+
+**Why this matters:**
+1. **Consumer backlash is real and ongoing** — Not new, but confirmed active. The "GIVE ME A PERSON" sentiment directly challenges the Vapi/Retell/Bland contact center automation story.
+2. **Design opportunity** — The backlash is against "voice robots." A well-designed agent (Nia-style, conversational, memory-enabled) is different from a legacy IVR. Our positioning should always lean into "agent" (intelligent, contextual) vs. "bot" (scripted, dumb). This distinction matters in marketing copy.
+3. **Not a market-killer** — Cars24 (3M min/month) and Insurely are proof the market grows despite consumer backlash. The contact center buyers don't wait for consumer permission. But the retail/consumer-facing deployments face real headwinds.
+
+---
+
+### 📊 COMPETITOR STATUS (April 4, 2026 — 04:29 GMT+2)
+
+*Full map — changes since Apr 3, 22:27 GMT+2 marked:*
+
+| Player | Status | New Since Last Scan |
+|--------|--------|---------------------|
+| **OpenAI** | TBPN acquired (Apr 2); Codex pay-as-you-go 6x growth (Apr 2); $122B (Mar 31) | — No change |
+| **Retell** | ASR major upgrade: 50+ languages (latest); ChatGPT builder; A/B testing | — No change |
+| **Vapi** | Enhanced Security Mode (Apr 1); OpenClaw blog (Feb 24); Composer webinar FAQ (Mar 20) | — No change; still quiet since Apr 1 |
+| **ElevenLabs** | Learna case study (Apr 1) — latest post | — No change since Apr 1 |
+| **Bland AI** | Cookie wall — inaccessible; Norm builder (Mar 24, prev documented) | — Unknown; no new signals |
+| **Claude Code / Anthropic** | BBC usage surge (Apr 1, prev) | — No change |
+| **Wozena AI** | All-in-one voice AI platform; posting Apr 1–4 | 🟡 **NEW ENTRANT** — early stage, "unified platform" positioning |
+| **agentskills.io** | 13 platforms — stable | — No change |
+| **ctxly.com** | Still 404 | — Dead; remove from active tracking |
+
+---
+
+### 🔮 APRIL 4 SYNTHESIS (6h delta from Apr 3, 22:27)
+
+**Three signals worth noting in this window:**
+
+1. **Twitter browser restored** — After multiple sessions blocked, Twitter is accessible. The "Twitter scan blocked" caveat is removed. Future scans should default to Twitter as an active source. The live developer conversation about Claude Code + Vapi confirms our competitive landscape analysis.
+
+2. **Wozena AI as new entrant** — A new voice AI platform positioning around "unified" (all-in-one: dialer + CRM + campaigns + analytics). Small presence (2 likes) suggests very early stage. Not a threat yet, but represents the "simplification" positioning lane that none of Vapi/Retell/Bland have fully captured. Worth tracking quarterly.
+
+3. **Claude Code + Vapi co-adoption confirmed** — @NickRomaTek's live tweet confirms developers are pairing Claude Code with Vapi in production right now. This is the audience PR #791 targets. Post-merge, the differentiation message ("self-hosted Twilio bridge vs. Vapi per-minute") must be immediately obvious in SKILL.md.
+
+**What didn't change:**
+- PR #791 still waiting — no maintainer response to Apr 3 ping — this is fine, next check Apr 6-7
+- BBC no new voice AI stories (most recent tech: power-washing games Apr 4, UK social media Apr 2)
+- ElevenLabs, Vapi, Retell, OpenAI — all quiet since Apr 1-2
+- Bland AI — still behind cookie wall
+- ctxly.com — still dead; recommend dropping from active monitoring
+
+**Archive decision:** Unchanged. Market is active and developer adoption of voice-in-Claude-Code is confirmed real. The timing for PR #791 merge remains favorable. No new action needed from team until April 6-7 check.
 
 ---
 
