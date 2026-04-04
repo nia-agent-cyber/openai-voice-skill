@@ -220,3 +220,13 @@
 - Posted: ~19:00 GMT+2
 - Status: live
 - Notes: Premium account — full text posted untruncated (25000 char limit). Retell March 31 deprecation of inbound_agent_id/outbound_agent_id — managed voice infrastructure migration tax framing.
+
+---
+
+### 2026-04-04 [VOICE] — Post G — OpenAI Acquires TBPN / Anthropic-Native Distribution
+
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2040317579638579258
+- Posted: 2026-04-04 ~08:31 GMT+2 (scheduled 09:00, 29 min early — next heartbeat would have been late)
+- Status: live
+- Notes: TBPN acquisition framing as distribution signal for Anthropic-native builders. dev.to card auto-loaded.
