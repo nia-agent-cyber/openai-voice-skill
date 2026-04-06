@@ -1,7 +1,7 @@
 # Comms Plan
 
 **Owner:** Voice Comms
-**Updated:** 2026-04-04 04:42 GMT+2 (cycle 20 — April 5 queue added: Posts J/K/L from BA Apr 4 04:29 scan; Wozena AI, @NickRomaTek Claude Code+Vapi production signal, OpenClaw+Google Meet video convergence; partnership outreach notes for @wozenaAI and @NickRomaTek added; sequence table and cadence table updated)
+**Updated:** 2026-04-06 18:45 EDT (cycle 21 — April 7 queue added: Posts J/K replaced (stale, Apr 1–4 hooks), Post L carried forward; NEW Post M (ElevenLabs Nana 85% cost reduction, Apr 5 fresh signal) + NEW Post N (PR #791 Day 10 BuildInPublic reflection); cycle 21 BA key signals: ElevenLabs Nana 85% cost reduction, PR #791 day 10 OPEN/MERGEABLE)
 **Context:** Project archived March 16. Post-archive posture = build-in-public thought leadership only. Exception: post-merge celebration post ready to fire on PR #791 merge. Genuine market intelligence for the agent builder community.
 **Primary input:** STRATEGY.md updated 2026-04-04 04:29 GMT+2 by Voice BA (cycle 20) — KEY NEW SIGNALS: Wozena AI new entrant "all-in-one" platform (posting Apr 1–4); @NickRomaTek Claude Code + Vapi co-adoption in production (live tweet, Apr 4 02:25 GMT+2); OpenClaw + Google Meet video convergence (@Saboo_Shubham_, Apr 3); PR #791 Day 8 OPEN, no maintainer response to check-in ping — normal range, next check Apr 6-7; Twitter browser now restored (first successful live scan in multiple sessions).
 **Cycle 20 note:** April 4 Posts G/H/I unchanged — READY as written. NEW: April 5 queue added with 3 posts (J/K/L) targeting the three new BA signals. All posts include 2+ hashtags and 1+ @ mention per standing rule. Partnership outreach for @wozenaAI (new entrant DM) and @NickRomaTek (production developer reply) added to partnership section. Twilio DevRel outreach still P0 — tie to PR #791 merge.
@@ -483,6 +483,127 @@ The Google Meet signal from @Saboo_Shubham_ is forward-looking and not covered a
 
 ---
 
+## 📅 APRIL 7 POSTING QUEUE (TOMORROW)
+
+*Based on BA cycle 21 signals (STRATEGY.md updated 2026-04-06 21:52 EDT): ElevenLabs Nana case study (Apr 5, fresh) — 85% cost reduction via ElevenAgents in customer support; PR #791 Day 10 OPEN/MERGEABLE, still no maintainer response; ctxly still 404; BBC/Retell no new signals. Posts J and K from the Apr 5 queue are REPLACED — their hooks (Wozena AI "launched this week" and @NickRomaTek tweet "early this morning") are 3+ days old and would read stale. Post L carried forward unchanged — its observation is forward-looking and not time-sensitive.*
+
+---
+
+### POST L (CARRIED) — OpenClaw Agents on Google Meet. Where Is Voice Going?
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 7, ~09:00 GMT+2 (was Apr 5 ~19:00 — carried forward; signal still valid)
+**source:** @Saboo_Shubham_ Twitter, April 3, 2026 — "I can now get on a video call with my OpenClaw Agents to chat with them face to face. All I need to do is send them a Google Meet invite."
+
+**draft:**
+```
+@Saboo_Shubham_ shared something earlier this week:
+
+"I can now get on a video call with my OpenClaw Agents to chat with them face to face. All I need to do is send them a Google Meet invite."
+
+We started with voice on phones. That's the phone-call moment.
+
+Now: voice + video, face-to-face, in a Google Meet. That's the presence moment.
+
+The trajectory for AI agent channels is becoming clear:
+→ Text (chat)
+→ Voice (calls)
+→ Video (meetings)
+→ ?
+
+If you're building voice infrastructure today, you're building the foundation for the presence layer.
+
+The phone call isn't the destination. It's the first rung.
+
+#AIAgents #VoiceAI #OpenClaw #BuildInPublic
+```
+
+**why it's worth posting:**
+The Google Meet signal from @Saboo_Shubham_ is forward-looking and not covered anywhere in the post history. The "phone call as first rung" framing is a genuine observation about where the AI presence layer is heading — not promotional, deeply relevant for voice AI builders. @Saboo_Shubham_ is a credible, verified Twitter voice — authentic mention. The Apr 3 date is now 4 days ago, but the framing is philosophical/architectural rather than "breaking news" — it holds up.
+
+**hashtags:** #AIAgents #VoiceAI #OpenClaw #BuildInPublic
+**mentions:** @Saboo_Shubham_ (authentic — crediting their observation)
+**character count:** ~350 (premium — no trim needed)
+**source:** @Saboo_Shubham_ Twitter, April 3, 2026
+
+---
+
+### POST M — ElevenLabs Says 85% Cost Reduction. Let's Unpack That.
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 7, ~14:00 GMT+2
+**source:** ElevenLabs blog — "Webinar Recap: How Nana Uses AI Agents to Transform Customer Experience" — April 5, 2026. Nana is a customer support platform. Reported 85% cost reduction via ElevenAgents.
+
+**draft:**
+```
+ElevenLabs published its fourth enterprise case study in two weeks yesterday.
+
+Nana — a customer support platform — reports 85% cost reduction after deploying ElevenAgents.
+
+That's a big number. And it's the fourth big number in 14 days:
+→ Cars24: 3M+ min/month (automotive)
+→ Insurely: GDPR-compliant voice (insurance)
+→ Learna: 500M users, education vertical
+→ Nana: 85% cost reduction (customer support)
+
+The managed voice AI industry has moved from "look at the demo" to "here are the measured outcomes."
+
+If you're building self-hosted voice infrastructure, this is the bar:
+You need a comparable cost story. Not theoretical savings — documented, specific percentages.
+
+85% is the new proof point. What's yours?
+
+#VoiceAI #AIAgents #BuildInPublic @ElevenLabs
+```
+
+**why it's worth posting:**
+Yesterday's case study (Apr 5) is the freshest signal from cycle 21. Four enterprise case studies in 14 days is a content velocity pattern worth naming — nobody has mapped it that explicitly. The challenge to self-hosted builders ("85% is the new proof point — what's yours?") is genuine and non-promotional. It acknowledges what ElevenLabs is doing right while positioning the gap self-hosted builders need to close. @ElevenLabs mention at the end is authentic (crediting their case study work). Not a repetition of Post E (which covered the compliance arms race framing) — this is the ROI/cost-reduction angle.
+
+**hashtags:** #VoiceAI #AIAgents #BuildInPublic
+**mentions:** @ElevenLabs (authentic — crediting their case study work)
+**character count:** ~390 (premium — no trim needed)
+**source:** ElevenLabs blog, April 5, 2026 (Nana case study)
+
+---
+
+### POST N — PR #791: Day 10. Still Waiting. Here's What I'm Learning.
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 7, ~19:00 GMT+2
+**source:** PR #791 — anthropics/skills — "Add openai-voice-skill" — Day 10 open, MERGEABLE, no maintainer response to Apr 3 check-in comment.
+
+**draft:**
+```
+We submitted a voice skill to @anthropic's Claude Code Skills registry 10 days ago.
+
+PR #791: open. Mergeable. No conflicts. 727 tests.
+
+Still waiting.
+
+This is not a complaint — open-source maintainers have queues. That's real.
+
+But Day 10 on a clean, mergeable PR in a public registry is its own data point.
+
+If you've submitted to an agent skills registry (agentskills.io, anthropics/skills, or similar): what's been your experience? How long did review take?
+
+Asking genuinely — building a picture of what the ecosystem review pipeline looks like in practice.
+
+#BuildInPublic #AIAgents #OpenSource #ClaudeCode
+```
+
+**why it's worth posting:**
+PR #791 Day 10 is a live, authentic build-in-public signal. The framing is transparent and non-aggressive — we're not complaining, we're documenting and inviting community input. The open question ("how long did review take for you?") generates replies and surfaces information about the skills registry ecosystem. @anthropic mention is relevant (it's their registry). The observation that "Day 10 on a clean, mergeable PR is its own data point" is something the agent builder community will relate to. Nothing like this exists in the post history.
+
+**hashtags:** #BuildInPublic #AIAgents #OpenSource #ClaudeCode
+**mentions:** @anthropic (contextual — it's their registry)
+**character count:** ~380 (premium — no trim needed)
+**source:** gh pr view 791 --repo anthropics/skills (live status Apr 6)
+
+---
+
 ## 📅 FULL SEQUENCE
 
 | # | Date | Time (GMT+2) | Title | Status |
@@ -497,9 +618,11 @@ The Google Meet signal from @Saboo_Shubham_ is forward-looking and not covered a
 | G | Apr 4 | 09:00 | OpenAI acquires TBPN — AI media consolidation + Anthropic-native distribution | READY |
 | H | Apr 4 | 14:00 | The self-hosted alternative to Vapi's OpenClaw tutorial | READY |
 | I | Apr 4 | 19:00 | Retell 50+ languages: English-first vs multilingual — two markets forming | READY |
-| J | Apr 5 | 09:00 | Wozena AI "all-in-one" — the fix matters as much as the diagnosis (@wozenaAI) | READY |
-| K | Apr 5 | 14:00 | @NickRomaTek: Claude Code + Vapi in production — the cost question | READY |
-| L | Apr 5 | 19:00 | OpenClaw on Google Meet — where the voice roadmap is going (@Saboo_Shubham_) | READY |
+| ~~J~~ | ~~Apr 5~~ | ~~09:00~~ | ~~Wozena AI "all-in-one" — stale hook~~ | REPLACED (cycle 21) |
+| ~~K~~ | ~~Apr 5~~ | ~~14:00~~ | ~~@NickRomaTek Claude Code+Vapi — stale hook~~ | REPLACED (cycle 21) |
+| L | Apr 7 | 09:00 | OpenClaw on Google Meet — where the voice roadmap is going (@Saboo_Shubham_) | READY (carried) |
+| M | Apr 7 | 14:00 | ElevenLabs Nana: 85% cost reduction — the new ROI bar (@ElevenLabs) | READY |
+| N | Apr 7 | 19:00 | PR #791 Day 10: build-in-public reflection on skills registry review (@anthropic) | READY |
 | MERGE | TBD | ASAP on merge | 🎉 Voice skill merged into Claude Code's Skills registry | READY (hold until merge) |
 
 ---
@@ -700,8 +823,9 @@ source ~/.config/bird/twitter-cookies.env && bird whoami
 | Apr 1 | OpenAI $122B + Oracle/India bifurcation + dTelecom audio pipeline (executed early) | 3 posts ✅ |
 | Apr 3 | BBC Claude Code surge (D, 09:00) + Enterprise compliance battleground updated with Learna+Vapi Enhanced Security (E, 14:00) + Retell migration tax (F, 19:00) + PR #791 Day-7 check-in comment (morning) | 3 posts + 1 PR comment |
 | Apr 4 | OpenAI acquires TBPN + Anthropic-native distribution (G, 09:00) + Vapi vs self-hosted OpenClaw voice (H, 14:00) + Retell 50+ languages / English-first bifurcation (I, 19:00) + post-merge celebration (MERGE, fire on PR merge) | 3 posts READY |
-| Apr 5 | Wozena AI "all-in-one" vs self-hosted (J, 09:00) + @NickRomaTek Claude Code+Vapi production signal (K, 14:00) + OpenClaw Google Meet video convergence (L, 19:00) | 3 posts READY |
-| Apr 6–7 | New BA signals + Twilio DevRel follow-up + r/ClaudeAI + dev.to posts if PR merged | 2–3 posts |
+| Apr 5 | J/K skipped (stale hooks); L carried to Apr 7 | — |
+| Apr 6 | Posts H + I executed (H: Vapi OpenClaw self-hosted alt; I: Retell 50+ languages) | 2 posts ✅ |
+| Apr 7 | OpenClaw Google Meet video trajectory (L, 09:00) + ElevenLabs Nana 85% cost reduction (M, 14:00) + PR #791 Day 10 build-in-public (N, 19:00) | 3 posts READY |
 
 ---
 
