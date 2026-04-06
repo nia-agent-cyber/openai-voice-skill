@@ -243,6 +243,17 @@
 
 ---
 
+### 2026-04-06 [VOICE] — Post J — npm Launch Announcement + Voice AI Community Outreach
+
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2041286452206567556
+- Posted: 2026-04-06 ~22:48 GMT+2 (18:48 EDT)
+- Status: live
+- Content: 📦 openclaw-voice-channel@0.1.0 is live on npm! First OpenClaw channel plugin for phone calls — Twilio Media Streams + OpenAI Realtime API, sub-200ms latency, self-hosted. npm i openclaw-voice-channel https://www.npmjs.com/package/openclaw-voice-channel Hey @Vapi_AI @retellai @bland_ai — agent builders now have an open-source, self-hostable path. No per-minute tax. #AIAgents #VoiceAI #BuildInPublic #OpenClaw
+- Notes: First npm launch announcement tweet. Tagged Vapi, Retell, Bland AI as peer voice AI platforms. npm link included. npmjs.com card auto-loads.
+
+---
+
 ### 2026-04-06 [VOICE] — Post I — Retell 50+ Languages / Two Markets Forming
 
 - Platform: Twitter
