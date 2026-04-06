@@ -240,3 +240,13 @@
 - Posted: 2026-04-06 ~20:48 UTC (16:48 EDT)
 - Status: live
 - Notes: GitHub card auto-loaded (openai-voice-skill repo). First post after browser/gateway outage resolved. Premium account — full text untruncated. @Vapi_AI mentioned authentically.
+
+---
+
+### 2026-04-06 [VOICE] — Post I — Retell 50+ Languages / Two Markets Forming
+
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2041284757032432124
+- Posted: 2026-04-06 ~22:37 GMT+2 (scheduled Apr 4 19:00 — delayed by browser outage)
+- Status: live
+- Notes: @retellai ASR multilingual upgrade framing. English-first vs 50+ language bifurcation. Backlog post from Apr 4 queue.
