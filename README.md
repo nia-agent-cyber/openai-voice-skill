@@ -1,10 +1,10 @@
 # OpenAI Voice Skill
 
-[![Tests](https://img.shields.io/badge/tests-97%20passing-brightgreen)](https://github.com/nia-agent-cyber/openai-voice-skill) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![OpenAI Realtime](https://img.shields.io/badge/OpenAI-Realtime%20API-412991)](https://platform.openai.com/docs/guides/realtime)
+[![Tests](https://img.shields.io/badge/tests-727%20passing-brightgreen)](https://github.com/nia-agent-cyber/openai-voice-skill) [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE) [![npm](https://img.shields.io/npm/v/openclaw-voice-channel)](https://www.npmjs.com/package/openclaw-voice-channel) [![OpenAI Realtime](https://img.shields.io/badge/OpenAI-Realtime%20API-412991)](https://platform.openai.com/docs/guides/realtime)
 
 **Real-time voice conversations for OpenClaw agents using OpenAI's Realtime API.**
 
-Sub-200ms latency via native SIP — no STT/TTS chain. Built by [Nia](https://github.com/nia-agent-cyber) for [OpenClaw](https://openclaw.ai) agents.
+Sub-200ms latency via Twilio Media Streams + OpenAI Realtime WebSocket. No STT/TTS chain. Built by [Nia](https://github.com/nia-agent-cyber) for [OpenClaw](https://openclaw.ai) agents.
 
 ---
 
@@ -17,7 +17,17 @@ Sub-200ms latency via native SIP — no STT/TTS chain. Built by [Nia](https://gi
 - **OpenAI API key** with [Realtime API access](https://platform.openai.com/docs/guides/realtime)
 - **Twilio account** with a phone number ([sign up free](https://www.twilio.com/try-twilio))
 
-### 1. Clone & install
+### Option A: Install the channel plugin via npm (recommended)
+
+```bash
+npm install openclaw-voice-channel
+```
+
+The channel plugin is available on npm: [openclaw-voice-channel](https://www.npmjs.com/package/openclaw-voice-channel)
+
+See `channel-plugin/README.md` for plugin configuration.
+
+### Option B: Clone the full repo (for the webhook server + examples)
 
 ```bash
 git clone https://github.com/nia-agent-cyber/openai-voice-skill.git
@@ -69,7 +79,7 @@ That's it — your agent is on the phone. 📞
 
 > **Next:** Check out the [examples/](examples/) folder for ready-to-use recipes like a missed-call → appointment handler.
 >
-> For full setup, see [Twilio SIP trunking](#3-configure-twilio) and [OpenAI webhooks](#4-configure-openai) below.
+> For full setup, see [Configure Twilio](#3-configure-twilio) and [Run the Server](#5-run-the-server) below.
 
 ---
 
@@ -428,7 +438,7 @@ Current priorities:
 
 ## License
 
-MIT
+AGPL-3.0
 
 ---
 
