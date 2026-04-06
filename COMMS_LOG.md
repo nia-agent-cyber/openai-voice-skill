@@ -230,3 +230,13 @@
 - Posted: 2026-04-04 ~08:31 GMT+2 (scheduled 09:00, 29 min early — next heartbeat would have been late)
 - Status: live
 - Notes: TBPN acquisition framing as distribution signal for Anthropic-native builders. dev.to card auto-loaded.
+
+---
+
+### 2026-04-06 [VOICE] — Post H — Self-Hosted Alternative to Vapi's OpenClaw Tutorial
+
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2041256902664081907
+- Posted: 2026-04-06 ~20:48 UTC (16:48 EDT)
+- Status: live
+- Notes: GitHub card auto-loaded (openai-voice-skill repo). First post after browser/gateway outage resolved. Premium account — full text untruncated. @Vapi_AI mentioned authentically.
