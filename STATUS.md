@@ -1,7 +1,33 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-03-27 by Voice QA (marketing draft QA review)
-**Status:** ✅ PR OPEN — anthropics/skills#791 waiting for maintainer review
+**Last Updated:** 2026-04-06 by Voice PM (npm milestone — README updated)
+**Status:** ✅ NPM LIVE — `openclaw-voice-channel@0.1.0` published | PR #791 to anthropics/skills day 10, waiting for maintainer review
+
+---
+
+## ✅ 2026-04-06 — README Updated for npm Milestone
+
+**By:** Voice PM → Coder → QA cycle
+
+### What Was Done
+
+**npm package is live:** `openclaw-voice-channel@0.1.0` at https://www.npmjs.com/package/openclaw-voice-channel
+
+**PR #44 merged** — README.md updated:
+- ✅ Test badge: 97 → 727 tests
+- ✅ License badge: MIT → AGPL-3.0
+- ✅ Added npm badge linking to openclaw-voice-channel
+- ✅ Architecture description: "native SIP" → "Twilio Media Streams + OpenAI Realtime WebSocket"
+- ✅ npm install section added as Option A (recommended) before the git clone option
+- ✅ Stale SIP trunking link removed
+
+**Cycle:** PM planned → Coder implemented → QA reviewed → PM merged
+
+### Next Steps
+- 🟠 anthropics/skills PR #791 still waiting for maintainer review (day 10)
+- 🟡 Consider version bump to 0.2.0 on channel-plugin package after docs stabilize
+- 🟡 Comms should highlight npm availability in next Twitter post
+- 🟢 README is now accurate and npm-ready
 
 ---
 
