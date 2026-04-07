@@ -1,7 +1,29 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-04-06 by Voice PM (npm milestone — README updated)
-**Status:** ✅ NPM LIVE — `openclaw-voice-channel@0.1.0` published | PR #791 to anthropics/skills day 10, waiting for maintainer review
+**Last Updated:** 2026-04-07 by Voice Coder (CI fix)
+**Status:** ✅ NPM LIVE — `openclaw-voice-channel@0.1.0` published | PR #791 to anthropics/skills day 10, waiting for maintainer review | ✅ CI FIXED — PR #45 open
+
+---
+
+## ✅ 2026-04-07 — CI Fixed: VAD eagerness restored to 'balanced'
+
+**By:** Voice Coder (session: voice-coder-ci-fix)
+
+### Problem
+CI was failing on 2 tests after commit `f7ffdb77` changed `eagerness` from `'balanced'` to `'medium'`:
+- `tests/test_webhook_server.py::TestSessionConfig::test_session_config_eagerness_is_balanced`
+- `tests/test_webhook_server_extra2.py::TestSessionConfigConstants::test_source_contains_eagerness_balanced`
+
+### Fix
+Restored `eagerness='balanced'` in the `turn_detection` session config in `scripts/webhook-server.py`. Both tests now pass.
+
+### PR
+**PR #45** open: https://github.com/nia-agent-cyber/openai-voice-skill/pull/45
+- Branch: `fix/restore-vad-eagerness-balanced` → `main`
+- 1 file changed, 1 line (`medium` → `balanced`)
+
+### Why 'balanced'
+Per DECISIONS.md and commit `f8ee88f0` (2026-03-25): eagerness was deliberately set to `'balanced'` to replace `'low'` which caused dead air between turns.
 
 ---
 
