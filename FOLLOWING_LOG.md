@@ -20,3 +20,11 @@ Track accounts followed to grow the voice AI community network.
 | 2026-04-03 | @echowinAI | echowin | AI Voice Agent Builder Platform — automates calls, chatbot, Discord |
 | 2026-04-03 | @IntronHealth | Intron Voice AI | Voice AI infrastructure for Africa — STT/TTS APIs at intron.io |
 | 2026-04-03 | @depthfirstsearc | Simon | Prev founding engineer @usebland, now @tennr — voice AI builder |
+| 2026-04-07 | @pipecat_ai | Pipecat AI | 100% open source framework for realtime voice and multimodal AI, maintained by Daily.co team |
+| 2026-04-07 | @trydaily | Daily | Build human and AI ultra low latency conversations — maintain Pipecat. 5,236 followers |
+| 2026-04-07 | @TwilioDevs | TwilioDevs | Twilio developer tutorials & voice/SMS infrastructure news. 3,161 followers |
+| 2026-04-07 | @aconchillo | Aleix Conchillo Flaqué | Engineering @trydaily, Pipecat core maintainer |
+| 2026-04-07 | @gstreamer | GStreamer | Open source multimedia framework — core audio/video pipeline infra used in voice AI stacks. 4,135 followers |
+| 2026-04-07 | @webrtcHacks | webrtcHacks | WebRTC real-time audio/video hacks & education. 5,671 followers |
+| 2026-04-07 | @juberti | Justin Uberti | Head of Realtime AI @OpenAI, creator of WebRTC, ex-CTO @ultravox_dot_ai. 13.9K followers |
+| 2026-04-07 | @ultravox_dot_ai | Ultravox AI | Speech-native voice AI agents platform. 4,242 followers |
