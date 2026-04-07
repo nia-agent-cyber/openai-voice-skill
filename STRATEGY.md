@@ -1606,3 +1606,102 @@ Top tech headlines this week:
 **No action recommended at this time** — archive decision stands. Monitoring continues.
 
 ---
+
+## Google Meet Integration Research
+
+**Last Updated:** 2026-04-07 00:00 EDT — Voice BA deep-dive
+
+### VERDICT: NO (receive-only API — cannot speak into a meeting)
+
+The Google Meet Media API **cannot** be used to build a voice-only AI agent that joins a Meet call and speaks back. It is a media **capture** API only. There is no mechanism to inject audio into a meeting from an external bot.
+
+---
+
+### 1. What the Meet Media API Actually Offers
+
+- ✅ **Receive audio** — Up to 3 concurrent audio streams via WebRTC SFU (Virtual Media Streams). The SFU dynamically maps the 3 loudest speakers across SSRCs.
+- ✅ **Audio-only participation** — You can connect with only audio transceivers and skip video entirely. Just don't include video media descriptions in your SDP offer.
+- ✅ **Receive participant metadata** — Speaker identity via CSRC values in RTP packet headers.
+- ❌ **Cannot send audio** — All OAuth scopes are `*.readonly`:
+  - `meetings.conference.media.readonly` — full audio+video capture
+  - `meetings.conference.media.audio.readonly` — audio only
+  - `meetings.conference.media.video.readonly` — video only
+  - There is NO write/send scope. The SDP offer/answer confirms this: client offers `recvonly` audio transceivers; Meet's SFU responds `sendonly` back to the client. No `sendrecv` mode exists.
+- 🔴 **Designed as a capture/observability API** — The stated use cases are: transcription, action item detection, AI analysis, sign language translation. Not participation.
+
+### 2. Authentication & Joining Flow
+
+- **OAuth 2.0 required** (user auth — not service account). The bot connects on behalf of a real Google account.
+- **No service account support** — unlike other Google Workspace APIs that accept SA, the Media API requires a user token with consent granted interactively via OAuth flow.
+- **Consumer (Gmail) meetings**: The meeting *initiator* must be present and grant consent. If the person who started the Meet call leaves, the bot is kicked.
+- **Workspace meetings**: Someone from the organization that owns the meeting must be present to consent.
+- **Restricted scopes**: All Media API scopes require Google's security verification process before production use. Not a quick approval.
+- **Workspace account recommended** — The TypeScript quickstart explicitly requires a Google Workspace account. Consumer Gmail accounts may work but are not the supported path.
+
+### 3. Audio Format
+
+- **Codec: Opus** (48kHz, 2-channel stereo)
+- Confirmed from official SDP examples: `a=rtpmap:111 opus/48000/2`
+- Transcode path to our OpenAI Realtime pipeline: Opus → PCM16 (16kHz, mono) — standard ffmpeg/libopus conversion, straightforward
+- So audio format compatibility is NOT the blocker
+
+### 4. The Critical Gap: No Audio Send
+
+This is not a technical gap we can bridge ourselves. The Meet Media API does not expose any mechanism to:
+- Add a microphone/audio track as a meeting participant
+- Send RTP packets back to Meet's SFU
+- Speak as an agent in the meeting
+
+The SFU connection is strictly SFU→Client (bot receives). There is no reverse path. The WebRTC peer connection is configured `recvonly` at the API level, not just by convention.
+
+**What's missing is not a WebRTC stack or TURN server** — it's a Google API endpoint that simply doesn't exist yet.
+
+### 5. Meet Add-ons SDK
+
+The Meet Add-ons SDK is a browser/JavaScript SDK for building sidebar panels and collaborative features inside the Meet UI. It has no audio capture or injection capabilities. It cannot help here.
+
+### 6. Closest Native Path (Without Recall.ai)
+
+If bidirectional Google Meet participation is required:
+
+**Option A: Headless browser bot (Playwright/Puppeteer)**
+- Join Meet via a real Chrome browser session controlled by Playwright
+- Use Web Audio API to capture microphone and inject audio track
+- Requires: Google account, Chrome, handle consent dialogs, survive Meet UI changes
+- Status: Fragile, high maintenance, not officially supported. Breaks with every Meet UI update.
+- This is essentially what Recall.ai and similar services automate at production scale.
+
+**Option B: Wait for Google to ship a write API**
+- Google is clearly building toward agent participation (the API only launched recently)
+- A future `meetings.conference.media.audio` (non-readonly) scope would unlock send
+- No timeline announced; monitor Google Workspace developer blog
+
+**Option C: Phone dial-in bridge (works TODAY)**
+- Every Google Meet has a phone number + PIN
+- Our existing Twilio + OpenAI Realtime skill can join any Meet call via the PSTN bridge
+- Audio quality: PSTN (mulaw 8kHz) vs native Meet (Opus 48kHz) — compressed but functional
+- No additional API integration required — it just works now
+- **This is the pragmatic path for Nia to join a Google Meet call right now**
+
+### 7. Summary Table
+
+| Question | Answer |
+|----------|--------|
+| Audio-only (no video)? | ✅ Yes, skip video transceivers in SDP offer |
+| Listen to meeting audio? | ✅ Yes, up to 3 streams via WebRTC |
+| Speak into meeting as agent? | ❌ No — receive-only API, no send scope exists |
+| Audio codec? | ✅ Opus 48kHz — easy transcode to PCM16 for our pipeline |
+| Needs Workspace account? | ⚠️ Strongly recommended |
+| Needs human in room to consent? | ✅ Yes, always (initiator or org member) |
+| Scopes restricted (Google review)? | 🔴 Yes — restricted scope verification required |
+| Can bridge with existing stack today? | ✅ Via phone dial-in (PSTN bridge) |
+
+### 8. Recommendation
+
+**Do NOT build on Meet Media API for a speaking agent** — the send capability does not exist. This is a hard API limitation, not a technical challenge.
+
+**Pragmatic path today:** Nia can join any Google Meet call via the meeting's phone number + PIN using our existing Twilio + OpenAI Realtime infrastructure. This works NOW with zero new API integration.
+
+**Watch for:** A future "Meet Participation API" (non-readonly scopes from Google). If Google ships this, it would be a 1-2 day integration on top of our existing WebRTC + Opus handling. Subscribe to Google Workspace developer blog for announcements.
+
+---
