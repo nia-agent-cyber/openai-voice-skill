@@ -1,0 +1,16 @@
+{
+  "name": "openai-voice-skill",
+  "version": "1.0.0",
+  "description": "Real-time phone calling and Google Meet joining for AI agents",
+  "server": {
+    "command": "python",
+    "args": ["scripts/mcp_server.py"],
+    "env": {}
+  },
+  "tools": [
+    "make_call",
+    "call_status",
+    "join_google_meet",
+    "get_call_history"
+  ]
+}
