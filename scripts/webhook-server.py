@@ -1475,6 +1475,99 @@ async def initiate_outbound_call(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
+# ─── Google Meet PSTN auto-dial ─────────────────────────────────────────────
+
+class MeetCallRequest(BaseModel):
+    meet_url: str
+    caller_id: Optional[str] = None
+    message: Optional[str] = None
+
+
+@app.post("/call/meet")
+async def initiate_meet_call(
+    request: MeetCallRequest,
+    background_tasks: BackgroundTasks
+):
+    """
+    Initiate an outbound call to a Google Meet dial-in number.
+
+    Extracts the PSTN phone number and PIN from the Meet page, starts an
+    outbound call via Twilio, and schedules DTMF delivery once the call
+    is answered.  When Twilio reports ``CallStatus=in-progress`` the
+    status-callback handler (see /voice/status) sends the PIN as DTMF.
+    """
+    from meet_utils import extract_meet_code, fetch_meet_dialin
+
+    meet_code = extract_meet_code(request.meet_url)
+    if not meet_code:
+        raise HTTPException(
+            status_code=422,
+            detail="Not a valid Google Meet URL"
+        )
+
+    dialin = await fetch_meet_dialin(meet_code)
+    if not dialin:
+        raise HTTPException(
+            status_code=404,
+            detail="Could not extract dial-in info from this Meet link."
+        )
+
+    call_request = OutboundCallRequest(
+        to=dialin["phone"],
+        caller_id=request.caller_id,
+        message=request.message or f"Joining Google Meet {meet_code}"
+    )
+    result = await initiate_outbound_call(call_request, background_tasks)
+
+    call_id = result.call_id
+    if call_id and call_id in active_calls:
+        active_calls[call_id]["dtmf_pin"] = dialin["pin"]
+        active_calls[call_id]["meet_code"] = meet_code
+
+    return {
+        **result.dict(),
+        "dial_in": dialin["phone"],
+        "meet_code": meet_code,
+    }
+
+
+@app.post("/voice/status")
+async def call_status_callback(request: Request):
+    """
+    Twilio status-callback webhook.
+
+    When a Meet call transitions to ``in-progress`` and a DTMF PIN is
+    stored for that call, this handler returns TwiML that plays the PIN
+    digits after a 4-second pause so the bridge number accepts them.
+
+    For non-Meet calls (or other status transitions) we return an empty
+    200 so Twilio is satisfied.
+    """
+    form = await request.form()
+    call_sid = form.get("CallSid", "")
+    call_status = form.get("CallStatus", "")
+
+    logger.info(f"Status callback: {call_sid} → {call_status}")
+
+    if call_status == "in-progress" and call_sid in active_calls:
+        pin = active_calls[call_sid].get("dtmf_pin")
+        if pin:
+            logger.info(f"Sending DTMF PIN for Meet call {call_sid}")
+            twiml = (
+                '<?xml version="1.0" encoding="UTF-8"?>'
+                "<Response>"
+                "<Pause length=\"4\"/>"
+                f"<Play digits=\"{pin}#\"/>"
+                "</Response>"
+            )
+            return Response(
+                content=twiml,
+                media_type="application/xml"
+            )
+
+    return Response(content="<Response/>", media_type="application/xml")
+
+
 @app.delete("/call/{call_id}")
 async def cancel_outbound_call(call_id: str):
     """Cancel an active outbound call."""
