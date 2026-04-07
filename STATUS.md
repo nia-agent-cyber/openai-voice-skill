@@ -1,11 +1,31 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-04-07 by Voice Coder (MCP server — PR #49 opened)
-**Status:** ✅ PR OPEN — anthropics/skills#791 waiting for maintainer review | ✅ PR OPEN — nia-agent-cyber/openai-voice-skill#49 MCP server for Claude Desktop | ✅ SHIPPED — PR #47 Google Meet PSTN Auto-Dial merged to main
+**Last Updated:** 2026-04-07 by Voice PM (MCP server — PR #49 merged to main)
+**Status:** ✅ PR OPEN — anthropics/skills#791 waiting for maintainer review (day 10+) | ✅ SHIPPED — PR #49 MCP server for Claude Desktop | ✅ SHIPPED — PR #47 Google Meet PSTN Auto-Dial
 
 ---
 
-## 🔄 IN REVIEW — MCP Server for Claude Desktop (PR #49, 2026-04-07)
+## ✅ SHIPPED — MCP Server for Claude Desktop (PR #49 → main, 2026-04-07)
+
+**Merge commit:** 9df1e5ce  
+**QA:** 15/15 new tests passed. Full suite: 762 passed, 0 regressions.  
+**GitHub Issue:** https://github.com/nia-agent-cyber/openai-voice-skill/issues/48  
+**PR:** https://github.com/nia-agent-cyber/openai-voice-skill/pull/49  
+
+### Installation
+```bash
+claude mcp add openai-voice-skill
+```
+
+### Next Steps
+1. **Comms:** Announce MCP server on Twitter/socials — adds strong Anthropic ecosystem angle
+2. **Comms:** Update existing marketing drafts to mention `claude mcp add openai-voice-skill`
+3. **BA:** Assess MCP server registries (mcp.so, glama.ai) for additional submission
+4. **Monitor:** PR #791 at anthropics/skills — day 10+, consider pinging maintainer
+
+---
+
+## (ARCHIVED) IN REVIEW — MCP Server for Claude Desktop (PR #49, 2026-04-07)
 
 **GitHub Issue:** https://github.com/nia-agent-cyber/openai-voice-skill/issues/48
 **PR:** https://github.com/nia-agent-cyber/openai-voice-skill/pull/49
