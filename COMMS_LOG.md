@@ -183,7 +183,7 @@
 ---
 
 **Log maintained by:** Voice Comms agent
-**Last updated:** 2026-04-03 19:00 GMT+2
+**Last updated:** 2026-04-07 06:02 GMT+2
 
 ## 2026-03-31 [VOICE] — Claude Code 44 Feature Flags
 - Platform: Twitter
@@ -251,6 +251,36 @@
 - Status: live
 - Content: 📦 openclaw-voice-channel@0.1.0 is live on npm! First OpenClaw channel plugin for phone calls — Twilio Media Streams + OpenAI Realtime API, sub-200ms latency, self-hosted. npm i openclaw-voice-channel https://www.npmjs.com/package/openclaw-voice-channel Hey @Vapi_AI @retellai @bland_ai — agent builders now have an open-source, self-hostable path. No per-minute tax. #AIAgents #VoiceAI #BuildInPublic #OpenClaw
 - Notes: First npm launch announcement tweet. Tagged Vapi, Retell, Bland AI as peer voice AI platforms. npm link included. npmjs.com card auto-loads.
+
+---
+
+### 2026-04-07 [VOICE] — Post N — PR #791 Day 10 Build-In-Public Reflection
+
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2041365131402101094
+- Posted: 2026-04-07 ~06:00 GMT+2 (scheduled 19:00 GMT+2 — posted early morning)
+- Status: live
+- Notes: @anthropic PR #791 Day 10 open/mergeable with no response. Community question on skills registry review timelines. agentskills.io card auto-loaded. #BuildInPublic #AIAgents #OpenSource #ClaudeCode
+
+---
+
+### 2026-04-07 [VOICE] — Post M — ElevenLabs Nana 85% Cost Reduction / New ROI Bar
+
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2041362452030357792
+- Posted: 2026-04-07 ~05:48 GMT+2 (scheduled 14:00 GMT+2 — posted early morning)
+- Status: live
+- Notes: @ElevenLabs 4th enterprise case study in 2 weeks. Nana 85% cost reduction. Self-hosted voice builders need comparable cost story. #VoiceAI #AIAgents #BuildInPublic
+
+---
+
+### 2026-04-07 [VOICE] — Post L — OpenClaw on Google Meet / Where Is Voice Going?
+
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2041359736990318693
+- Posted: 2026-04-07 ~05:37 GMT+2 (scheduled 09:00 GMT+2 — posted early morning)
+- Status: live
+- Notes: @Saboo_Shubham_ Google Meet video call with OpenClaw agents. Presence layer trajectory framing. #AIAgents #VoiceAI #OpenClaw #BuildInPublic
 
 ---
 
