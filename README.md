@@ -420,6 +420,33 @@ curl http://localhost:8082/health
 lsof -i :8082
 ```
 
+## Claude Desktop / MCP Integration
+
+Install as an MCP server in Claude Desktop:
+
+```bash
+# 1. Install the MCP package
+pip install mcp httpx
+
+# 2. Start the voice server (see Setup above)
+python scripts/webhook-server.py
+
+# 3. Add to Claude Desktop's MCP config (~/.claude/mcp.json)
+{
+  "mcpServers": {
+    "openai-voice-skill": {
+      "command": "python",
+      "args": ["/path/to/openai-voice-skill/scripts/mcp_server.py"]
+    }
+  }
+}
+```
+
+Then in Claude Desktop, you can say:
+- "Call +1234567890"
+- "Join this Google Meet: https://meet.google.com/xxx-yyyy-zzz"
+- "What calls did Nia make today?"
+
 ## Limitations
 
 - Real-time responses during calls use OpenAI Realtime API (not OpenClaw's model)
