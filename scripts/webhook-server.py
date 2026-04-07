@@ -1138,7 +1138,7 @@ async def media_stream_ws(websocket: WebSocket):
                             },
                             "turn_detection": {
                                 "type": "semantic_vad",
-                                "eagerness": "medium"
+                                "eagerness": "balanced"
                             },
                             "temperature": 0.6,
                             "tools": tools,
