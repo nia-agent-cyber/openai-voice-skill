@@ -2,7 +2,276 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
-**Last Updated:** 2026-04-01 07:09 GMT+2 — BA Scan: PR #791 day 5, no activity, ping rec still Apr 3; Gnani.ai $10M Series B (India voice AI funded); SarvamAI dev program active (multilingual Indian voice AI); dTelecom audio pipeline technical depth; Oracle significant job cuts (BBC, new); Vapi quiet confirmed; agentskills.io 13 platforms stable; ctxly still 404
+**Last Updated:** 2026-04-07 03:45 EDT — BA Sprint: Google Meet integration research complete. See "## Google Meet Integration Research" section below.
+
+---
+
+## Google Meet Integration Research
+
+**Date:** 2026-04-07 | **By:** Voice BA (session: voice-ba-meet)
+
+**THE QUESTION:** Can we wire our existing OpenAI Realtime + audio pipeline to Google Meet instead of (or alongside) phone calls?
+
+---
+
+### 🔑 KEY FINDING: YES — Technically Possible. Two Viable Paths.
+
+This is not a moonshot. Google has shipped a real API for this (in Developer Preview), and a mature ecosystem of bot infrastructure (Recall.ai) already handles it for other tools. The question is *how hard* and *whether it's worth it*.
+
+---
+
+### 🛠️ TECHNICAL RESEARCH
+
+#### 1. Google Meet Media API (Official Path)
+
+**What it is:** Google officially shipped the **Meet Media API** (currently in Developer Preview). It exposes real-time raw audio and video streams from Google Meet conferences.
+
+**Capabilities:**
+- ✅ Access live audio streams from any participant
+- ✅ Inject audio/video back into the meeting via "Virtual Media Streams"
+- ✅ Access participant metadata (who's speaking, when)
+- ✅ Explicitly supports: "Feed audio directly into Gemini and create your own meeting AI chatbot"
+- ✅ TypeScript and C++ reference implementations on GitHub (googleworkspace/meet-media-api-samples)
+
+**Current limitations (Developer Preview):**
+- ⚠️ **ALL participants in the conference must be enrolled in Google's Developer Preview Program** — this is a major blocker for general use. You can't just join any random Meet call.
+- ⚠️ Requires Google Cloud project registration + OAuth consent
+- ⚠️ Workspace accounts only for consent (not Google personal accounts as organizers)
+- ⚠️ Not yet Generally Available — GA timeline unknown
+
+**Audio format:**
+- Meet uses WebRTC internally (Opus codec, 48kHz)
+- Our existing pipeline: mulaw 8kHz ↔ PCM16 24kHz (Twilio Media Streams)
+- Bridge needed: Opus 48kHz → PCM16 24kHz (one extra `ffmpeg` or `audioop` step)
+- **Compatible with OpenAI Realtime API** after transcoding — not a blocker
+
+**Docs:** https://developers.google.com/workspace/meet/media-api/guides/overview
+
+---
+
+#### 2. Google Meet Add-ons SDK (Sidebar/UI Path)
+
+**What it is:** Embeds apps into Meet's UI as a panel in the side rail.
+
+**Verdict for our use case: NOT the right tool.**
+- The Add-ons SDK is for UI widgets (shared whiteboards, collaborative apps)
+- It does NOT give access to audio streams
+- Cannot inject audio into the meeting
+- Good for: showing a transcript panel, a shared doc, a task list
+- NOT good for: AI agent that speaks in the meeting
+
+---
+
+#### 3. Bot Account Approach (What Otter/Fireflies/Grain Do)
+
+**How the big players work:**
+- **All three (Otter.ai, Fireflies.ai, Grain)** join Meet as a **bot participant** — a Google account user invited to the meeting (usually via Google Calendar integration or a direct invite link)
+- The bot runs a **headless browser** (Playwright/Chrome) that joins the Meet session as a normal user
+- Audio is captured via the browser's WebRTC implementation (not via Meet's official API)
+- They are **passive listeners only** — none of them inject AI voice back into the call
+- This approach works against Google's ToS in some interpretations, and Google periodically blocks headless browser fingerprints
+
+**Architecture for a DIY bot:**
+```
+User shares Meet link → Bot Google account joins via headless Playwright
+→ Browser captures WebRTC audio stream
+→ Audio forwarded to transcription/AI service
+→ (Optional) AI response injected back via Virtual Audio Cable or browser audio API
+```
+
+**Open-source examples found:**
+- `github.com/screenappai/meeting-bot` — TypeScript + Playwright, supports Meet/Zoom/Teams
+- `github.com/dhruvldrp9/Google-Meet-Bot` — Python bot, joins + records + summarizes
+- `github.com/AbishKamran/google-meet-ai-agent` — Uses Playwright + OpenAI TTS to join and speak
+
+**Verdict:** Works but fragile. Google actively detects and blocks headless browsers. High maintenance overhead. Not suitable for a production skill.
+
+---
+
+#### 4. Recall.ai — The Managed Bot Layer (Best Shortcut)
+
+**What it is:** Recall.ai is a managed API that handles the complexity of joining Zoom/Meet/Teams as a bot. You just pass it a meeting URL and it handles the headless browser, audio capture, and streaming.
+
+**Capabilities:**
+- ✅ Join any Google Meet (no Developer Preview enrollment required)
+- ✅ Real-time transcript stream via WebSocket
+- ✅ Real-time audio stream (mixed or per-participant)
+- ✅ Can output audio/video BACK INTO the meeting
+- ✅ Python-friendly FastAPI integration (see their sample app)
+- ✅ Cross-platform: Zoom + Meet + Teams + WebEx in one API
+
+**Pricing:** ~$0.10–0.15/min per bot (comparable to Twilio call costs)
+
+**Architecture with Recall.ai:**
+```
+User invites Nia bot to Meet call (via Recall.ai bot account)
+→ Recall.ai joins meeting, streams audio via WebSocket
+→ Our existing pipeline: PCM16 24kHz → OpenAI Realtime WebSocket
+→ OpenAI Realtime response audio → Recall.ai injects back into meeting
+→ Post-call: summary → memory/YYYY-MM-DD.md
+```
+
+**This maps almost 1:1 to our existing Twilio Media Streams architecture.** Recall.ai is essentially "Twilio for video meeting bots."
+
+---
+
+#### 5. Audio Format Compatibility Assessment
+
+| Layer | Format | Our pipeline |
+|-------|--------|-------------|
+| Twilio Media Streams | mulaw 8kHz | ✅ We handle this |
+| OpenAI Realtime API | PCM16 24kHz | ✅ We handle this |
+| Google Meet (WebRTC) | Opus 48kHz | 🟡 Needs one extra transcode step |
+| Recall.ai stream | PCM16 16kHz or 24kHz | ✅ Compatible |
+
+**Verdict:** Audio format is NOT a blocker. One `ffmpeg`/`audioop` step handles the Opus→PCM16 conversion. The rest of our pipeline (VAD, session_ready gate, OpenAI Realtime) is unchanged.
+
+---
+
+### 📊 STRATEGIC RESEARCH
+
+#### 6. Market Size Comparison
+
+| Market | Users | Use case for AI agents |
+|--------|-------|------------------------|
+| **Google Meet** | ~300M daily active users (2025) | B2B meetings, enterprise, remote work |
+| **All video meeting platforms** | ~1B+ users combined (Meet + Zoom + Teams) | Same |
+| **Phone calls (Twilio TAM)** | Billions of calls/year | B2C automation, scheduling, IVR replacement |
+
+**Google Meet TAM:** Enormous. Almost every enterprise worker uses video meetings daily. Vs. Twilio phone calls: more infrastructure-focused, mostly B2C automation (sales, healthcare, scheduling).
+
+**The key difference:** Phone calls are *asynchronous interruptions* (you call someone). Meet is *synchronous collaboration* (everyone joins together). These are genuinely different products.
+
+---
+
+#### 7. Unique Use Cases: Meet > Phone
+
+Capabilities that are impossible on phone calls but natural in Meet:
+
+| Capability | Description |
+|------------|-------------|
+| **Screen context** | AI sees shared presentation, whiteboard, document → can answer questions about what's on screen |
+| **Multi-party awareness** | AI knows who is speaking, track individual participants |
+| **Meeting summaries** | Post-call: write structured notes, action items, decisions to memory |
+| **Live translation** | Real-time interpretation for multilingual teams (high value for Remi's network) |
+| **Pre-meeting brief** | AI reads agenda doc before joining, comes prepared |
+| **Action execution during call** | AI schedules follow-up meetings, creates tickets, sends emails *while the meeting is happening* |
+| **No phone number required** | Anyone with a Meet link can use it — global, no PSTN friction |
+
+---
+
+#### 8. Competitive Landscape: AI Agents in Google Meet
+
+**Who's doing it now:**
+
+| Player | What they do | What they DON'T do |
+|--------|-------------|--------------------|
+| **Otter.ai** | Transcription, post-meeting summaries, action items | No real-time voice response, no tool execution |
+| **Fireflies.ai** | Transcription, CRM sync, meeting search | No real-time voice response, no tool execution |
+| **Grain** | Video snippets, highlight reels, notes | No voice, no real-time AI |
+| **Voiceflow** | Flow-based chatbot builder (separate from Meet, uses their own SDK) | Not a native Meet participant |
+| **Interprefy** | Live speech translation streaming | Translation only, not general AI |
+
+**THE GAP: Nobody is doing a conversational AI agent (voice-in, voice-out) that joins Google Meet as a participant, listens to the meeting, answers questions in real-time, and takes actions.**
+
+Otter/Fireflies/Grain are all **passive recorders**. They don't speak. They don't act. They don't integrate with your agent's memory.
+
+---
+
+#### 9. "Nia joins your Google Meet" — Product Concept
+
+**How it would work:**
+
+1. User creates a Meet link and shares it with Nia (via Telegram or any channel)
+2. Nia uses Recall.ai to join the meeting as a bot participant (appears as "Nia" in the participants list)
+3. Nia listens in real-time, transcribing via OpenAI Realtime
+4. Participants can address Nia directly: "Nia, what's on our calendar tomorrow?" → Nia responds in voice
+5. Nia executes tools during the call: search memory, schedule events, send Slack messages
+6. Post-meeting: Nia writes a summary to `memory/YYYY-MM-DD.md`, wakes the OpenClaw main session with key action items
+
+**Unique differentiators vs. Otter/Fireflies:**
+- Nia speaks (not just records)
+- Nia has memory across sessions (meeting is part of ongoing conversation history)
+- Nia executes tools (she doesn't just note action items — she does them)
+- Nia is your agent (not a SaaS product — she knows your context, your projects, your preferences)
+
+**User story:** "I'm in a meeting with investors. I say 'Nia, remind me of the key metrics from last week's demo.' Nia responds in voice with the numbers. I don't break stride."
+
+---
+
+### 📋 TECHNICAL IMPLEMENTATION PLAN
+
+#### Option A: Recall.ai Bridge (Recommended for first iteration)
+
+**Complexity:** Medium (2–3 sprint days for Coder)
+
+**Architecture:**
+```
+User → Telegram: "Join this Meet: https://meet.google.com/xxx"
+Nia → Recall.ai API: POST /bot {meeting_url, display_name: "Nia"}
+Recall.ai → Joins meeting as participant
+Recall.ai → Webhook + WebSocket: real-time audio chunks
+Nia → Existing OpenAI Realtime pipeline (same webhook-server.py logic)
+OpenAI Realtime → Audio response → Recall.ai injects back into meeting
+Meeting ends → Summary written to memory
+```
+
+**What needs to be built:**
+- Recall.ai API client (`pip install recall-sdk` or direct HTTP)
+- Audio bridge: Recall.ai PCM stream → our existing format
+- Post-call handler (identical to existing Twilio post-call handler)
+- Telegram command handler: "join meet [url]"
+
+**Dependencies:**
+- Recall.ai account + API key (~$0.10-0.15/min)
+- No changes to webhook-server.py (important per PROTOCOL.md)
+- No new Twilio requirements
+
+#### Option B: Google Meet Media API (Future/Official Path)
+
+**Complexity:** High (requires Google Cloud setup, OAuth, WebRTC client implementation)
+
+**Status:** Developer Preview — not GA. All participants must be enrolled. Not suitable for general deployment yet.
+
+**When to pursue:** After GA release. Watch for Google I/O 2026 announcements.
+
+#### Option C: DIY Headless Browser Bot
+
+**Complexity:** High + fragile
+
+**Verdict:** Avoid. Google detects and blocks headless browsers. High maintenance.
+
+---
+
+### 🎯 STRATEGIC RECOMMENDATION
+
+**Verdict: PARALLEL TRACK — not a pivot, not a deprioritization. High strategic value.**
+
+**Why parallel track (not pivot):**
+- Phone calls and Meet serve fundamentally different use cases
+- Phone = someone calling Nia (B2C, scheduled reminders, inbound queries)
+- Meet = Nia joining a scheduled meeting (B2B collaboration, professional context)
+- Both are valid channels. An AI agent should support both.
+
+**Why NOT deprioritize:**
+- Nobody is doing conversational AI agent participation in Meet (massive gap)
+- The TAM is enormous (300M+ Meet users vs. niche phone automation)
+- The technical path is clearer than phone was when we started (Recall.ai handles the hard parts)
+- This differentiates Nia from both Otter/Fireflies (they don't speak/act) AND Vapi/Retell (they're phone-only)
+
+**The strategic unlock:** If Nia can join your Google Meet, she goes from being a voice assistant you *call* to being a team member who *shows up* to meetings. That's a fundamentally different product — and nobody else is offering it.
+
+**Recommended next action:** Assign a Coder sprint to build a minimal Recall.ai bridge. 2-3 days. MVP: Nia joins a Meet link on command, transcribes, responds to direct questions in voice, writes meeting summary to memory afterward.
+
+**Timing:** After PR #791 merges and marketing posts land. This is the *next* feature sprint.
+
+**One risk to flag:** Recall.ai adds a per-minute cost (~$0.10-0.15/min) on top of OpenAI Realtime. A 1-hour meeting = ~$6-9 in Recall.ai costs alone. Pricing must reflect this. Free tier probably limited to 15-min demo calls.
+
+---
+
+*Research conducted: 2026-04-07 03:45 EDT. Sources: Google Developer documentation, GitHub repos (recallai/meeting-bot, screenappai/meeting-bot, AbishKamran/google-meet-ai-agent), web research on Otter.ai/Fireflies.ai/Grain architecture, Recall.ai sample app analysis.*
+
+---
 
 ---
 
