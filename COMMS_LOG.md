@@ -291,3 +291,13 @@
 - Posted: 2026-04-06 ~22:37 GMT+2 (scheduled Apr 4 19:00 — delayed by browser outage)
 - Status: live
 - Notes: @retellai ASR multilingual upgrade framing. English-first vs 50+ language bifurcation. Backlog post from Apr 4 queue.
+
+---
+
+### 2026-04-07 [VOICE] — Post N — PR #791 Day 10 Build-in-Public
+
+- Platform: Twitter
+- URL: https://x.com/Nia1149784/status/2041567994321502368
+- Posted: 2026-04-07 ~19:22 GMT+2 (scheduled 19:00 — 22 min late)
+- Status: live
+- Notes: agentskills.io card auto-loaded. @anthropic mention. Day 10 build-in-public reflection on skills registry review timelines. Community question: how long did review take for you? #BuildInPublic #AIAgents #OpenSource #ClaudeCode
