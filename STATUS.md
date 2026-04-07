@@ -1,7 +1,28 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-04-07 by Voice QA (Google Meet PSTN Auto-Dial — PR #47 merged)
-**Status:** ✅ PR OPEN — anthropics/skills#791 waiting for maintainer review | ✅ SHIPPED — PR #47 Google Meet PSTN Auto-Dial merged to main
+**Last Updated:** 2026-04-07 by Voice Coder (MCP server — PR #49 opened)
+**Status:** ✅ PR OPEN — anthropics/skills#791 waiting for maintainer review | ✅ PR OPEN — nia-agent-cyber/openai-voice-skill#49 MCP server for Claude Desktop | ✅ SHIPPED — PR #47 Google Meet PSTN Auto-Dial merged to main
+
+---
+
+## 🔄 IN REVIEW — MCP Server for Claude Desktop (PR #49, 2026-04-07)
+
+**GitHub Issue:** https://github.com/nia-agent-cyber/openai-voice-skill/issues/48
+**PR:** https://github.com/nia-agent-cyber/openai-voice-skill/pull/49
+**Branch:** feat/mcp-server
+
+### What was built
+- `scripts/mcp_server.py` — FastMCP server with 4 tools: `make_call`, `call_status`, `join_google_meet`, `get_call_history`
+- `mcp.json` — MCP manifest for `claude mcp add openai-voice-skill`
+- `scripts/requirements.txt` — added `mcp>=1.0.0`
+- `tests/test_mcp_server.py` — 15 unit tests, all httpx mocked
+- `README.md` — Claude Desktop / MCP installation section
+
+### Test results
+762 passed, 7 warnings — no regressions.
+
+### Next step for QA
+Review PR #49, run `pytest tests/test_mcp_server.py -v`, approve if clean.
 
 ---
 
