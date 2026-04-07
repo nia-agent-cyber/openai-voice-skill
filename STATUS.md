@@ -1,55 +1,56 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-04-07 by Voice Coder (CI fix)
-**Status:** ✅ NPM LIVE — `openclaw-voice-channel@0.1.0` published | PR #791 to anthropics/skills day 10, waiting for maintainer review | ✅ CI FIXED — PR #45 open
+**Last Updated:** 2026-04-07 by Voice PM (Google Meet PSTN Auto-Dial sprint planning)
+**Status:** ✅ PR OPEN — anthropics/skills#791 waiting for maintainer review | 🔜 NEXT SPRINT — Issue #46: Google Meet PSTN Auto-Dial
 
 ---
 
-## ✅ 2026-04-07 — CI Fixed: VAD eagerness restored to 'balanced'
+## 🔜 NEXT SPRINT — Google Meet PSTN Auto-Dial (Issue #46)
 
-**By:** Voice Coder (session: voice-coder-ci-fix)
+**GitHub Issue:** https://github.com/nia-agent-cyber/openai-voice-skill/issues/46  
+**Planned by:** Voice PM (session: voice-pm-meet)  
+**Date:** 2026-04-07  
+**Context:** BA research completed in STRATEGY.md (2026-04-07). Coder brief prepared and ready.
 
-### Problem
-CI was failing on 2 tests after commit `f7ffdb77` changed `eagerness` from `'balanced'` to `'medium'`:
-- `tests/test_webhook_server.py::TestSessionConfig::test_session_config_eagerness_is_balanced`
-- `tests/test_webhook_server_extra2.py::TestSessionConfigConstants::test_source_contains_eagerness_balanced`
+### Feature Summary
+When a user shares a Google Meet link with their agent, the voice skill automatically:
+1. Detects the Google Meet URL (regex pattern match)
+2. Fetches the Meet page and extracts the PSTN dial-in number + PIN
+3. Initiates an outbound Twilio call to the bridge number
+4. Sends PIN as DTMF tones after connect
+5. OpenAI Realtime session bridges audio as normal — agent joins the meeting as an audio participant
 
-### Fix
-Restored `eagerness='balanced'` in the `turn_detection` session config in `scripts/webhook-server.py`. Both tests now pass.
+### Why PSTN (not Media API or Recall.ai)
+- Google Meet Media API requires ALL participants to be enrolled in Developer Preview — not viable for general use
+- Recall.ai adds $0.10–0.15/min third-party cost per minute
+- PSTN dial-in: built into every Google Meet, free, no extra services, maps directly onto existing outbound call flow
 
-### PR
-**PR #45** open: https://github.com/nia-agent-cyber/openai-voice-skill/pull/45
-- Branch: `fix/restore-vad-eagerness-balanced` → `main`
-- 1 file changed, 1 line (`medium` → `balanced`)
+### Implementation Tasks for Coder
+| Task | File | Effort |
+|------|------|--------|
+| Meet URL detector | `scripts/meet_utils.py` (new) | 0.5 day |
+| Phone + PIN page extractor | `scripts/meet_utils.py` | 1 day |
+| DTMF PIN delivery | `scripts/webhook-server.py` (add endpoint) | 0.5 day |
+| `POST /call/meet` endpoint | `scripts/webhook-server.py` | 0.5 day |
+| Channel plugin hook | `channel-plugin/` | 1 day |
+| Tests (target ≥85% on meet_utils) | `tests/test_meet_utils.py` (new) | 0.5 day |
 
-### Why 'balanced'
-Per DECISIONS.md and commit `f8ee88f0` (2026-03-25): eagerness was deliberately set to `'balanced'` to replace `'low'` which caused dead air between turns.
+**Total estimated effort:** ~4 days (Coder sprint)
+
+### Acceptance Criteria
+- Sharing a Meet URL triggers the join flow (with user confirmation)
+- `POST /call/meet` correctly extracts dial-in number + PIN from a real Meet page
+- Agent dials in and PIN enters automatically via DTMF
+- Audio flows through existing OpenAI Realtime pipeline unchanged
+- Post-call summary written to memory (existing flow)
+- Graceful error if extraction fails
+- All 727+ existing tests still pass
+- New `meet_utils.py` has ≥85% test coverage
+
+### Sprint Trigger Condition
+Spawn Voice Coder after this STATUS.md is committed. Coder brief is in the PM session report.
 
 ---
-
-## ✅ 2026-04-06 — README Updated for npm Milestone
-
-**By:** Voice PM → Coder → QA cycle
-
-### What Was Done
-
-**npm package is live:** `openclaw-voice-channel@0.1.0` at https://www.npmjs.com/package/openclaw-voice-channel
-
-**PR #44 merged** — README.md updated:
-- ✅ Test badge: 97 → 727 tests
-- ✅ License badge: MIT → AGPL-3.0
-- ✅ Added npm badge linking to openclaw-voice-channel
-- ✅ Architecture description: "native SIP" → "Twilio Media Streams + OpenAI Realtime WebSocket"
-- ✅ npm install section added as Option A (recommended) before the git clone option
-- ✅ Stale SIP trunking link removed
-
-**Cycle:** PM planned → Coder implemented → QA reviewed → PM merged
-
-### Next Steps
-- 🟠 anthropics/skills PR #791 still waiting for maintainer review (day 10)
-- 🟡 Consider version bump to 0.2.0 on channel-plugin package after docs stabilize
-- 🟡 Comms should highlight npm availability in next Twitter post
-- 🟢 README is now accurate and npm-ready
 
 ---
 
