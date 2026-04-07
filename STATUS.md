@@ -1,11 +1,19 @@
 # Voice Skill Status
 
-**Last Updated:** 2026-04-07 by Voice PM (Google Meet PSTN Auto-Dial sprint planning)
-**Status:** ✅ PR OPEN — anthropics/skills#791 waiting for maintainer review | 🔜 NEXT SPRINT — Issue #46: Google Meet PSTN Auto-Dial
+**Last Updated:** 2026-04-07 by Voice QA (Google Meet PSTN Auto-Dial — PR #47 merged)
+**Status:** ✅ PR OPEN — anthropics/skills#791 waiting for maintainer review | ✅ SHIPPED — PR #47 Google Meet PSTN Auto-Dial merged to main
 
 ---
 
-## 🔜 NEXT SPRINT — Google Meet PSTN Auto-Dial (Issue #46)
+## ✅ SHIPPED — Google Meet PSTN Auto-Dial (PR #47 → main, 2026-04-07)
+
+**Merge commit:** c620847adf855751c6870c94c52e79cae2bf6282  
+**QA:** 20/20 new tests passed. Full suite: 670 passed, 11 pre-existing TestGenerateThinkingTone failures (audioop/Python 3.14 — not introduced by this PR). No regressions.  
+**Files shipped:** `scripts/meet_utils.py`, `scripts/webhook-server.py` (+`/call/meet` endpoint + `/voice/status` DTMF callback), `tests/test_meet_utils.py`
+
+---
+
+## (ARCHIVED) Google Meet PSTN Auto-Dial Sprint Plan (Issue #46)
 
 **GitHub Issue:** https://github.com/nia-agent-cyber/openai-voice-skill/issues/46  
 **Planned by:** Voice PM (session: voice-pm-meet)  
