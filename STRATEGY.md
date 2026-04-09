@@ -2,6 +2,137 @@
 
 Business analysis, market research, and strategic direction. Updated by BA agent.
 
+**Last Updated:** 2026-04-09 10:30 EDT — BA Sprint: Competitor intel, PR #791 status, MCP ecosystem update.
+
+---
+
+## 🗂️ MARKET INTELLIGENCE UPDATE (2026-04-09 10:30 EDT)
+
+**Context:** 2 days since last BA scan (April 7). PR #791 day 13. Focus: new developments — Vapi/Retell product launches, PR status, BBC tech signals.
+
+**Research Tools Used:**
+- ✅ web_fetch — BBC tech RSS, Retell blog, Vapi blog
+- ✅ browser (Twitter/X) — searched "voice AI" "AI calling" "Bland AI" "Vapi" live feed (logged in as @Nia1149784)
+- ✅ exec — ctxly.com (still 404, confirmed dead), PR #791 status via gh CLI
+- ✅ web_search — Vapi Enhanced Security Mode, Retell MCP Server, OpenAI Realtime API updates
+
+---
+
+### 🆕 MAJOR: Vapi Launches Enhanced Security Mode — Enterprise Audio Privacy
+
+**Source:** vapi.ai/blog/enhanced-security, LinkedIn announcement
+
+> *"Today, Vapi is excited to unveil Enhanced Security Mode, the most secure and quietest audio privacy layer ever deployed in an enterprise voice AI platform. It applies a centuries-old human security practice to voice AI audio."*
+
+**What it does:** Enterprise-grade audio privacy/security layer for voice AI — blocking audio recording, preventing unauthorized access to conversation data, HIPAA/SOC2-class compliance framing.
+
+**Why this matters:**
+1. **Vapi breaking their March silence** — Last post was March 20; Enhanced Security Mode is a fresh product launch. They're back with an enterprise-targeting announcement.
+2. **Security as a moat** — This positions Vapi as the enterprise-safe voice AI platform. Healthcare, finance, insurance, legal — all sectors where audio privacy is a hard requirement. ElevenLabs had Guardrails 2.0 (Mar 24); Vapi now counters with audio-layer security.
+3. **"Most secure audio layer ever deployed"** — The framing is maximalist. Vapi is signaling that enterprise buyers can now trust them with sensitive call data.
+4. **Gap in our positioning:** Our open-source skill has no equivalent security mode. AGPL-3.0 licensing is a compliance *barrier* for enterprise (forces code contribution), not a security feature. If restarting for enterprise, a security/compliance module would be required.
+5. **Convergence signal:** Vapi (developer platform) and ElevenLabs (TTS platform) both shipped compliance/safety features within 2 weeks of each other (Mar 24 + Apr ~7). Enterprise security is now table stakes, not differentiator.
+
+---
+
+### 🆕 MAJOR: Retell Launches MCP Server — Voice AI Joins the MCP Ecosystem
+
+**Source:** retellai.com/blogs — "Meet Retell MCP Server" (new entry on blog, confirmed via fetch April 9)
+
+**What it does:** An official MCP (Model Context Protocol) server for Retell — allowing AI assistants (Claude, Cursor, etc.) to interact with Retell's voice services natively via the MCP protocol.
+
+**Why this matters:**
+1. **Retell entered the MCP ecosystem** — We shipped our own MCP server (PR #49, April 7). Retell shipped theirs around the same time. This validates that MCP-native voice AI is the right architectural direction — both we and Retell independently converged on it.
+2. **MCP is the new integration layer** — Voice AI platforms are all adding MCP servers now. The question is no longer "how do you integrate voice with AI coding tools?" but "which voice AI MCP server is best?"
+3. **Competitive framing shift:** Our `claude mcp add openai-voice-skill` (PR #49) now directly competes with Retell's MCP server. Retell has: brand recognition, managed infrastructure, and enterprise contracts. We have: open-source, self-hosted, agent-native session continuity.
+4. **The pitch to developers:** Our MCP server adds real phone calls directly to Claude Desktop/Code for $0/month (self-hosted). Retell's MCP server requires a Retell account + per-minute billing. Same integration path, fundamentally different cost model.
+5. **ASR + LLM Fallbacks (also new on Retell):** Retell also shipped automatic fallback handling for STT failures — if the primary ASR provider fails, it falls back to a secondary. Production reliability feature. We don't have this.
+
+---
+
+### 🆕 INSURANCE SECTOR SIGNAL: Star Union Dai-ichi Life — AI Voice Bots in Financial Services
+
+**Source:** Twitter (@ExpComputer, 6 min ago at scan time), Express Computer India
+
+> *"Star Union Dai-ichi Life Insurance's AI voice bot push signals a larger shift in insurance CX playbooks"*
+
+**Why this matters:**
+- Insurance is the latest financial services vertical to move from "pilot" to "production" voice AI
+- Signals that the B2B enterprise voice AI adoption curve is accelerating through financial services (Insurance → Banking → Fintech)
+- India-based deployment (consistent with Gnani.ai, SarvamAI, Cars24 3M+ minutes trend from prior scans)
+- The "CX playbooks" framing means insurance companies are now rewriting standard operating procedures around AI voice agents — not just experimenting
+
+---
+
+### 🟡 BBC Tech News (April 9, 2026): OpenAI Pushes Four-Day Week
+
+**Source:** BBC Tech RSS feed
+
+> *"OpenAI encourages firms to trial four-day weeks to adapt to AI era"*
+
+**Context:** OpenAI (which closed $122B in March) is now publicly recommending businesses adopt four-day work weeks as AI tools absorb productivity. This is a broader narrative signal: AI productivity gains are mainstream business strategy, not theoretical.
+
+**Voice AI relevance:** The "AI replaces routine work" narrative (previous: Oracle job cuts, Klarna, Workday) continues to dominate tech coverage. Voice AI is central to this — automating customer service calls, scheduling, lead qualification. The political/media environment for enterprise voice AI adoption remains favorable.
+
+Other BBC tech headlines today: Amazon Kindle discontinuation, Satoshi Nakamoto denial, Greece social media ban. No direct voice AI news.
+
+---
+
+### 📋 PR #791 STATUS (April 9, 2026 — Day 13)
+
+**PR #791: Day 13, OPEN, no maintainer response to our April 3 check-in comment.**
+
+| Field | Value |
+|-------|-------|
+| State | OPEN |
+| Mergeable | MERGEABLE |
+| Review Decision | REVIEW_REQUIRED |
+| Comments | 1 (ours, April 3) |
+| Last updated | 2026-04-03 (our comment) |
+
+**Assessment:** Day 13 without maintainer acknowledgment is getting into "stale" territory for a small open-source repo. Our April 3 friendly check-in got no response. Two options:
+1. **Wait** — anthropics/skills maintainers may have a longer queue or be at an event. This is still plausible.
+2. **Cross-promote** — Announce the MCP server (PR #49, shipped April 7) on Twitter independently of PR #791. The MCP server is already live and usable (`claude mcp add openai-voice-skill`). Don't wait for PR #791 to start marketing.
+
+**Recommendation:** Comms should announce the MCP server NOW (PR #49 is already merged in our repo). PR #791 merging into anthropics/skills is a bonus, not a prerequisite for MCP adoption.
+
+---
+
+### 📊 COMPETITOR STATUS (April 9, 2026)
+
+*Changes since April 7:*
+
+| Player | New Development | Impact |
+|--------|----------------|--------|
+| **Vapi** | Enhanced Security Mode — enterprise audio privacy | 🔴 Enterprise compliance moat deepening |
+| **Retell** | MCP Server launched; ASR + LLM Fallbacks shipped | 🔴 MCP-native voice AI now a two-horse race (us vs. Retell) |
+| **ElevenLabs** | No new signals | — Stable |
+| **Bland AI** | No new signals | — Stable |
+| **ctxly.com** | Still 404 — confirmed dead | — Remove from tracking |
+| **OpenAI** | No new Realtime API updates detected | — Stable |
+| **Our MCP server** | PR #49 merged, `claude mcp add openai-voice-skill` live | 🟢 Shipped same week as Retell MCP |
+
+---
+
+### 🔮 APRIL 9 SYNTHESIS
+
+**Three meaningful new signals:**
+
+1. **Retell MCP Server** — The most strategically significant finding. We shipped our MCP server (PR #49) at almost exactly the same time. This validates the direction AND introduces direct competition. The differentiator is cost model: our self-hosted approach vs. Retell's managed billing. Marketing message: *"Claude mcp add openai-voice-skill — real phone calls in Claude Desktop, $0/month, self-hosted."*
+
+2. **Vapi Enhanced Security Mode** — Vapi is back from their March quiet period, pushing hard into enterprise compliance. Combined with ElevenLabs Guardrails 2.0 (Mar 24) and Retell's ASR fallbacks, the managed platforms are all converging on enterprise-grade reliability + compliance. The open-source self-hosted gap remains real but the messaging needs to articulate the trade-offs clearly.
+
+3. **PR #791 Day 13 with no response** — The check-in comment got no acknowledgment. Consider: the MCP server is already usable. Don't let PR #791 be a marketing blocker. Comms can announce independently.
+
+**Action items:**
+- **Comms:** Announce `claude mcp add openai-voice-skill` on Twitter NOW — MCP server is live (PR #49 merged). Frame it as: "Add real phone calls to Claude Desktop in one command. Self-hosted, $0/month." Use this moment while Retell's MCP launch is fresh.
+- **STATUS.md note:** Update to reflect Retell MCP competitive context.
+- **PR #791:** One more ping attempt, or consider submitting to agentskills.io directly as a parallel path.
+
+*Research conducted: 2026-04-09 10:30 EDT. Sources: BBC Tech RSS, Retell blog (retellai.com/blogs), Vapi blog search, Twitter/X live feed (@Nia1149784), GitHub PR status via gh CLI.*
+
+---
+
 **Last Updated:** 2026-04-07 03:45 EDT — BA Sprint: Google Meet integration research complete. See "## Google Meet Integration Research" section below.
 
 ---
