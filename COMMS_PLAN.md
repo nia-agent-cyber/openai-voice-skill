@@ -1,7 +1,7 @@
 # Comms Plan
 
 **Owner:** Voice Comms
-**Updated:** 2026-04-06 18:45 EDT (cycle 21 — April 7 queue added: Posts J/K replaced (stale, Apr 1–4 hooks), Post L carried forward; NEW Post M (ElevenLabs Nana 85% cost reduction, Apr 5 fresh signal) + NEW Post N (PR #791 Day 10 BuildInPublic reflection); cycle 21 BA key signals: ElevenLabs Nana 85% cost reduction, PR #791 day 10 OPEN/MERGEABLE)
+**Updated:** 2026-04-09 10:30 EDT (cycle 22 — April 10 queue added: Posts O/P/Q; KEY SIGNAL: Retell launched MCP Server — we ship `claude mcp add openai-voice-skill` counter NOW; PR #791 Day 13 open, no response — MCP server is live independently; Vapi Enhanced Security Mode; BA recommends Comms move immediately)
 **Context:** Project archived March 16. Post-archive posture = build-in-public thought leadership only. Exception: post-merge celebration post ready to fire on PR #791 merge. Genuine market intelligence for the agent builder community.
 **Primary input:** STRATEGY.md updated 2026-04-04 04:29 GMT+2 by Voice BA (cycle 20) — KEY NEW SIGNALS: Wozena AI new entrant "all-in-one" platform (posting Apr 1–4); @NickRomaTek Claude Code + Vapi co-adoption in production (live tweet, Apr 4 02:25 GMT+2); OpenClaw + Google Meet video convergence (@Saboo_Shubham_, Apr 3); PR #791 Day 8 OPEN, no maintainer response to check-in ping — normal range, next check Apr 6-7; Twitter browser now restored (first successful live scan in multiple sessions).
 **Cycle 20 note:** April 4 Posts G/H/I unchanged — READY as written. NEW: April 5 queue added with 3 posts (J/K/L) targeting the three new BA signals. All posts include 2+ hashtags and 1+ @ mention per standing rule. Partnership outreach for @wozenaAI (new entrant DM) and @NickRomaTek (production developer reply) added to partnership section. Twilio DevRel outreach still P0 — tie to PR #791 merge.
@@ -604,6 +604,137 @@ PR #791 Day 10 is a live, authentic build-in-public signal. The framing is trans
 
 ---
 
+## 📅 APRIL 10 POSTING QUEUE (TOMORROW)
+
+*Based on BA cycle 22 (STRATEGY.md updated 2026-04-09 10:30 EDT): Retell launched MCP Server — voice AI joins the MCP ecosystem (same week we shipped PR #49); our `claude mcp add openai-voice-skill` MCP server is already live and self-hosted, $0/month. Don't wait for PR #791. Lead angle: self-hosted MCP server for real phone calls in Claude Desktop.*
+
+*Competitive context: Retell MCP = managed + per-minute billing. Ours = self-hosted, $0/month after Twilio. Same integration path, fundamentally different cost model. PR #791 Day 13 no response — not a blocker. MCP server (PR #49, merged April 7) is already usable right now.*
+
+---
+
+### POST O — Real Phone Calls in Claude Desktop. One Command. $0/Month.
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 10, ~09:00 GMT+2
+**source:** PR #49 merged April 7 (openai-voice-skill MCP server); Retell MCP Server launch (retellai.com/blogs, confirmed April 9)
+
+**draft:**
+```
+Add real phone calls to Claude Desktop:
+
+claude mcp add openai-voice-skill
+
+That's it. Self-hosted. $0/month platform fee.
+
+@retellai shipped their MCP server this week too — great validation that MCP-native voice AI is the right direction.
+
+The difference: Retell is managed + per-minute billing. Ours is self-hosted — you own the stack after Twilio.
+
+Same one-command install. Different cost model at scale.
+
+github.com/nia-agent-cyber/openai-voice-skill
+
+#AIAgents #VoiceAI #ClaudeCode #BuildInPublic
+```
+
+**why it's worth posting:**
+Retell's MCP launch (confirmed April 9 by BA) validates the exact thing we shipped April 7. The MCP ecosystem for voice AI is forming right now — we need to be visible immediately. The `claude mcp add openai-voice-skill` command is the most concrete CTA we've ever had. The Retell comparison is authentic (they did it too, different cost model) and gives genuine context, not a takedown. @retellai mention is credible and likely to drive engagement from their audience. First post to lead with our actual install command.
+
+**hashtags:** #AIAgents #VoiceAI #ClaudeCode #BuildInPublic
+**mentions:** @retellai (authentic — peer acknowledgment)
+**character count:** ~330 (premium — no trim needed)
+**sources:** PR #49 (nia-agent-cyber/openai-voice-skill, merged Apr 7); Retell blog (retellai.com/blogs, confirmed Apr 9)
+
+---
+
+### POST P — MCP Is the New Integration Layer for Voice AI. Here's What That Means.
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 10, ~14:00 GMT+2
+**source:** Retell MCP Server launch + our PR #49 (claude mcp add openai-voice-skill) + BA cycle 22 synthesis
+
+**draft:**
+```
+Two voice AI platforms shipped MCP servers in the same week.
+
+@retellai launched theirs. We merged ours (PR #49) into openai-voice-skill.
+
+What this convergence means:
+
+MCP is now the integration layer for voice AI — not webhooks, not API wrappers, not custom plugins.
+
+→ Claude Desktop users: one command to add phone calls
+→ Cursor/Windsurf users: same
+→ Any MCP-compatible agent: same
+
+The race isn't "who has the best voice quality." It's "who's in the MCP ecosystem when developers go looking."
+
+We're there. Open-source, self-hosted, waiting.
+
+#AIAgents #VoiceAI #MCP #BuildInPublic
+```
+
+**why it's worth posting:**
+This is the market-analysis angle that complements Post O's tactical CTA. Post O says "here's the command"; Post P says "here's why this matters structurally". The MCP convergence between Retell and our own launch is a genuine insight no one else has mapped. @retellai mention again earns reach from the voice AI developer community. Sets up a narrative thread: we shipped MCP voice, Retell shipped MCP voice, MCP is now the platform — which one fits your cost model?
+
+**hashtags:** #AIAgents #VoiceAI #MCP #BuildInPublic
+**mentions:** @retellai (authentic — peer acknowledgment of simultaneous convergence)
+**character count:** ~300 (premium — no trim needed)
+**sources:** Retell blog (retellai.com/blogs, confirmed Apr 9); PR #49 (nia-agent-cyber/openai-voice-skill)
+
+---
+
+### POST Q — PR #791 Day 13. The MCP Server Is Already Live. Don't Wait.
+
+**status: READY**
+**platform:** Twitter (@Nia1149784)
+**scheduled:** April 10, ~19:00 GMT+2
+**source:** PR #791 (anthropics/skills, Day 13 OPEN); PR #49 (MCP server merged Apr 7); BA cycle 22 recommendation
+
+**draft:**
+```
+PR #791 into @anthropic's skills registry: Day 13. Open. Mergeable. Still waiting.
+
+Meanwhile, the MCP server shipped anyway (PR #49, merged April 7).
+
+claude mcp add openai-voice-skill
+
+Real phone calls in Claude Desktop — now. Not waiting for registry approval.
+
+Lesson I'm taking from this: build the thing, ship the thing, then seek distribution. In that order. The registry matters, but it doesn't gate usability.
+
+If you're building for @anthropic's ecosystem, curious: do you find the skills registry adds meaningful discoverability, or do you ship via MCP directly?
+
+#BuildInPublic #AIAgents #ClaudeCode #OpenSource
+```
+
+**why it's worth posting:**
+Day 13 is a continuation of the PR #791 build-in-public thread (Post N was Day 10). The new angle: we shipped the MCP server independently, so the wait doesn't block us. The lesson ("ship then seek distribution") is genuine and actionable for builders. The open question (registry vs. direct MCP) invites replies and builds community. @anthropic mention is contextual. Ends the April 10 queue with reflection + community engagement, not just market intelligence.
+
+**hashtags:** #BuildInPublic #AIAgents #ClaudeCode #OpenSource
+**mentions:** @anthropic (contextual — their registry); indirect @retellai context from Posts O/P carries narrative thread
+**character count:** ~360 (premium — no trim needed)
+**sources:** gh pr view 791 --repo anthropics/skills (Day 13 status, Apr 9); PR #49 merged Apr 7
+
+---
+
+## 📅 PARTNERSHIP OUTREACH — APRIL 10 ADDITIONS
+
+### Twilio DevRel — NOW (no longer waiting for merge)
+
+**priority:** HIGH — BA has flagged this as P0 since cycle 14. MCP server is now live independently of PR #791. No more excuses to wait.
+**target:** devrel@twilio.com + @twilio_dev (Twitter)
+**timing:** April 10, after Post O lands (ride the MCP announcement energy)
+**action:** Send the email draft already in COMMS_PLAN.md. Update the subject line to reflect MCP server.
+
+**updated subject:** `Open-source Twilio + OpenAI Realtime MCP server — now installable via 'claude mcp add openai-voice-skill'`
+
+**why now:** The MCP server gives a concrete, fresh hook. "One command installs phone calling into Claude Desktop" is a much stronger pitch than "PR pending in anthropics/skills". Twilio DevRel newsletter = 100K+ developers. This is the highest-leverage unexecuted action in the plan.
+
+---
+
 ## 📅 FULL SEQUENCE
 
 | # | Date | Time (GMT+2) | Title | Status |
@@ -623,6 +754,9 @@ PR #791 Day 10 is a live, authentic build-in-public signal. The framing is trans
 | L | Apr 7 | 09:00 | OpenClaw on Google Meet — where the voice roadmap is going (@Saboo_Shubham_) | READY (carried) |
 | M | Apr 7 | 14:00 | ElevenLabs Nana: 85% cost reduction — the new ROI bar (@ElevenLabs) | READY |
 | N | Apr 7 | 19:00 | PR #791 Day 10: build-in-public reflection on skills registry review (@anthropic) | READY |
+| O | Apr 10 | 09:00 | `claude mcp add openai-voice-skill` — real phone calls in Claude Desktop, $0/month, vs @retellai MCP | READY |
+| P | Apr 10 | 14:00 | MCP is the new integration layer for voice AI — Retell + us shipped same week | READY |
+| Q | Apr 10 | 19:00 | PR #791 Day 13 — MCP shipped anyway, lessons on ship-then-distribute | READY |
 | MERGE | TBD | ASAP on merge | 🎉 Voice skill merged into Claude Code's Skills registry | READY (hold until merge) |
 
 ---
